@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, createElement } from 'react';
+import { InputHTMLAttributes, createElement, forwardRef } from 'react';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -16,8 +16,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   register?: UseFormRegister<FieldValues> | object;
 }
 
-function Input({ register = {}, ...props }: InputProps) {
-  return createElement(InputLayout, { ...register, ...props });
-}
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ register = {}, ...props }, ref) =>
+    createElement(InputLayout, { ref, ...register, ...props }),
+);
+Input.displayName = 'Input';
 
 export default Input;
