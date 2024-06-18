@@ -1,7 +1,7 @@
-import CardListingPage from './Pages/CardListingPage.tsx';
+import Header from './Components/Header/Header.tsx';
 
 function App() {
-  return <CardListingPage />;
+  return <Header />;
 }
 
 export default App;
