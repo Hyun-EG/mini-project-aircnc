@@ -1,6 +1,6 @@
 export interface MockData {
-  image: string;
+  photo: string;
   name: string;
   address: string;
-  info: string;
+  rooms: string;
 }
