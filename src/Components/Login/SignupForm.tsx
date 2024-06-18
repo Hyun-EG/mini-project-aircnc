@@ -1,16 +1,16 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LoginFormFields } from './LoginForm.tsx';
+import { FindPasswordFormFields } from './FindPasswordForm.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Select from '../Select.tsx';
 import Button from '../Button.tsx';
 
-interface SignupFormFields extends LoginFormFields {
-  nickname: string;
-  verifyPassword: string;
-  findPasswordQuestion: string;
-  findPasswordAnswer: string;
-}
+type SignupFormFields = LoginFormFields &
+  FindPasswordFormFields & {
+    nickname: string;
+    verifyPassword: string;
+  };
 
 function SignupForm() {
   const { register, handleSubmit } = useForm<SignupFormFields>();
