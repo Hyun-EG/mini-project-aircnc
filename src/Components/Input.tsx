@@ -1,4 +1,5 @@
-import { createElement } from 'react';
+import { InputHTMLAttributes, createElement } from 'react';
+import { FieldValues, UseFormRegister } from 'react-hook-form';
 import styled from 'styled-components';
 
 const InputLayout = styled.input`
@@ -11,8 +12,12 @@ const InputLayout = styled.input`
   font-size: 24px;
 `;
 
-function Input({ ...props }) {
-  return createElement(InputLayout, { ...props });
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  register?: UseFormRegister<FieldValues> | object;
+}
+
+function Input({ register = {}, ...props }: InputProps) {
+  return createElement(InputLayout, { ...register, ...props });
 }
 
 export default Input;
