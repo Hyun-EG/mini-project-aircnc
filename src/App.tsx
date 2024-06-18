@@ -1,7 +1,7 @@
-import CardListingPage from './Pages/CardListingPage.tsx';
+import AppRoutes from './Routes/\bAppRoutes.tsx';
 
 function App() {
-  return <CardListingPage />;
+  return <AppRoutes />;
 }
 
 export default App;
