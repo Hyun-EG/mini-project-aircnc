@@ -97,7 +97,6 @@ const NavigationButton = styled.button`
   font-size: 1.7vh;
 `;
 
-// Define a type for the Calendar tile properties
 interface CalendarTileProperties {
   date: Date;
   view: string;
