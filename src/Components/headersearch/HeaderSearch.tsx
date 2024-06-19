@@ -174,7 +174,16 @@ const SearchBtnImg = styled.img`
   cursor: pointer;
 `;
 
-const locations = ['서울', '대전', '대구', '부산', '울산', '광주', '인천'];
+const locations = [
+  '서울',
+  '대전',
+  '대구',
+  '부산',
+  '울산',
+  '광주',
+  '인천',
+  '세종',
+];
 
 export default function HeaderSearch(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState<string>('');
