@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const FormLayout = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.5vh;
   & :last-child {
     margin-top: 32px;
   }
