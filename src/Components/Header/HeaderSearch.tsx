@@ -1,24 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import searchBtn from '../../assets/images/search-btn.svg';
-import CalendarComponent from '../headercalendar/Calendar.tsx';
-import Guest from '../headerguest/Guest.tsx';
-
-interface SearchBoxProps {
-  isOpen: boolean;
-}
-
-interface LocationSelectProps {
-  isOpen: boolean;
-}
-
-interface DateSelectProps {
-  isOpen: boolean;
-}
-
-interface GuestSelectProps {
-  isOpen: boolean;
-}
+import CalendarComponent from './Calendar.tsx';
+import Guest from './Guest.tsx';
+import {
+  MockData,
+  SearchBoxProps,
+  LocationSelectProps,
+  DateSelectProps,
+  GuestSelectProps,
+} from '../../assets/interfaces.ts';
 
 const SearchBox = styled.div<SearchBoxProps>`
   width: 90vh;
@@ -90,7 +81,7 @@ const LocationContent = styled.div`
 
 const LocationSelectContainer = styled.div<LocationSelectProps>`
   width: 58vh;
-  max-height: ${(props) => (props.isOpen ? '10vh' : '0')};
+  max-height: ${(props) => (props.isOpen ? '12vh' : '0')};
   position: absolute;
   display: flex;
   flex-wrap: wrap;
@@ -176,13 +167,13 @@ const SearchBtnImg = styled.img`
 
 const locations = [
   '서울',
-  '대전',
-  '대구',
   '부산',
   '울산',
-  '광주',
   '인천',
-  '세종',
+  '대전',
+  '경기',
+  '제주',
+  '강원',
 ];
 
 export default function HeaderSearch(): JSX.Element {
@@ -193,67 +184,38 @@ export default function HeaderSearch(): JSX.Element {
     adult: number;
     child: number;
     cat: number;
-  }>({
-    adult: 0,
-    child: 0,
-    cat: 0,
-  });
+  }>({ adult: 0, child: 0, cat: 0 });
   const [openSelect, setOpenSelect] = useState<string>('');
+  const [listings, setListings] = useState<MockData[]>([]);
 
-  const toggleLocationSelect = (): void => {
-    setOpenSelect(openSelect === 'location' ? '' : 'location');
-  };
-
-  const handleLocationClick = (location: string): void => {
-    setSelectedLocation(location);
-    setOpenSelect('');
-  };
-
-  const toggleCheckInSelect = (): void => {
-    setOpenSelect(openSelect === 'checkIn' ? '' : 'checkIn');
-  };
-
-  const toggleCheckOutSelect = (): void => {
-    setOpenSelect(openSelect === 'checkOut' ? '' : 'checkOut');
-  };
-
-  const toggleGuestSelect = (): void => {
-    setOpenSelect(openSelect === 'guest' ? '' : 'guest');
-  };
-
-  const handleGuestChange = (
-    type: 'adult' | 'child' | 'cat',
-    delta: number,
-  ): void => {
-    setGuestCounts((prevCounts) => ({
-      ...prevCounts,
-      [type]: Math.max(0, prevCounts[type] + delta),
-    }));
-  };
-
-  const handleConfirmGuests = (): void => {
-    setOpenSelect('');
-  };
-
-  const handleDateChange = (date: Date): void => {
-    if (!checkInDate || (checkInDate && checkOutDate)) {
-      setCheckInDate(date);
-      setCheckOutDate(null);
-    } else if (checkInDate && !checkOutDate) {
-      if (date < checkInDate) {
-        setCheckOutDate(checkInDate);
-        setCheckInDate(date);
-      } else {
-        setCheckOutDate(date);
-        setOpenSelect('');
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await fetch('/src/assets/mockdata.json');
+        const data = await response.json();
+        setListings(data);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
       }
-    }
+    };
+
+    fetchListings();
+  }, []);
+
+  const handleSearch = () => {
+    const locationPrefix = selectedLocation.substring(0, 2);
+    const filteredData = listings.filter((listing) =>
+      listing.address.includes(locationPrefix),
+    );
+    console.log(filteredData);
   };
 
   return (
     <SearchBox isOpen={false}>
       <SearchLocation
-        onClick={toggleLocationSelect}
+        onClick={() =>
+          setOpenSelect(openSelect === 'location' ? '' : 'location')
+        }
         isOpen={openSelect === 'location'}
       >
         <LocationTitle>여행지</LocationTitle>
@@ -263,14 +225,17 @@ export default function HeaderSearch(): JSX.Element {
         {locations.map((location) => (
           <LocationOption
             key={location}
-            onClick={() => handleLocationClick(location)}
+            onClick={() => {
+              setSelectedLocation(location);
+              setOpenSelect('');
+            }}
           >
             {location}
           </LocationOption>
         ))}
       </LocationSelectContainer>
       <SearchDate
-        onClick={toggleCheckInSelect}
+        onClick={() => setOpenSelect(openSelect === 'checkIn' ? '' : 'checkIn')}
         isOpen={openSelect === 'checkIn'}
       >
         <DateTitle>체크인</DateTitle>
@@ -280,12 +245,27 @@ export default function HeaderSearch(): JSX.Element {
       </SearchDate>
       <CalendarComponent
         isOpen={openSelect === 'checkIn'}
-        onDateChange={handleDateChange}
+        onDateChange={(date) => {
+          if (!checkInDate || (checkInDate && checkOutDate)) {
+            setCheckInDate(date);
+            setCheckOutDate(null);
+          } else if (checkInDate && !checkOutDate) {
+            if (date < checkInDate) {
+              setCheckOutDate(checkInDate);
+              setCheckInDate(date);
+            } else {
+              setCheckOutDate(date);
+              setOpenSelect('');
+            }
+          }
+        }}
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
       />
       <SearchDate
-        onClick={toggleCheckOutSelect}
+        onClick={() =>
+          setOpenSelect(openSelect === 'checkOut' ? '' : 'checkOut')
+        }
         isOpen={openSelect === 'checkOut'}
       >
         <DateTitle>체크아웃</DateTitle>
@@ -295,11 +275,22 @@ export default function HeaderSearch(): JSX.Element {
       </SearchDate>
       <CalendarComponent
         isOpen={openSelect === 'checkOut'}
-        onDateChange={handleDateChange}
+        onDateChange={(date) => {
+          if (date && checkInDate && date < checkInDate) {
+            setCheckOutDate(checkInDate);
+            setCheckInDate(date);
+          } else {
+            setCheckOutDate(date);
+            setOpenSelect('');
+          }
+        }}
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
       />
-      <SearchGuest onClick={toggleGuestSelect} isOpen={openSelect === 'guest'}>
+      <SearchGuest
+        onClick={() => setOpenSelect(openSelect === 'guest' ? '' : 'guest')}
+        isOpen={openSelect === 'guest'}
+      >
         <div>
           <GuestTitle>게스트</GuestTitle>
           <GuestContent>
@@ -310,11 +301,16 @@ export default function HeaderSearch(): JSX.Element {
         <Guest
           isOpen={openSelect === 'guest'}
           counts={guestCounts}
-          onChange={handleGuestChange}
-          onConfirm={handleConfirmGuests}
+          onChange={(type, delta) => {
+            setGuestCounts((prevCounts) => ({
+              ...prevCounts,
+              [type]: Math.max(0, prevCounts[type] + delta),
+            }));
+          }}
+          onConfirm={() => setOpenSelect('')}
         />
       </SearchGuest>
-      <SearchBtnImg src={searchBtn} alt="search-btn" onClick={() => {}} />
+      <SearchBtnImg src={searchBtn} alt="search-btn" onClick={handleSearch} />
     </SearchBox>
   );
 }

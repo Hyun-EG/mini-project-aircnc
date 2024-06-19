@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CardGrid from '../Components/CardGrid.tsx';
 import { MockData } from '../assets/interfaces.ts';
-import Header from '../Components/Header/Header.tsx';
+import Header from '../Components/header/Header.tsx';
 
 const BodyContainer = styled.div`
   margin-top: 13vh;

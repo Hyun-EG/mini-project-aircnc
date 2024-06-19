@@ -1,8 +1,8 @@
 // Header.tsx
 import styled from 'styled-components';
 import logo from '../../assets/images/logo.svg';
-import HeaderSearch from '../headersearch/HeaderSearch.tsx';
-import HeaderMenu from '../headermenu/HeaderMenu.tsx';
+import HeaderSearch from './HeaderSearch.tsx';
+import HeaderMenu from './HeaderMenu.tsx';
 
 const HeaderContainer = styled.div`
   width: 100%;
