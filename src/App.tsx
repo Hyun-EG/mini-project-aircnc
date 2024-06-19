@@ -1,7 +1,7 @@
-import Header from './Components/header/Header.tsx';
+import AppRoutes from './Routes/AppRoutes.tsx';
 
 function App() {
-  return <Header />;
+  return <AppRoutes />;
 }
 
 export default App;
