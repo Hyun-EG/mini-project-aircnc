@@ -265,7 +265,7 @@ export default function HeaderSearch(): JSX.Element {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await fetch('/src/assets/mockdata.json');
+        const response = await fetch('/src/assets/room_data.json');
         const data = await response.json();
         setListings(data);
       } catch (error) {
