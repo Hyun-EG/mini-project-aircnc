@@ -15,10 +15,25 @@ const MenuContainer = styled.div`
   padding: 0 3vh;
   cursor: pointer;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    border-radius: 50%;
+    width: 4vh;
+    height: 4vh;
+  }
+  @media (max-width: 600px) {
+    margin: 0;
+    padding: 0 2vh 0 0.5vh;
+  }
 `;
 
 const HamburgerBtn = styled.img`
   width: 3vh;
+  @media (max-width: 768px) {
+    display: none;
+    width: 0vh;
+  }
 `;
 
 const HeaderProfile = styled.img`
@@ -41,6 +56,9 @@ const DropdownMenu = styled.div<{ isOpen: boolean }>`
   transition:
     max-height 0.3s ease-out,
     visibility 0.3s ease-out;
+  @media (max-width: 600px) {
+    margin: 0 2vh;
+  }
 `;
 
 const MenuItem = styled.div`
