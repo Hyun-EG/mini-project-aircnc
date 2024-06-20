@@ -10,6 +10,10 @@ import {
   DateSelectProps,
   GuestSelectProps,
 } from '../../assets/interfaces.ts';
+import Calendar from 'react-calendar';
+import locationImg from '../../assets/images/airplane.png';
+import checkImg from '../../assets/images/calendar.png';
+import usersImg from '../../assets/images/users.png';
 
 const SearchBox = styled.div<SearchBoxProps>`
   width: 90vh;
@@ -22,6 +26,14 @@ const SearchBox = styled.div<SearchBoxProps>`
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   position: relative;
+  @media (max-width: 768px) {
+    width: 50vh;
+    height: 7vh;
+  }
+  @media (max-width: 600px) {
+    width: 30vh;
+    height: 7vh;
+  }
 `;
 
 const SearchLocation = styled.div<LocationSelectProps>`
@@ -51,6 +63,15 @@ const SearchLocation = styled.div<LocationSelectProps>`
       border-right: none;
     }
   }
+  @media (max-width: 768px) {
+    width: 20vh;
+    height: 7vh;
+  }
+  @media (max-width: 600px) {
+    width: 10vh;
+    padding-right: 1vh;
+    padding-left: 2vh;
+  }
 `;
 
 const LocationOption = styled.div`
@@ -73,10 +94,22 @@ const LocationOption = styled.div`
 const LocationTitle = styled.div`
   font-size: 2vh;
   font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 1.5vh;
+  }
+  @media (max-width: 600px) {
+  }
 `;
 
 const LocationContent = styled.div`
   font-size: 1.5vh;
+  @media (max-width: 768px) {
+    font-size: 1.2vh;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const LocationSelectContainer = styled.div<LocationSelectProps>`
@@ -94,10 +127,14 @@ const LocationSelectContainer = styled.div<LocationSelectProps>`
   overflow: hidden;
   transition: max-height 0.3s ease-out;
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
+  @media (max-width: 768px) {
+    width: 35vh;
+    max-height: ${(props) => (props.isOpen ? '15vh' : '0')};
+  }
 `;
 
 const SearchDate = styled.div<DateSelectProps>`
-  width: 15vh;
+  width: 23vh;
   height: 7vh;
   border-radius: 50px;
   display: flex;
@@ -123,19 +160,32 @@ const SearchDate = styled.div<DateSelectProps>`
       border-right: none;
     }
   }
+  @media (max-width: 600px) {
+    width: 15vh;
+    padding-left: 2vh;
+  }
 `;
 
 const DateTitle = styled.div`
   font-size: 2vh;
   font-weight: bold;
+  @media (max-width: 768px) {
+    font-size: 1.5vh;
+  }
 `;
 
 const DateContent = styled.div`
   font-size: 1.5vh;
+  @media (max-width: 768px) {
+    font-size: 1.2vh;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const SearchGuest = styled.div<GuestSelectProps>`
-  width: 30vh;
+  width: 20vh;
   height: 7vh;
   border-radius: 50px;
   padding: 0 1vh 0 1vh;
@@ -148,15 +198,29 @@ const SearchGuest = styled.div<GuestSelectProps>`
   &:hover {
     background: lightgrey;
   }
+
+  @media (max-width: 600px) {
+    width: 9vh;
+    padding-left: 2vh;
+  }
 `;
 
 const GuestTitle = styled.div`
   font-weight: bold;
   font-size: 2vh;
+  @media (max-width: 768px) {
+    font-size: 1.5vh;
+  }
 `;
 
 const GuestContent = styled.div`
   font-size: 1.5vh;
+  @media (max-width: 768px) {
+    font-size: 1.2vh;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const SearchBtnImg = styled.img`
@@ -181,13 +245,23 @@ export default function HeaderSearch(): JSX.Element {
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [guestCounts, setGuestCounts] = useState<{
-    adult: number;
-    child: number;
-    cat: number;
-  }>({ adult: 0, child: 0, cat: 0 });
+    total: number;
+  }>({ total: 0 });
   const [openSelect, setOpenSelect] = useState<string>('');
   const [listings, setListings] = useState<MockData[]>([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   useEffect(() => {
     const fetchListings = async () => {
       try {
@@ -202,6 +276,51 @@ export default function HeaderSearch(): JSX.Element {
     fetchListings();
   }, []);
 
+  const locationPhone = () => {
+    if (windowWidth <= 600) {
+      return <img src={locationImg} alt="location" width="15vh" />;
+    }
+
+    if (windowWidth <= 768) {
+      return '여행지';
+    }
+
+    return '여행지';
+  };
+
+  const checkInPhone = () => {
+    if (windowWidth <= 600) {
+      return <img src={checkImg} alt="check" width="15vh" />;
+    }
+
+    if (windowWidth <= 768) {
+      return '체크인';
+    }
+
+    return '체크인';
+  };
+  const checkOutPhone = () => {
+    if (windowWidth <= 600) {
+      return <img src={checkImg} alt="check" width="15vh" />;
+    }
+
+    if (windowWidth <= 768) {
+      return '체크아웃';
+    }
+
+    return '체크아웃';
+  };
+  const usersPhone = () => {
+    if (windowWidth <= 600) {
+      return <img src={usersImg} alt="users" width="15vh" />;
+    }
+
+    if (windowWidth <= 768) {
+      return '게스트';
+    }
+
+    return '게스트';
+  };
   const handleSearch = () => {
     const locationPrefix = selectedLocation.substring(0, 2);
     const filteredData = listings.filter((listing) =>
@@ -218,7 +337,7 @@ export default function HeaderSearch(): JSX.Element {
         }
         isOpen={openSelect === 'location'}
       >
-        <LocationTitle>여행지</LocationTitle>
+        <LocationTitle>{locationPhone()}</LocationTitle>
         <LocationContent>{selectedLocation || '여행지 선택'}</LocationContent>
       </SearchLocation>
       <LocationSelectContainer isOpen={openSelect === 'location'}>
@@ -238,7 +357,7 @@ export default function HeaderSearch(): JSX.Element {
         onClick={() => setOpenSelect(openSelect === 'checkIn' ? '' : 'checkIn')}
         isOpen={openSelect === 'checkIn'}
       >
-        <DateTitle>체크인</DateTitle>
+        <DateTitle>{checkInPhone()}</DateTitle>
         <DateContent>
           {checkInDate ? checkInDate.toLocaleDateString() : '체크인 선택'}
         </DateContent>
@@ -268,7 +387,7 @@ export default function HeaderSearch(): JSX.Element {
         }
         isOpen={openSelect === 'checkOut'}
       >
-        <DateTitle>체크아웃</DateTitle>
+        <DateTitle>{checkOutPhone()}</DateTitle>
         <DateContent>
           {checkOutDate ? checkOutDate.toLocaleDateString() : '체크아웃 선택'}
         </DateContent>
@@ -292,11 +411,8 @@ export default function HeaderSearch(): JSX.Element {
         isOpen={openSelect === 'guest'}
       >
         <div>
-          <GuestTitle>게스트</GuestTitle>
-          <GuestContent>
-            성인: {guestCounts.adult} 어린이: {guestCounts.child} 고양이:
-            {guestCounts.cat}
-          </GuestContent>
+          <GuestTitle>{usersPhone()}</GuestTitle>
+          <GuestContent>인원: {guestCounts.total}</GuestContent>
         </div>
         <Guest
           isOpen={openSelect === 'guest'}
