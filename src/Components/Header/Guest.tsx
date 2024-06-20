@@ -9,6 +9,7 @@ const GuestSelectContainer = styled.div<GuestSelectProps>`
   width: 30vh;
   max-height: ${(props) => (props.isOpen ? '25vh' : '0')};
   position: absolute;
+  padding: 1vh 0;
   top: 115%;
   left: 0;
   background-color: white;
@@ -23,6 +24,10 @@ const GuestSelectContainer = styled.div<GuestSelectProps>`
     max-height 0.3s ease-out,
     visibility 0.3s ease-out;
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
+  @media (max-width: 768px) {
+    width: 20vh;
+    height: 12vh;
+  }
 `;
 
 const GuestOption = styled.div`
@@ -40,6 +45,9 @@ const GuestOption = styled.div`
 
 const GuestOptionLabel = styled.div`
   font-size: 1.5vh;
+  @media (max-width: 768px) {
+    font-size: 2vh;
+  }
 `;
 
 const GuestOptionCounter = styled.div`
@@ -60,10 +68,14 @@ const GuestOptionButton = styled.button`
   cursor: pointer;
   font-size: 2vh;
   margin: 0 1vh;
+  @media (max-width: 768px) {
+    width: 4vh;
+    height: 4vh;
+  }
 `;
 
 const ConfirmButton = styled.button`
-  width: 80%;
+  width: 60%;
   height: 5vh;
   margin-top: 10px;
   background-color: #ff385c;
@@ -72,9 +84,12 @@ const ConfirmButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-size: 2vh;
+  @media (max-width: 768px) {
+    width: 40%;
+  }
 `;
 
-type GuestType = 'adult' | 'child' | 'cat';
+type GuestType = 'total';
 
 interface GuestProps {
   isOpen: boolean;
@@ -82,19 +97,6 @@ interface GuestProps {
   onChange: (type: GuestType, delta: number) => void;
   onConfirm: () => void;
 }
-
-const getLabel = (type: GuestType): string => {
-  switch (type) {
-    case 'adult':
-      return '성인';
-    case 'child':
-      return '어린이';
-    case 'cat':
-      return '고양이';
-    default:
-      return '';
-  }
-};
 
 export default function Guest({
   isOpen,
@@ -104,30 +106,28 @@ export default function Guest({
 }: GuestProps) {
   return (
     <GuestSelectContainer isOpen={isOpen}>
-      {(['adult', 'child', 'cat'] as GuestType[]).map((type) => (
-        <GuestOption key={type}>
-          <GuestOptionLabel>{getLabel(type)}</GuestOptionLabel>
-          <GuestOptionCounter>
-            <GuestOptionButton
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange(type, -1);
-              }}
-            >
-              -
-            </GuestOptionButton>
-            <div>{counts[type]}</div>
-            <GuestOptionButton
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange(type, 1);
-              }}
-            >
-              +
-            </GuestOptionButton>
-          </GuestOptionCounter>
-        </GuestOption>
-      ))}
+      <GuestOption>
+        <GuestOptionLabel>인원</GuestOptionLabel>
+        <GuestOptionCounter>
+          <GuestOptionButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange('total', -1);
+            }}
+          >
+            -
+          </GuestOptionButton>
+          <div>{counts.total}</div>
+          <GuestOptionButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange('total', 1);
+            }}
+          >
+            +
+          </GuestOptionButton>
+        </GuestOptionCounter>
+      </GuestOption>
       <ConfirmButton onClick={onConfirm}>확인</ConfirmButton>
     </GuestSelectContainer>
   );
