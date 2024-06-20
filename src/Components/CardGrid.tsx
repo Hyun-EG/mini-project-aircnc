@@ -2,28 +2,21 @@ import styled from 'styled-components';
 import Card from './Card.tsx';
 import { RoomData } from '../assets/interfaces.ts';
 
-const GridContainer = styled.div<{ fullWidth: boolean }>`
+const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(${(props) => (props.fullWidth ? '300px' : '150px')}, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 25px;
-  margin: ${(props) => (props.fullWidth ? '0 auto' : '0')};
-  width: ${(props) => (props.fullWidth ? '100%' : '50%')};
+  margin: 0;
+  width: 100%;
 `;
 
 interface CardGridProps {
   listings: RoomData[];
-  fullWidth?: boolean;
 }
 
-export default function CardGrid({
-  listings,
-  fullWidth = false,
-}: CardGridProps) {
+export default function CardGrid({ listings }: CardGridProps) {
   return (
-    <GridContainer fullWidth={fullWidth}>
+    <GridContainer>
       {listings.map((listing) => (
         <Card
           key={listing.id}

@@ -39,7 +39,7 @@ function CardListingPage() {
         <Header />
       </header>
       <BodyContainer>
-        <CardGrid listings={listings} fullWidth />
+        <CardGrid listings={listings} />
       </BodyContainer>
     </>
   );

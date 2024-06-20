@@ -48,20 +48,19 @@ const Info = styled.p`
 `;
 
 function Card({ id, image_url, name, address, price }: RoomData) {
+  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
+  // id는 나중에 페이지 이동하는 것 처리하자!
   return (
-    <>
-      {console.log({ image_url })}
-      <CardContainer>
-        <ImageContainer>
-          <Image src={image_url} alt={name} />
-        </ImageContainer>
-        <TextContainer>
-          <Title>{name}</Title>
-          <Address>{address}</Address>
-          <Info>{price}원/박</Info>
-        </TextContainer>
-      </CardContainer>
-    </>
+    <CardContainer>
+      <ImageContainer>
+        <Image src={image_url} alt={name} />
+      </ImageContainer>
+      <TextContainer>
+        <Title>{name}</Title>
+        <Address>{address}</Address>
+        <Info>{price}원/박</Info>
+      </TextContainer>
+    </CardContainer>
   );
 }
 
