@@ -1,7 +1,7 @@
-import CardListingPage from './Pages/CardListingPage.tsx';
+import MainPage from './Pages/MainPage.tsx';
 
 function App() {
-  return <CardListingPage />;
+  return <MainPage />;
 }
 
 export default App;
