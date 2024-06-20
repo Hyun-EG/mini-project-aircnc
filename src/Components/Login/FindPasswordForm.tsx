@@ -1,16 +1,24 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Form from '../Form.tsx';
 import Select from '../Select.tsx';
 import Input from '../Input.tsx';
 import Button from '../Button.tsx';
 
-export interface FindPasswordFormFields {
-  findPasswordQuestion: string;
-  findPasswordAnswer: string;
-}
+export const FindPasswordFormSchema = z.object({
+  findPasswordQuestion: z.string(),
+  findPasswordAnswer: z
+    .string()
+    .min(1, { message: '비밀번호 찾기 답을 정확히 입력해 주세요.' }),
+});
+
+export type FindPasswordFormFields = z.infer<typeof FindPasswordFormSchema>;
 
 function FindPasswordForm() {
-  const { register, handleSubmit } = useForm<FindPasswordFormFields>();
+  const { register, handleSubmit } = useForm<FindPasswordFormFields>({
+    resolver: zodResolver(FindPasswordFormSchema),
+  });
 
   const onSubmit: SubmitHandler<FindPasswordFormFields> = (data) => {
     console.log(data);
