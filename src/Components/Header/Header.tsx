@@ -1,5 +1,4 @@
 // Header.tsx
-import React from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/images/logo.svg';
 import HeaderSearch from '../headersearch/HeaderSearch.tsx';
@@ -10,10 +9,12 @@ const HeaderContainer = styled.div`
   height: 13vh;
   top: 0;
   display: flex;
-  position: absolute;
+  position: fixed; // 수정 By 상화, absolute -> fixed
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid lightgray;
+  z-index: 1000; // 수정 By 상화, Z-index 설정 (카드 위에 표시..)
+  background-color: #ffffff; // 수정By 상화, background color표시 (스크롤했을 때 카드가 보여서,,)
 `;
 
 const HeaderLogo = styled.img`

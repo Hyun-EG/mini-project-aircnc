@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { MockData } from '../assets/interfaces.ts';
 
 const CardContainer = styled.div`
-  max-width: 80vw;
-  margin: 3vw auto;
+  width: 100%;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -19,7 +18,7 @@ const ImageContainer = styled.div`
 `;
 const Image = styled.img`
   position: absolute;
-  padding: 1vw;
+  padding: 10px;
   top: 0;
   left: 0;
   width: 100%;
@@ -29,26 +28,26 @@ const Image = styled.img`
   object-fit: cover;
 `;
 const TextContainer = styled.div`
-  margin: 1.5vw 1.5vw;
+  margin: 10px 10px;
 `;
 const Title = styled.h3`
-  margin: 1vw 0;
-  font-size: 3vw;
+  margin: 10px 0;
+  font-size: 20px;
   color: #333;
 `;
 const Address = styled.p`
-  margin: 1vw 0;
-  font-size: 2vw;
+  margin: 10px 0;
+  font-size: 15px;
   color: #666;
 `;
 const Info = styled.p`
-  margin: 1vw 0;
-  font-size: 2vw;
+  margin: 10px 0;
+  font-size: 15px;
   font-weight: bold;
   color: #333;
 `;
 
-function CardView({ photo, name, address, rooms }: MockData) {
+function Card({ photo, name, address, rooms }: MockData) {
   return (
     <CardContainer>
       <ImageContainer>
@@ -63,4 +62,4 @@ function CardView({ photo, name, address, rooms }: MockData) {
   );
 }
 
-export default CardView;
+export default Card;
