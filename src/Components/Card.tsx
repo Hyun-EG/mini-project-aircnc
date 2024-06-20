@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MockData } from '../assets/interfaces.ts';
+import { RoomData } from '../assets/interfaces.ts';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -47,16 +47,18 @@ const Info = styled.p`
   color: #333;
 `;
 
-function Card({ photo, name, address, rooms }: MockData) {
+function Card({ id, image_url, name, address, price }: RoomData) {
+  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
+  // id는 나중에 페이지 이동하는 것 처리하자!
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={photo} alt={name} />
+        <Image src={image_url} alt={name} />
       </ImageContainer>
       <TextContainer>
         <Title>{name}</Title>
         <Address>{address}</Address>
-        <Info>{rooms}</Info>
+        <Info>{price}원/박</Info>
       </TextContainer>
     </CardContainer>
   );
