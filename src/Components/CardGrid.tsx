@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from './Card.tsx';
-import { MockData } from '../assets/interfaces.ts';
+import { RoomData } from '../assets/interfaces.ts';
 
 const GridContainer = styled.div<{ fullWidth: boolean }>`
   display: grid;
@@ -14,7 +14,7 @@ const GridContainer = styled.div<{ fullWidth: boolean }>`
 `;
 
 interface CardGridProps {
-  listings: MockData[];
+  listings: RoomData[];
   fullWidth?: boolean;
 }
 
@@ -26,11 +26,12 @@ export default function CardGrid({
     <GridContainer fullWidth={fullWidth}>
       {listings.map((listing) => (
         <Card
-          key={listing.name + listing.address}
-          photo={listing.photo}
+          key={listing.id}
+          id={listing.id}
+          image_url={listing.image_url}
           name={listing.name}
           address={listing.address}
-          rooms={`${listing.rooms}개의 방을 예약할 수 있습니다`}
+          price={listing.price}
         />
       ))}
     </GridContainer>

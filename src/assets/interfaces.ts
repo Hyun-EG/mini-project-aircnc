@@ -10,7 +10,7 @@ export interface RoomData {
   name: string;
   price: number;
   address: string;
-  imageUrl: string;
+  image_url: string;
 }
 
 export interface RoomDetailData {
@@ -24,5 +24,5 @@ export interface RoomDetailData {
   map_x: number;
   map_y: number;
   created_at: string;
-  imageUrl: string;
+  image_url: string;
 }
