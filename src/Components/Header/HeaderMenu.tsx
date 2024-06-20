@@ -23,8 +23,10 @@ const MenuContainer = styled.div`
     height: 4vh;
   }
   @media (max-width: 600px) {
-    margin: 0;
-    padding: 0 2vh 0 0.5vh;
+    width: 4vh;
+    height: 4vh;
+    border-radius: 50%;
+    margin: 0 2vh 0 0.5vh;
   }
 `;
 
