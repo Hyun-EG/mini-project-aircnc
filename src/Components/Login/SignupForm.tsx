@@ -32,7 +32,7 @@ function SignupForm() {
         placeholder="비밀번호"
       />
       <Input
-        register={register('verifyPassword')}
+        register={register('confirmPassword')}
         type="password"
         placeholder="비밀번호 확인"
       />

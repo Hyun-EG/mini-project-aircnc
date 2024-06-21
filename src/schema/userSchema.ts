@@ -17,8 +17,8 @@ const PASSWORD = {
     '비밀번호는 숫자, 영문 대문자, 특수문자를 한번 이상 사용한 조합으로 입력해 주세요.',
 };
 
-const VERIFY_PASSWORD = {
-  VERIFY_ERROR_MESSAGE: '비밀번호 확인이 일치하지 않습니다.',
+const CONFIRM_PASSWORD = {
+  CONFIRM_ERROR_MESSAGE: '비밀번호 확인이 일치하지 않습니다.',
 };
 
 const EMAIL = {
@@ -37,7 +37,7 @@ export const UserSchema = z.object({
   nickname: z.string(),
   email: z.string(),
   password: z.string(),
-  verifyPassword: z.string(),
+  confirmPassword: z.string(),
   question: z.string(),
   answer: z.string(),
 });
@@ -59,7 +59,7 @@ export const SignupFormSchema = UserSchema.omit({ id: true })
       .min(PASSWORD.MIN_LENGTH, { message: PASSWORD.MIN_ERROR_MESSAGE })
       .max(PASSWORD.MAX_LENGTH, { message: PASSWORD.MAX_ERROR_MESSAGE })
       .regex(PASSWORD.FORMAT_REGEX, { message: PASSWORD.FORMAT_ERROR_MESSAGE }),
-    verifyPassword: z.string(),
+    confirmPassword: z.string(),
     question: z.string(),
     answer: z
       .string()
@@ -70,8 +70,9 @@ export const SignupFormSchema = UserSchema.omit({ id: true })
         message: ANSWER.MAX_ERROR_MESSAGE,
       }),
   })
-  .refine((data) => data.password === data.verifyPassword, {
-    message: VERIFY_PASSWORD.VERIFY_ERROR_MESSAGE,
+  .refine((data) => data.password === data.confirmPassword, {
+    message: CONFIRM_PASSWORD.CONFIRM_ERROR_MESSAGE,
+    path: ['confirmPassword'],
   });
 
 export const FindPasswordFormSchema = UserSchema.pick({
@@ -81,4 +82,4 @@ export const FindPasswordFormSchema = UserSchema.pick({
 });
 
 export type UserSchemaType = z.infer<typeof UserSchema>;
-export type User = Omit<UserSchemaType, 'verifyPassword'>;
+export type User = Omit<UserSchemaType, 'confirmPassword'>;
