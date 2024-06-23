@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import searchBtn from '../../assets/images/search-btn.svg';
 import CalendarComponent from './Calendar.tsx';
@@ -11,6 +11,7 @@ import {
   setCheckInDate,
   setCheckOutDate,
   setGuestCount,
+  resetSearch,
 } from '../../redux/searchSlice.ts';
 import {
   MockData,
@@ -255,6 +256,7 @@ export default function HeaderSearch(): JSX.Element {
   );
   const [openSelect, setOpenSelect] = useState<string>('');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const locationPath = useLocation().pathname;
 
   useEffect(() => {
     const handleResize = () => {
@@ -267,6 +269,13 @@ export default function HeaderSearch(): JSX.Element {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // 경로가 '/'인 경우 검색 조건 초기화
+  useEffect(() => {
+    if (locationPath === '/') {
+      dispatch(resetSearch());
+    }
+  }, [locationPath, dispatch]);
 
   const locationPhone = () => {
     if (windowWidth <= 600) {

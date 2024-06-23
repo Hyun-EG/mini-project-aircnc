@@ -1,3 +1,4 @@
+// searchSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SearchState {
@@ -30,9 +31,16 @@ const searchSlice = createSlice({
     setGuestCount: (state, action: PayloadAction<number>) => {
       state.guestCount = action.payload;
     },
+    resetSearch: () => initialState,
   },
 });
 
-export const { setLocation, setCheckInDate, setCheckOutDate, setGuestCount } =
-  searchSlice.actions;
+export const {
+  setLocation,
+  setCheckInDate,
+  setCheckOutDate,
+  setGuestCount,
+  resetSearch,
+} = searchSlice.actions;
+
 export default searchSlice.reducer;

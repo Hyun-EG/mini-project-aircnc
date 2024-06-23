@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import Header from '../Components/header/Header.tsx';
 import { RoomData } from '../assets/interfaces.ts';
@@ -19,7 +20,9 @@ const MapContainer = styled.div`
 `;
 
 function SearchResultPage() {
-  const { state: searchParams } = useLocation();
+  const { location, checkInDate, checkOutDate, guestCount } = useSelector(
+    (state: RootState) => state.search,
+  );
   const [listings, setListings] = useState<RoomData[]>([]);
 
   useEffect(() => {
@@ -28,7 +31,7 @@ function SearchResultPage() {
         const response = await fetch('src/assets/room_data.json');
         const rooms: RoomData[] = await response.json();
         const filteredRooms = rooms.filter(
-          (room: RoomData) => room.city === searchParams.location,
+          (room: RoomData) => room.city === location,
         );
         setListings(filteredRooms);
       } catch (error) {
@@ -36,12 +39,12 @@ function SearchResultPage() {
       }
     };
 
-    if (searchParams && searchParams.location) {
+    if (location) {
       fetchListings();
     } else {
       console.log('검색한 파라미터 내용이 없습니다.');
     }
-  }, [searchParams]);
+  }, [location]);
 
   return (
     <SearchPageContainer>
