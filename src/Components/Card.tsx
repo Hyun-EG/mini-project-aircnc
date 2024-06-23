@@ -1,5 +1,8 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { RoomData } from '../assets/interfaces.ts';
+import { selectRoom } from '../store/slices/roomDetailSlice.ts';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -48,10 +51,16 @@ const Info = styled.p`
 `;
 
 function Card({ id, image_url, name, address, price }: RoomData) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // id에 따라 페이지 이동..
+  const handleClick = () => {
+    dispatch(selectRoom(id));
+    navigate(`/detail/${id}`);
+  };
   // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
-  // id는 나중에 페이지 이동하는 것 처리하자!
   return (
-    <CardContainer>
+    <CardContainer onClick={handleClick}>
       <ImageContainer>
         <Image src={image_url} alt={name} />
       </ImageContainer>

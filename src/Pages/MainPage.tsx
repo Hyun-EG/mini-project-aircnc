@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import CardGrid from '../Components/CardGrid.tsx';
 import { RoomDetailData, RoomData } from '../assets/interfaces.ts';
-import Header from '../Components/header/Header.tsx';
+import Header from '../Components/Header/Header.tsx';
+import { setRooms } from '../store/slices/roomDetailSlice.ts';
 
 const BodyContainer = styled.div`
   margin-top: 13vh;
@@ -11,6 +13,7 @@ const BodyContainer = styled.div`
 
 function MainPage() {
   const [listings, setListings] = useState<RoomData[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -25,13 +28,14 @@ function MainPage() {
           image_url: item.image_url,
         }));
         setListings(formattedData);
+        dispatch(setRooms(data));
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
 
     fetchListings();
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

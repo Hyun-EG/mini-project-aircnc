@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/images/logo.svg';
 import HeaderSearch from './HeaderSearch.tsx';
 import HeaderMenu from './HeaderMenu.tsx';
 import logoSmall from '../../assets/images/logo-small.svg';
-import { useState, useEffect } from 'react';
 
 const HeaderContainer = styled.div`
   width: 100%;
