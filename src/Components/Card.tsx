@@ -50,12 +50,13 @@ const Info = styled.p`
   color: #333;
 `;
 
-function Card({ id, image_url, name, address, price }: RoomData) {
+function Card(props: RoomData) {
+  const { id, image_url, name, address, price } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // id에 따라 페이지 이동..
   const handleClick = () => {
-    dispatch(selectRoom(id));
+    dispatch(selectRoom(props));
     navigate(`/detail/${id}`);
   };
   // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
