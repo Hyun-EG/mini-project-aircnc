@@ -10,6 +10,7 @@ export interface RoomData {
   name: string;
   price: number;
   address: string;
+  city: string;
   image_url: string;
 }
 
