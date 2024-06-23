@@ -1,50 +1,51 @@
-// 검색 결과 페이지
-// 헤더 + 좌측 리스트카드 + 우측 지도
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import CardGrid from '../Components/CardGrid.tsx';
-import { RoomDetailData, RoomData } from '../assets/interfaces.ts';
+import Header from '../Components/header/Header.tsx';
+import { RoomData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
   display: flex;
 `;
+
 const CardGridContainer = styled.div`
   width: 60%;
-  height: 100px;
-  background-color: red;
+  margin-top: 13vh;
 `;
+
 const MapContainer = styled.div`
   width: 40%;
-  height: 100px;
-  background-color: blue;
 `;
 
 function SearchResultPage() {
+  const { state: searchParams } = useLocation();
   const [listings, setListings] = useState<RoomData[]>([]);
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await fetch('/src/assets/room_data.json');
-        const data: RoomDetailData[] = await response.json();
-        const formattedData = data.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          address: item.address,
-          image_url: item.image_url,
-        }));
-        setListings(formattedData);
+        const response = await fetch('src/assets/room_data.json');
+        const rooms: RoomData[] = await response.json();
+        const filteredRooms = rooms.filter(
+          (room: RoomData) => room.city === searchParams.location,
+        );
+        setListings(filteredRooms);
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
 
-    fetchListings();
-  }, []);
+    if (searchParams && searchParams.location) {
+      fetchListings();
+    } else {
+      console.log('검색한 파라미터 내용이 없습니다.');
+    }
+  }, [searchParams]);
 
   return (
     <SearchPageContainer>
+      <Header />
       <CardGridContainer>
         <CardGrid listings={listings} />
       </CardGridContainer>
