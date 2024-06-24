@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
+import Header from '../Components/Header/Header.tsx';
 import CardGrid from '../Components/CardGrid.tsx';
-import Header from '../Components/header/Header.tsx';
 import { RoomData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
