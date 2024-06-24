@@ -5,7 +5,7 @@
 // 푸터..? 예약하기 버튼, 클릭했을 때 유효성 검사 한번 더 해서 불가능하면 빨간 글씨로 바꾸기
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '../store/index.ts';
+import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import DetailCard from '../Components/DetailCard.tsx';
 import DetailCalendar from '../Components/DetailCalendar.tsx';
