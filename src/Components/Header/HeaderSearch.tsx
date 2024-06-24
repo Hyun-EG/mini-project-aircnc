@@ -12,7 +12,7 @@ import {
   setCheckOutDate,
   setGuestCount,
   resetSearch,
-} from '../../redux/searchSlice.ts';
+} from '../../redux/slices/searchSlice.ts';
 import {
   MockData,
   SearchBoxProps,
