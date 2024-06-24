@@ -23,6 +23,7 @@ function LoginForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
       <Input register={register('email')} type="text" placeholder="이메일" />
       <Input
         register={register('password')}

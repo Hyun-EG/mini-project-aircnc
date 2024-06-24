@@ -81,5 +81,21 @@ export const FindPasswordFormSchema = UserSchema.pick({
   answer: true,
 });
 
+export const NewPasswordFormSchema = UserSchema.pick({
+  password: true,
+  confirmPassword: true,
+})
+  .extend({
+    password: z
+      .string()
+      .min(PASSWORD.MIN_LENGTH, { message: PASSWORD.MIN_ERROR_MESSAGE })
+      .max(PASSWORD.MAX_LENGTH, { message: PASSWORD.MAX_ERROR_MESSAGE })
+      .regex(PASSWORD.FORMAT_REGEX, { message: PASSWORD.FORMAT_ERROR_MESSAGE }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: CONFIRM_PASSWORD.CONFIRM_ERROR_MESSAGE,
+    path: ['confirmPassword'],
+  });
+
 export type UserSchemaType = z.infer<typeof UserSchema>;
 export type User = Omit<UserSchemaType, 'confirmPassword'>;

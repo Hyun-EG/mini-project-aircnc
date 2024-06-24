@@ -24,6 +24,7 @@ function FindPasswordForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <h3>이메일과 비밀번호 찾기 답변을 입력해 주세요.</h3>
       <Input register={register('email')} type="text" placeholder="이메일" />
       <Select register={register('question')}>
         <option value="" hidden>

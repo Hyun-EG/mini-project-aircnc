@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import LoginForm from './LoginForm.tsx';
 import SignupForm from './SignupForm.tsx';
 import FindPasswordForm from './FindPasswordForm.tsx';
+import NewPasswordForm from './NewPasswordForm.tsx';
+import PasswordChangeMessage from './PasswordChangeMessage.tsx';
+import LogoImage from '../../assets/images/logo.svg';
 
 const LoginModalLayout = styled.div`
   position: fixed;
@@ -51,6 +54,13 @@ const LoginModalCloseButton = styled.button`
   }
 `;
 
+const LoginModalLogo = styled.img`
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 1rem 0;
+`;
+
 const LoginModalLinkText = styled.nav`
   display: flex;
   gap: 0.5rem;
@@ -71,7 +81,12 @@ const LoginModalLinkButton = styled.button`
   cursor: pointer;
 `;
 
-type LoginModalStatus = 'login' | 'signup' | 'findPassword';
+type LoginModalStatus =
+  | 'login'
+  | 'signup'
+  | 'findPassword'
+  | 'newPassword'
+  | 'changeComplete';
 
 interface LoginModalProps {
   initialStatus: LoginModalStatus;
@@ -82,7 +97,7 @@ function LoginModal({ initialStatus, isOpenModal }: LoginModalProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [status, setStatus] = useState<LoginModalStatus>(initialStatus);
 
-  const handleCloseModalClick = () => {
+  const handleCloseModal = () => {
     setIsVisible(false);
   };
 
@@ -99,14 +114,12 @@ function LoginModal({ initialStatus, isOpenModal }: LoginModalProps) {
   return (
     isVisible && (
       <>
-        <LoginModalBackground onClick={handleCloseModalClick} />
+        <LoginModalBackground onClick={handleCloseModal} />
         <LoginModalLayout>
-          <LoginModalCloseButton onClick={handleCloseModalClick}>
+          <LoginModalCloseButton onClick={handleCloseModal}>
             X
           </LoginModalCloseButton>
-          {status !== 'findPassword' && (
-            <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
-          )}
+          <LoginModalLogo src={LogoImage} />
           {status === 'login' && (
             <>
               <LoginForm />
@@ -142,6 +155,10 @@ function LoginModal({ initialStatus, isOpenModal }: LoginModalProps) {
             </>
           )}
           {status === 'findPassword' && <FindPasswordForm />}
+          {status === 'newPassword' && <NewPasswordForm />}
+          {status === 'changeComplete' && (
+            <PasswordChangeMessage onClick={toPage('login')} />
+          )}
         </LoginModalLayout>
       </>
     )
