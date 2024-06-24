@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
 import HeaderSearch from './HeaderSearch.tsx';
 import HeaderMenu from './HeaderMenu.tsx';
@@ -42,6 +43,8 @@ const HeaderLogo = styled.img`
 export default function Header() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  const Navigate = useNavigate();
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -56,10 +59,26 @@ export default function Header() {
 
   const logoPhone = () => {
     if (windowWidth <= 600) {
-      return <HeaderLogo src={logoSmall} alt="Logo" />;
+      return (
+        <HeaderLogo
+          onClick={() => {
+            Navigate('/');
+          }}
+          src={logoSmall}
+          alt="Logo"
+        />
+      );
     }
 
-    return <HeaderLogo src={logo} alt="Logo" />;
+    return (
+      <HeaderLogo
+        onClick={() => {
+          Navigate('/');
+        }}
+        src={logo}
+        alt="Logo"
+      />
+    );
   };
   return (
     <HeaderContainer>

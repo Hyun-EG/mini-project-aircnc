@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import hamburgerBtn from '../../assets/images/hamburger-btn.svg';
 import headerProfile from '../../assets/images/header-profile.svg';
+import LoginForm from '../Login/LoginForm.tsx';
 
 const MenuContainer = styled.div`
   width: 13vh;
@@ -84,7 +85,13 @@ export default function HeaderMenu() {
       <HamburgerBtn src={hamburgerBtn} alt="hamburger-btn" />
       <HeaderProfile src={headerProfile} alt="headerProfile" />
       <DropdownMenu isOpen={isOpen}>
-        <MenuItem>Login</MenuItem>
+        <MenuItem
+          onClick={() => {
+            <LoginForm />;
+          }}
+        >
+          Login
+        </MenuItem>
         <MenuItem>Sign Up</MenuItem>
       </DropdownMenu>
     </MenuContainer>
