@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
 import HeaderSearch from './HeaderSearch.tsx';
 import HeaderMenu from './HeaderMenu.tsx';
+import LoginModal from '../Login/LoginModal.tsx';
 import logoSmall from '../../assets/images/logo-small.svg';
 
 const HeaderContainer = styled.div`
@@ -85,6 +86,7 @@ export default function Header() {
       {logoPhone()}
       <HeaderSearch />
       <HeaderMenu />
+      <LoginModal />
     </HeaderContainer>
   );
 }
