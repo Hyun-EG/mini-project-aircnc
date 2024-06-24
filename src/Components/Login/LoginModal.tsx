@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { RootState, AppDispatch } from '../../redux/store.ts';
+import {
+  LoginModalStatus,
+  setModalStatus,
+} from '../../redux/slices/loginModalSlice.ts';
 import LoginForm from './LoginForm.tsx';
 import SignupForm from './SignupForm.tsx';
 import FindPasswordForm from './FindPasswordForm.tsx';
@@ -81,38 +87,29 @@ const LoginModalLinkButton = styled.button`
   cursor: pointer;
 `;
 
-type LoginModalStatus =
-  | 'login'
-  | 'signup'
-  | 'findPassword'
-  | 'newPassword'
-  | 'changeComplete';
-
-interface LoginModalProps {
-  initialStatus: LoginModalStatus;
-  isOpenModal: boolean;
-}
-
-function LoginModal({ initialStatus, isOpenModal }: LoginModalProps) {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [status, setStatus] = useState<LoginModalStatus>(initialStatus);
+function LoginModal() {
+  const modalStatus = useSelector(
+    (state: RootState) => state.loginModal.status,
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const [status, setStatus] = useState<LoginModalStatus>(modalStatus);
 
   const handleCloseModal = () => {
-    setIsVisible(false);
+    dispatch(setModalStatus(null));
   };
 
   const toPage = (status: LoginModalStatus) => {
     return () => {
-      setStatus(status);
+      dispatch(setModalStatus(status));
     };
   };
 
   useEffect(() => {
-    setIsVisible(isOpenModal);
-  }, [isOpenModal]);
+    setStatus(modalStatus);
+  }, [modalStatus]);
 
   return (
-    isVisible && (
+    status && (
       <>
         <LoginModalBackground onClick={handleCloseModal} />
         <LoginModalLayout>

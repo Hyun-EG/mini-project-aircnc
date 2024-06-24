@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
 import hamburgerBtn from '../../assets/images/hamburger-btn.svg';
 import headerProfile from '../../assets/images/header-profile.svg';
+import { AppDispatch } from '../../redux/store.ts';
 
 const MenuContainer = styled.div`
   width: 13vh;
@@ -74,6 +77,7 @@ const MenuItem = styled.div`
 
 export default function HeaderMenu() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
@@ -84,8 +88,20 @@ export default function HeaderMenu() {
       <HamburgerBtn src={hamburgerBtn} alt="hamburger-btn" />
       <HeaderProfile src={headerProfile} alt="headerProfile" />
       <DropdownMenu isOpen={isOpen}>
-        <MenuItem>Login</MenuItem>
-        <MenuItem>Sign Up</MenuItem>
+        <MenuItem
+          onClick={() => {
+            dispatch(setModalStatus('login'));
+          }}
+        >
+          Login
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            dispatch(setModalStatus('signup'));
+          }}
+        >
+          Sign Up
+        </MenuItem>
       </DropdownMenu>
     </MenuContainer>
   );
