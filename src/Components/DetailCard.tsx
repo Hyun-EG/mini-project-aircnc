@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/index.ts';
+import { RootState } from '../redux/store.ts';
 
 const CardContainer = styled.div`
   width: 80%;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { RoomData } from '../assets/interfaces.ts';
-import { selectRoom } from '../store/slices/roomDetailSlice.ts';
+import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
 
 const CardContainer = styled.div`
   width: 100%;
