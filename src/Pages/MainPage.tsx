@@ -1,7 +1,41 @@
-// 메인페이지
-// 헤더 / 바디에 2줄가량 주변 숙소, 그 아래 최근 조회 숙소(최근 최대 4개), 조회되는 부분 없으면 보여줘~ (ex, 주변에 이용 가능한 숙소가 없습니다 / 최근 조회한 숙소가 없습니다) / 푸터 팀원 이름
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import CardGrid from '../Components/CardGrid.tsx';
+import { RoomData } from '../assets/interfaces.ts';
+import Header from '../Components/Header/Header.tsx';
+
+const BodyContainer = styled.div`
+  margin-top: 13vh;
+  padding: 20px;
+`;
+
 function MainPage() {
-  return <div>MainPage</div>;
+  const [listings, setListings] = useState<RoomData[]>([]);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await fetch('/src/assets/room_data.json');
+        const data: RoomData[] = await response.json();
+        setListings(data);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
+
+    fetchListings();
+  }, []);
+
+  return (
+    <>
+      <header>
+        <Header />
+      </header>
+      <BodyContainer>
+        <CardGrid listings={listings} />
+      </BodyContainer>
+    </>
+  );
 }
 
 export default MainPage;
