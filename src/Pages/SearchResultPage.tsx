@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import CardGrid from '../Components/CardGrid.tsx';
+import Map from '../Components/Map/Map.tsx';
 import { RoomData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
@@ -13,25 +14,22 @@ const SearchPageContainer = styled.div`
 const CardGridContainer = styled.div`
   width: 60%;
   margin-top: 13vh;
-`;
-
-const MapContainer = styled.div`
-  width: 40%;
+  overflow: auto;
 `;
 
 function SearchResultPage() {
-  const { location, checkInDate, checkOutDate, guestCount } = useSelector(
-    (state: RootState) => state.search,
-  );
+  const { location } = useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomData[]>([]);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const loader = useRef(null);
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
         const response = await fetch('src/assets/room_data.json');
         const rooms: RoomData[] = await response.json();
-        const filteredRooms = rooms.filter(
-          (room: RoomData) => room.city === location,
+        const filteredRooms = rooms.filter((room) =>
+          room.city.includes(location),
         );
         setListings(filteredRooms);
       } catch (error) {
@@ -41,18 +39,41 @@ function SearchResultPage() {
 
     if (location) {
       fetchListings();
-    } else {
-      console.log('검색한 파라미터 내용이 없습니다.');
     }
   }, [location]);
+
+  const handleObserver = (entities) => {
+    const target = entities[0];
+    if (target.isIntersecting) {
+      setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+    if (loader.current) {
+      observer.observe(loader.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [listings]);
 
   return (
     <SearchPageContainer>
       <Header />
       <CardGridContainer>
-        <CardGrid listings={listings} />
+        <CardGrid listings={listings.slice(0, visibleCount)} />
+        <div ref={loader} />
       </CardGridContainer>
-      <MapContainer />
+      <Map
+        width="39.5%"
+        height="100vh"
+        listings={listings.slice(0, visibleCount)}
+      />
     </SearchPageContainer>
   );
 }
