@@ -22,7 +22,7 @@ const LoginModalLayout = styled.div`
   padding: 32px;
   background-color: white;
   box-sizing: border-box;
-  overflow: scroll;
+  overflow-y: auto;
   @media (min-width: 769px) {
     top: 50%;
     left: 50%;
