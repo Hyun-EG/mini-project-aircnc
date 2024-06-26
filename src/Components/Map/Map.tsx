@@ -40,22 +40,25 @@ function Map({ width, height, listings }: MapProps) {
     };
 
     const map = new naver.maps.Map('map', mapOptions);
+    const bounds = new naver.maps.LatLngBounds();
 
     let openInfoWindow;
 
     listings.forEach((listing) => {
+      const markerPosition = new naver.maps.LatLng(
+        parseFloat(listing.map_y),
+        parseFloat(listing.map_x),
+      );
       const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(
-          parseFloat(listing.map_y),
-          parseFloat(listing.map_x),
-        ),
+        position: markerPosition,
         map: map,
       });
 
-      // 스타일 인라인으로 박아놨는데 나중에 바꿔야함
+      bounds.extend(markerPosition);
+
       const contentString = `
         <div>
-        <img src="${listing.image_url}" alt="${listing.name}" style="width: 100%; height: 20vh; " />
+          <img src="${listing.image_url}" alt="${listing.name}" style="width: 100%; height: 20vh;" />
           <p style="font-size: 2vh; font-weight: bold;">${listing.name}</p>
           <p style="font-size: 1.5vh;">주소: ${listing.address}</p>
           <p style="font-size: 1.5vh;">가격: ${listing.price}원</p>
@@ -68,17 +71,19 @@ function Map({ width, height, listings }: MapProps) {
         maxWidth: 250,
       });
 
-      naver.maps.Event.addListener(marker, 'click', function () {
+      naver.maps.Event.addListener(marker, 'mouseover', function () {
         infowindow.open(map, marker);
         openInfoWindow = infowindow;
       });
 
-      naver.maps.Event.addListener(map, 'click', function () {
+      naver.maps.Event.addListener(marker, 'mouseout', function () {
         if (openInfoWindow) {
           openInfoWindow.close();
         }
       });
     });
+
+    map.fitBounds(bounds);
   }, [listings]);
 
   return <MapInstance id="map" width={width} height={height} />;
