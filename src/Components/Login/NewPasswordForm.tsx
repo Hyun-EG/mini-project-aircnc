@@ -26,11 +26,13 @@ function NewPasswordForm() {
       <h3>새로운 비밀번호를 입력해 주세요.</h3>
       <Input
         register={register('password')}
+        message={errors.password?.message}
         type="password"
         placeholder="새 비밀번호"
       />
       <Input
         register={register('confirmPassword')}
+        message={errors.confirmPassword?.message}
         type="password"
         placeholder="새 비밀번호 확인"
       />

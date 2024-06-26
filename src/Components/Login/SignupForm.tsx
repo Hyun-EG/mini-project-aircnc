@@ -25,15 +25,27 @@ function SignupForm() {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
-      <Input register={register('nickname')} type="text" placeholder="닉네임" />
-      <Input register={register('email')} type="text" placeholder="이메일" />
+      <Input
+        register={register('nickname')}
+        message={errors.nickname?.message}
+        type="text"
+        placeholder="닉네임"
+      />
+      <Input
+        register={register('email')}
+        message={errors.email?.message}
+        type="text"
+        placeholder="이메일"
+      />
       <Input
         register={register('password')}
+        message={errors.password?.message}
         type="password"
         placeholder="비밀번호"
       />
       <Input
         register={register('confirmPassword')}
+        message={errors.confirmPassword?.message}
         type="password"
         placeholder="비밀번호 확인"
       />
@@ -46,7 +58,12 @@ function SignupForm() {
         <option value="elementary_school">내가 졸업한 초등학교 이름은?</option>
         <option value="book">기억에 남는 책 이름은?</option>
       </Select>
-      <Input register={register('answer')} type="text" placeholder="정답 :" />
+      <Input
+        register={register('answer')}
+        message={errors.answer?.message}
+        type="text"
+        placeholder="정답 :"
+      />
       <Button type="submit">회원가입</Button>
     </Form>
   );

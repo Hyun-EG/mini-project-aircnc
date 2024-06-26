@@ -4,8 +4,8 @@ import styled from 'styled-components';
 const FormLayout = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.5vh;
-  & :last-child {
+  gap: 0.5rem;
+  & > :last-child {
     margin-top: 32px;
   }
 `;
