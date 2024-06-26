@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
 import hamburgerBtn from '../../assets/images/hamburger-btn.svg';
 import headerProfile from '../../assets/images/header-profile.svg';
+import { AppDispatch } from '../../redux/store.ts';
 
 const MenuContainer = styled.div`
   width: 13vh;
@@ -15,10 +18,27 @@ const MenuContainer = styled.div`
   padding: 0 3vh;
   cursor: pointer;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    border-radius: 50%;
+    width: 4vh;
+    height: 4vh;
+  }
+  @media (max-width: 600px) {
+    width: 4vh;
+    height: 4vh;
+    border-radius: 50%;
+    margin: 0 2vh 0 0.5vh;
+  }
 `;
 
 const HamburgerBtn = styled.img`
   width: 3vh;
+  @media (max-width: 768px) {
+    display: none;
+    width: 0vh;
+  }
 `;
 
 const HeaderProfile = styled.img`
@@ -41,6 +61,9 @@ const DropdownMenu = styled.div<{ isOpen: boolean }>`
   transition:
     max-height 0.3s ease-out,
     visibility 0.3s ease-out;
+  @media (max-width: 600px) {
+    margin: 0 2vh;
+  }
 `;
 
 const MenuItem = styled.div`
@@ -54,6 +77,7 @@ const MenuItem = styled.div`
 
 export default function HeaderMenu() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
@@ -64,8 +88,20 @@ export default function HeaderMenu() {
       <HamburgerBtn src={hamburgerBtn} alt="hamburger-btn" />
       <HeaderProfile src={headerProfile} alt="headerProfile" />
       <DropdownMenu isOpen={isOpen}>
-        <MenuItem>Login</MenuItem>
-        <MenuItem>Sign Up</MenuItem>
+        <MenuItem
+          onClick={() => {
+            dispatch(setModalStatus('login'));
+          }}
+        >
+          Login
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            dispatch(setModalStatus('signup'));
+          }}
+        >
+          Sign Up
+        </MenuItem>
       </DropdownMenu>
     </MenuContainer>
   );

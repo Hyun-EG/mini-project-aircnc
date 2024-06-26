@@ -69,6 +69,14 @@ const DateSelectContainer = styled.div<Pick<CalendarProps, 'isOpen'>>`
   border-radius: 20px;
   overflow: hidden;
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  @media (max-width: 768px) {
+    width: 50vh;
+    height: 30vh;
+  }
+  @media (max-width: 600px) {
+    width: 30vh;
+    height: 30vh;
+  }
 `;
 
 const CalendarWrapper = styled.div`
@@ -77,6 +85,11 @@ const CalendarWrapper = styled.div`
   & > * {
     margin: 0 1vh;
     width: 45vh;
+  }
+  @media (max-width: 768px) {
+    & > :nth-child(2) {
+      display: none;
+    }
   }
 `;
 
@@ -87,6 +100,11 @@ const NavigationContainer = styled.div`
   width: 100%;
   padding: 1vh 0;
   font-size: 2vh;
+  @media (max-width: 768px) {
+    .next-month-label {
+      display: none;
+    }
+  }
 `;
 
 const NavigationButton = styled.button`
@@ -191,8 +209,16 @@ export default function CalendarComponent({
       <NavigationContainer>
         <NavigationButton onClick={handlePrevMonth}>{'<'}</NavigationButton>
         <div>
-          {formatNavigationLabel(currentDate)} &nbsp;{' '}
-          {formatNavigationLabel(nextMonthDate)}
+          {formatNavigationLabel(currentDate)} &nbsp;
+          <span className="next-month-label">
+            {formatNavigationLabel(
+              new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth() + 1,
+                1,
+              ),
+            )}
+          </span>
         </div>
         <NavigationButton onClick={handleNextMonth}>{'>'}</NavigationButton>
       </NavigationContainer>

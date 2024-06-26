@@ -1,13 +1,12 @@
 import styled from 'styled-components';
-import { MockData } from '../assets/interfaces.ts';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store.ts';
 
 const CardContainer = styled.div`
-  max-width: 80vw;
-  margin: 3vw auto;
-  border: 1px solid #ddd;
+  width: 80%;
+  padding: 10px;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 const ImageContainer = styled.div`
   width: 100%;
@@ -19,7 +18,7 @@ const ImageContainer = styled.div`
 `;
 const Image = styled.img`
   position: absolute;
-  padding: 1vw;
+  padding: 10px;
   top: 0;
   left: 0;
   width: 100%;
@@ -29,38 +28,40 @@ const Image = styled.img`
   object-fit: cover;
 `;
 const TextContainer = styled.div`
-  margin: 1.5vw 1.5vw;
+  margin: 10px 10px;
 `;
-const Title = styled.h3`
-  margin: 1vw 0;
-  font-size: 3vw;
-  color: #333;
-`;
+
 const Address = styled.p`
-  margin: 1vw 0;
-  font-size: 2vw;
+  margin: 10px 0;
+  font-size: 15px;
   color: #666;
 `;
 const Info = styled.p`
-  margin: 1vw 0;
-  font-size: 2vw;
+  margin: 10px 0;
+  font-size: 15px;
   font-weight: bold;
   color: #333;
 `;
 
-function CardView({ photo, name, address, rooms }: MockData) {
+function DetailCard() {
+  const selectedRoom = useSelector(
+    (state: RootState) => state.rooms.selectedRoom,
+  );
+  if (!selectedRoom) {
+    return <h1>Loading</h1>;
+  }
+  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={photo} alt={name} />
+        <Image src={selectedRoom.image_url} alt={selectedRoom.name} />
       </ImageContainer>
       <TextContainer>
-        <Title>{name}</Title>
-        <Address>{address}</Address>
-        <Info>{rooms}</Info>
+        <Info>{selectedRoom.description}</Info>
+        <Address>{selectedRoom.address}</Address>
       </TextContainer>
     </CardContainer>
   );
 }
 
-export default CardView;
+export default DetailCard;

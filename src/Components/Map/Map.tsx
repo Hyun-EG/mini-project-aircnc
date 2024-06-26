@@ -4,23 +4,82 @@ import styled from 'styled-components';
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  margin-top: 13vh;
+  margin-left: 1vh;
+  display: flex;
+  right: 0;
+  position: fixed !important;
+  border-radius: 20px;
 `;
 
 interface MapProps {
   width: string;
   height: string;
+  listings: RoomData[];
 }
 
-function Map({ width, height }: MapProps) {
-  const { naver } = window;
-
+function Map({ width, height, listings }: MapProps) {
   useEffect(() => {
-    const map = new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(37.5666805, 126.9784147),
-      zoom: 10,
-      mapTypeId: naver.maps.MapTypeId.NORMAL,
+    if (listings.length === 0) return;
+
+    const { naver } = window;
+
+    const initialCenter = new naver.maps.LatLng(
+      parseFloat(listings[0].map_y),
+      parseFloat(listings[0].map_x),
+    );
+
+    const mapOptions = {
+      center: initialCenter,
+      zoom: 12.5,
+      zoomControl: true,
+      zoomControlOptions: {
+        style: naver.maps.ZoomControlStyle.SMALL,
+        position: naver.maps.Position.TOP_RIGHT,
+      },
+    };
+
+    const map = new naver.maps.Map('map', mapOptions);
+
+    let openInfoWindow;
+
+    listings.forEach((listing) => {
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(
+          parseFloat(listing.map_y),
+          parseFloat(listing.map_x),
+        ),
+        map: map,
+      });
+
+      // 스타일 인라인으로 박아놨는데 나중에 바꿔야함
+      const contentString = `
+        <div>
+        <img src="${listing.image_url}" alt="${listing.name}" style="width: 100%; height: 20vh; " />
+          <p style="font-size: 2vh; font-weight: bold;">${listing.name}</p>
+          <p style="font-size: 1.5vh;">주소: ${listing.address}</p>
+          <p style="font-size: 1.5vh;">가격: ${listing.price}원</p>
+          <p style="font-size: 1.5vh;">옵션: ${listing.description}</p>
+        </div>
+      `;
+
+      const infowindow = new naver.maps.InfoWindow({
+        content: contentString,
+        maxWidth: 250,
+      });
+
+      naver.maps.Event.addListener(marker, 'click', function () {
+        infowindow.open(map, marker);
+        openInfoWindow = infowindow;
+      });
+
+      naver.maps.Event.addListener(map, 'click', function () {
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
     });
-  }, [naver]);
+  }, [listings]);
 
   return <MapInstance id="map" width={width} height={height} />;
 }

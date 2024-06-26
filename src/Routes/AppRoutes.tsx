@@ -4,7 +4,7 @@ import WishListPage from '../Pages/WishListPage.tsx';
 import SearchResultPage from '../Pages/SearchResultPage.tsx';
 import DetailInfoPage from '../Pages/DetailInfoPage.tsx';
 import BookedListPage from '../Pages/BookedListPage.tsx';
-import CardListingPage from '../Pages/CardListingPage.tsx';
+import NotFoundPage from '../Pages/NotFoundPage.tsx';
 
 function AppRoutes() {
   return (
@@ -12,12 +12,11 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/search" element={<SearchResultPage />} />
-        <Route path="/detail" element={<DetailInfoPage />} />
+        <Route path="/detail/:id" element={<DetailInfoPage />} />
         {/* wishlist와 booked는 추후 PrivateRoute로 수정,, notion에서 링크 확인하기 */}
         <Route path="/wishlist" element={<WishListPage />} />
         <Route path="/booked" element={<BookedListPage />} />
-        {/* cardListing은 카드 리스트 표시를 위한 임시 페이지 */}
-        <Route path="/cardListing" element={<CardListingPage />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
