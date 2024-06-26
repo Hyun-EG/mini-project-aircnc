@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { AppDispatch, RootState } from '../../redux/store.ts';
 import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
+import { clearUser } from '../../redux/slices/userSlice.ts';
 import hamburgerBtn from '../../assets/images/hamburger-btn.svg';
 import headerProfile from '../../assets/images/header-profile.svg';
-import { AppDispatch } from '../../redux/store.ts';
 
 const MenuContainer = styled.div`
   width: 13vh;
@@ -78,6 +80,8 @@ const MenuItem = styled.div`
 export default function HeaderMenu() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.user.profile);
+  const navigate = useNavigate();
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
@@ -88,20 +92,36 @@ export default function HeaderMenu() {
       <HamburgerBtn src={hamburgerBtn} alt="hamburger-btn" />
       <HeaderProfile src={headerProfile} alt="headerProfile" />
       <DropdownMenu isOpen={isOpen}>
-        <MenuItem
-          onClick={() => {
-            dispatch(setModalStatus('login'));
-          }}
-        >
-          Login
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            dispatch(setModalStatus('signup'));
-          }}
-        >
-          Sign Up
-        </MenuItem>
+        {user ? (
+          <>
+            <MenuItem>예약 목록</MenuItem>
+            <MenuItem
+              onClick={() => {
+                dispatch(clearUser());
+                navigate('/');
+              }}
+            >
+              로그아웃
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem
+              onClick={() => {
+                dispatch(setModalStatus('login'));
+              }}
+            >
+              로그인
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                dispatch(setModalStatus('signup'));
+              }}
+            >
+              회원가입
+            </MenuItem>
+          </>
+        )}
       </DropdownMenu>
     </MenuContainer>
   );

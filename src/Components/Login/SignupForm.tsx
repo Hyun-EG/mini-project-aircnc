@@ -1,13 +1,15 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignupFormSchema } from '../../schema/userSchema.ts';
+import {
+  SignupFormSchema,
+  SignupFormSchemaType,
+} from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Select from '../Select.tsx';
 import Button from '../Button.tsx';
 
-type SignupFormFields = z.infer<typeof SignupFormSchema>;
+type SignupFormFields = SignupFormSchemaType;
 
 function SignupForm() {
   const {

@@ -1,13 +1,15 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FindPasswordFormSchema } from '../../schema/userSchema.ts';
+import {
+  FindPasswordFormSchema,
+  FindPasswordFormSchemaType,
+} from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Select from '../Select.tsx';
 import Input from '../Input.tsx';
 import Button from '../Button.tsx';
 
-type FindPasswordFormFields = z.infer<typeof FindPasswordFormSchema>;
+type FindPasswordFormFields = FindPasswordFormSchemaType;
 
 function FindPasswordForm() {
   const {

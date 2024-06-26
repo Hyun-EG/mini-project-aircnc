@@ -99,3 +99,7 @@ export const NewPasswordFormSchema = UserSchema.pick({
 
 export type UserSchemaType = z.infer<typeof UserSchema>;
 export type User = Omit<UserSchemaType, 'confirmPassword'>;
+export type LoginFormSchemaType = z.infer<typeof LoginFormSchema>;
+export type SignupFormSchemaType = z.infer<typeof SignupFormSchema>;
+export type FindPasswordFormSchemaType = z.infer<typeof FindPasswordFormSchema>;
+export type NewPasswordFormSchemaType = z.infer<typeof NewPasswordFormSchema>;

@@ -1,12 +1,14 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NewPasswordFormSchema } from '../../schema/userSchema.ts';
+import {
+  NewPasswordFormSchema,
+  NewPasswordFormSchemaType,
+} from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Button from '../Button.tsx';
 
-export type NewPasswordFormFields = z.infer<typeof NewPasswordFormSchema>;
+export type NewPasswordFormFields = NewPasswordFormSchemaType;
 
 function NewPasswordForm() {
   const {
