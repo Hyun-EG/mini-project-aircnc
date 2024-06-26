@@ -334,6 +334,13 @@ export default function HeaderSearch(): JSX.Element {
 
   const handleSearch = () => {
     const locationPrefix = location.substring(0, 2);
+    const checkInOutDate = checkInDate && checkOutDate;
+    const chooseOne = location || checkInOutDate || guestCount > 0;
+
+    if (!chooseOne) {
+      return;
+    }
+
     const searchParams = {
       location: locationPrefix,
       checkInDate: checkInDate ? formatDate(checkInDate) : null,
