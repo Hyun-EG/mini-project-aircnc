@@ -1,3 +1,4 @@
+import React from 'react';
 import AppRoutes from './Routes/AppRoutes.tsx';
 
 function App() {

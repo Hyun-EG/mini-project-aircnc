@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import searchBtn from '../../assets/images/search-btn.svg';
 import CalendarComponent from './Calendar.tsx';
 import Guest from './Guest.tsx';
+import { RootState } from '../../redux/store.ts';
+import {
+  setLocation,
+  setCheckInDate,
+  setCheckOutDate,
+  setGuestCount,
+  resetSearch,
+} from '../../redux/slices/searchSlice.ts';
 import {
   MockData,
   SearchBoxProps,
@@ -10,7 +20,6 @@ import {
   DateSelectProps,
   GuestSelectProps,
 } from '../../assets/interfaces.ts';
-import Calendar from 'react-calendar';
 import locationImg from '../../assets/images/airplane.png';
 import checkImg from '../../assets/images/calendar.png';
 import usersImg from '../../assets/images/users.png';
@@ -94,7 +103,6 @@ const LocationOption = styled.div`
 const LocationTitle = styled.div`
   font-size: 2vh;
   font-weight: bold;
-
   @media (max-width: 768px) {
     font-size: 1.5vh;
   }
@@ -241,15 +249,14 @@ const locations = [
 ];
 
 export default function HeaderSearch(): JSX.Element {
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [checkInDate, setCheckInDate] = useState<Date | null>(null);
-  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
-  const [guestCounts, setGuestCounts] = useState<{
-    total: number;
-  }>({ total: 0 });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { location, checkInDate, checkOutDate, guestCount } = useSelector(
+    (state: RootState) => state.search,
+  );
   const [openSelect, setOpenSelect] = useState<string>('');
-  const [listings, setListings] = useState<MockData[]>([]);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const locationPath = useLocation().pathname;
 
   useEffect(() => {
     const handleResize = () => {
@@ -262,19 +269,13 @@ export default function HeaderSearch(): JSX.Element {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const response = await fetch('/src/assets/mockdata.json');
-        const data = await response.json();
-        setListings(data);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
 
-    fetchListings();
-  }, []);
+  // 경로가 '/'인 경우 검색 조건 초기화
+  useEffect(() => {
+    if (locationPath === '/') {
+      dispatch(resetSearch());
+    }
+  }, [locationPath, dispatch]);
 
   const locationPhone = () => {
     if (windowWidth <= 600) {
@@ -299,6 +300,7 @@ export default function HeaderSearch(): JSX.Element {
 
     return '체크인';
   };
+
   const checkOutPhone = () => {
     if (windowWidth <= 600) {
       return <img src={checkImg} alt="check" width="15vh" />;
@@ -310,6 +312,7 @@ export default function HeaderSearch(): JSX.Element {
 
     return '체크아웃';
   };
+
   const usersPhone = () => {
     if (windowWidth <= 600) {
       return <img src={usersImg} alt="users" width="15vh" />;
@@ -321,12 +324,30 @@ export default function HeaderSearch(): JSX.Element {
 
     return '게스트';
   };
+
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleSearch = () => {
-    const locationPrefix = selectedLocation.substring(0, 2);
-    const filteredData = listings.filter((listing) =>
-      listing.address.includes(locationPrefix),
-    );
-    console.log(filteredData);
+    const locationPrefix = location.substring(0, 2);
+    const checkInOutDate = checkInDate && checkOutDate;
+    const chooseOne = location || checkInOutDate || guestCount > 0;
+
+    if (!chooseOne) {
+      return;
+    }
+
+    const searchParams = {
+      location: locationPrefix,
+      checkInDate: checkInDate ? formatDate(checkInDate) : null,
+      checkOutDate: checkOutDate ? formatDate(checkOutDate) : null,
+      guestCount: guestCount,
+    };
+    navigate('/search', { state: searchParams });
   };
 
   return (
@@ -338,18 +359,18 @@ export default function HeaderSearch(): JSX.Element {
         isOpen={openSelect === 'location'}
       >
         <LocationTitle>{locationPhone()}</LocationTitle>
-        <LocationContent>{selectedLocation || '여행지 선택'}</LocationContent>
+        <LocationContent>{location || '여행지 선택'}</LocationContent>
       </SearchLocation>
       <LocationSelectContainer isOpen={openSelect === 'location'}>
-        {locations.map((location) => (
+        {locations.map((loc) => (
           <LocationOption
-            key={location}
+            key={loc}
             onClick={() => {
-              setSelectedLocation(location);
+              dispatch(setLocation(loc));
               setOpenSelect('');
             }}
           >
-            {location}
+            {loc}
           </LocationOption>
         ))}
       </LocationSelectContainer>
@@ -359,21 +380,21 @@ export default function HeaderSearch(): JSX.Element {
       >
         <DateTitle>{checkInPhone()}</DateTitle>
         <DateContent>
-          {checkInDate ? checkInDate.toLocaleDateString() : '체크인 선택'}
+          {checkInDate ? formatDate(checkInDate) : '체크인 선택'}
         </DateContent>
       </SearchDate>
       <CalendarComponent
         isOpen={openSelect === 'checkIn'}
         onDateChange={(date) => {
           if (!checkInDate || (checkInDate && checkOutDate)) {
-            setCheckInDate(date);
-            setCheckOutDate(null);
+            dispatch(setCheckInDate(date));
+            dispatch(setCheckOutDate(null));
           } else if (checkInDate && !checkOutDate) {
             if (date < checkInDate) {
-              setCheckOutDate(checkInDate);
-              setCheckInDate(date);
+              dispatch(setCheckOutDate(checkInDate));
+              dispatch(setCheckInDate(date));
             } else {
-              setCheckOutDate(date);
+              dispatch(setCheckOutDate(date));
               setOpenSelect('');
             }
           }
@@ -389,17 +410,17 @@ export default function HeaderSearch(): JSX.Element {
       >
         <DateTitle>{checkOutPhone()}</DateTitle>
         <DateContent>
-          {checkOutDate ? checkOutDate.toLocaleDateString() : '체크아웃 선택'}
+          {checkOutDate ? formatDate(checkOutDate) : '체크아웃 선택'}
         </DateContent>
       </SearchDate>
       <CalendarComponent
         isOpen={openSelect === 'checkOut'}
         onDateChange={(date) => {
           if (date && checkInDate && date < checkInDate) {
-            setCheckOutDate(checkInDate);
-            setCheckInDate(date);
+            dispatch(setCheckOutDate(checkInDate));
+            dispatch(setCheckInDate(date));
           } else {
-            setCheckOutDate(date);
+            dispatch(setCheckOutDate(date));
             setOpenSelect('');
           }
         }}
@@ -412,16 +433,13 @@ export default function HeaderSearch(): JSX.Element {
       >
         <div>
           <GuestTitle>{usersPhone()}</GuestTitle>
-          <GuestContent>인원: {guestCounts.total}</GuestContent>
+          <GuestContent>인원: {guestCount}</GuestContent>
         </div>
         <Guest
           isOpen={openSelect === 'guest'}
-          counts={guestCounts}
+          counts={{ total: guestCount }}
           onChange={(type, delta) => {
-            setGuestCounts((prevCounts) => ({
-              ...prevCounts,
-              [type]: Math.max(0, prevCounts[type] + delta),
-            }));
+            dispatch(setGuestCount(guestCount + delta));
           }}
           onConfirm={() => setOpenSelect('')}
         />
