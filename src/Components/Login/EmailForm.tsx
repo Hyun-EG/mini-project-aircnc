@@ -12,6 +12,7 @@ import {
 } from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
+import LoginModalTitle from './LoginModalTitle.tsx';
 import SubmitButton from './SubmitButton.tsx';
 
 export type EmailFormFields = EmailFormSchemaType;
@@ -60,8 +61,8 @@ function EmailForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
-      <h3>로그인 또는 회원가입</h3>
+      <LoginModalTitle>에어씨엔씨에 오신 것을 환영합니다.</LoginModalTitle>
+      <LoginModalTitle>로그인 또는 회원가입</LoginModalTitle>
       <Input
         register={register('email')}
         message={errors.email?.message}

@@ -14,6 +14,7 @@ import {
 } from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
+import LoginModalTitle from './LoginModalTitle.tsx';
 import SubmitButton from './SubmitButton.tsx';
 
 export type LoginFormFields = LoginFormSchemaType;
@@ -73,7 +74,7 @@ function LoginForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h3>비밀번호를 입력해 주세요.</h3>
+      <LoginModalTitle>비밀번호를 입력해 주세요.</LoginModalTitle>
       <Input
         register={register('password')}
         message={errors.password?.message}

@@ -12,6 +12,7 @@ import SubmitButton from './SubmitButton.tsx';
 
 const SignupTitle = styled.h3`
   margin: 0;
+  font-size: 1.25rem;
 `;
 
 type SignupFormFields = SignupFormSchemaType;
