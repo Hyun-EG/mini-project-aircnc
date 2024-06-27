@@ -44,7 +44,7 @@ const GlobalStyles = createGlobalStyle`
     border-radius: 0;
   }
   .selected-date, .date-in-range {
-    background: #f7f7f7;
+    background: #9a9a9a;
     color: black;
   }
   .react-calendar__navigation {
@@ -115,6 +115,7 @@ const formatDay = (locale: string | undefined, date: Date) => {
 
 export default function CalendarComponent({
   isOpen,
+  className,
   onDateChange,
   checkInDate,
   checkOutDate,
@@ -191,7 +192,7 @@ export default function CalendarComponent({
   const tileDisabled = ({ date }: { date: Date }) => date < new Date();
 
   return (
-    <DateSelectContainer isOpen={isOpen}>
+    <DateSelectContainer isOpen={isOpen} className={className}>
       <GlobalStyles />
       <NavigationContainer>
         <NavigationButton onClick={handlePrevMonth}>{'<'}</NavigationButton>
