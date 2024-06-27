@@ -6,7 +6,7 @@ const FormLayout = styled.form`
   flex-direction: column;
   gap: 0.5rem;
   & > :last-child {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 `;
 

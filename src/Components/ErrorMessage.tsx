@@ -5,7 +5,6 @@ const ErrorMessage = styled.p`
   margin-top: 8px;
   padding: 0;
   font-size: 14px;
-  text-align: right;
   color: red;
 `;
 

@@ -27,7 +27,9 @@ const LoginModalLayout = styled.div`
     top: 50%;
     left: 50%;
     width: fit-content;
+    min-width: 27.5rem;
     height: fit-content;
+    padding: 2rem;
     transform: translate(-50%, -50%);
     border-radius: 16px;
   }

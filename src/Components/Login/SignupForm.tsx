@@ -29,21 +29,24 @@ function SignupForm() {
       <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
       <Input
         register={register('nickname')}
+        label="닉네임"
         message={errors.nickname?.message}
         type="text"
-        placeholder="닉네임"
+        placeholder="2자리 이상의 닉네임"
       />
       <Input
         register={register('email')}
+        label="이메일"
         message={errors.email?.message}
         type="text"
-        placeholder="이메일"
+        placeholder="예: abc@xyz.com"
       />
       <Input
         register={register('password')}
+        label="비밀번호"
         message={errors.password?.message}
         type="password"
-        placeholder="비밀번호"
+        placeholder="숫자, 알파벳 대문자, 특수문자를 모두 사용"
       />
       <Input
         register={register('confirmPassword')}
@@ -51,7 +54,7 @@ function SignupForm() {
         type="password"
         placeholder="비밀번호 확인"
       />
-      <Select register={register('question')}>
+      <Select register={register('question')} label="비밀번호 찾기 질문">
         <option value="" hidden>
           비밀번호 찾기 질문을 선택해 주세요.
         </option>
