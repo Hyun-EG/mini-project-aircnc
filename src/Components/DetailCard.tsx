@@ -3,15 +3,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 
 const CardContainer = styled.div`
-  width: 80%;
+  width: 60%;
   padding: 10px;
+  margin-right: 20vh;
   border-radius: 10px;
   overflow: hidden;
 `;
 const ImageContainer = styled.div`
   width: 100%;
-  height: 0;
-  padding-bottom: 100%;
+  padding-bottom: 80%;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -23,7 +23,7 @@ const Image = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 30px;
   box-sizing: border-box;
   object-fit: cover;
 `;
