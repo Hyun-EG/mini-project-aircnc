@@ -20,6 +20,8 @@ export interface RoomData {
   address: string;
   city: string;
   image_url: string;
+  map_x: number;
+  map_y: number;
 }
 
 export interface RoomDetailData {
@@ -50,4 +52,16 @@ export interface DateSelectProps {
 
 export interface GuestSelectProps {
   isOpen: boolean;
+}
+
+export interface Reservation {
+  room: RoomData;
+  userID: string;
+  checkInDate: Date;
+  checkOutDate: Date;
+}
+
+export interface Wishlist {
+  roomID: number;
+  userID: string;
 }

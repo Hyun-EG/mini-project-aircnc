@@ -9,7 +9,7 @@ import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import DetailCard from '../Components/DetailCard.tsx';
 import DetailCalendar from '../Components/DetailCalendar.tsx';
-
+import DetailFooter from '../Components/DetailFooter.tsx';
 // 헤더 아래로 바디 두려고,,
 const BodyContainer = styled.div`
   margin-top: 13vh;
@@ -52,6 +52,7 @@ function DetailInfoPage() {
           숙소 위치
         </MapContainer>
       </BodyContainer>
+      <DetailFooter />
     </>
   );
 }
