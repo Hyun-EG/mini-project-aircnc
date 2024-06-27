@@ -59,6 +59,7 @@ const DropdownMenu = styled.div<{ isOpen: boolean }>`
   z-index: 1000;
   max-height: ${({ isOpen }) => (isOpen ? '20vh' : '0')};
   overflow: hidden;
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   transition:
     max-height 0.3s ease-out,
@@ -108,14 +109,14 @@ export default function HeaderMenu() {
           <>
             <MenuItem
               onClick={() => {
-                dispatch(setModalStatus('login'));
+                dispatch(setModalStatus('email'));
               }}
             >
               로그인
             </MenuItem>
             <MenuItem
               onClick={() => {
-                dispatch(setModalStatus('signup'));
+                dispatch(setModalStatus('email'));
               }}
             >
               회원가입

@@ -1,8 +1,12 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RootState } from '../../redux/store.ts';
 import { setUser } from '../../redux/slices/userSlice.ts';
-import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
+import {
+  setIsFailed,
+  clearModalState,
+} from '../../redux/slices/loginModalSlice.ts';
 import {
   LoginFormSchema,
   LoginFormSchemaType,
@@ -10,13 +14,13 @@ import {
 } from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
-import Button from '../Button.tsx';
-import ErrorMessage from '../ErrorMessage.tsx';
+import SubmitButton from './SubmitButton.tsx';
 
 export type LoginFormFields = LoginFormSchemaType;
 
 function LoginForm() {
   const dispatch = useDispatch();
+  const email = useSelector((state: RootState) => state.loginModal.email);
 
   const {
     register,
@@ -46,7 +50,7 @@ function LoginForm() {
         throw new Error();
       }
 
-      const matchEmail = users.filter((user) => user.email === data.email);
+      const matchEmail = users.filter((user) => user.email === email);
       if (!matchEmail.length) {
         throw new Error();
       }
@@ -57,28 +61,26 @@ function LoginForm() {
       }
 
       dispatch(setUser(matchEmail[0]));
-      dispatch(setModalStatus(null));
+      dispatch(clearModalState());
     } catch (error) {
       console.error(error);
-      setError('root', {
-        message: '올바른 이메일이나 비밀번호가 아닙니다.',
+      dispatch(setIsFailed(true));
+      setError('password', {
+        message: '비밀번호가 일치하지 않습니다.',
       });
     }
   };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
-      <Input register={register('email')} type="text" placeholder="이메일" />
+      <h3>비밀번호를 입력해 주세요.</h3>
       <Input
         register={register('password')}
-        message={errors.root?.message}
+        message={errors.password?.message}
         type="password"
         placeholder="비밀번호"
       />
-      <Button disabled={isSubmitting} type="submit">
-        로그인
-      </Button>
+      <SubmitButton isSubmitting={isSubmitting}>로그인</SubmitButton>
     </Form>
   );
 }

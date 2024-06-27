@@ -1,5 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import styled from 'styled-components';
 import {
   SignupFormSchema,
   SignupFormSchemaType,
@@ -7,7 +8,11 @@ import {
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Select from '../Select.tsx';
-import Button from '../Button.tsx';
+import SubmitButton from './SubmitButton.tsx';
+
+const SignupTitle = styled.h3`
+  margin: 0;
+`;
 
 type SignupFormFields = SignupFormSchemaType;
 
@@ -15,8 +20,9 @@ function SignupForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignupFormFields>({
+    mode: 'onTouched',
     resolver: zodResolver(SignupFormSchema),
   });
 
@@ -26,20 +32,13 @@ function SignupForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h3>에어씨엔씨에 오신 것을 환영합니다.</h3>
+      <SignupTitle>회원가입 완료하기</SignupTitle>
       <Input
         register={register('nickname')}
         label="닉네임"
         message={errors.nickname?.message}
         type="text"
         placeholder="2자리 이상의 닉네임"
-      />
-      <Input
-        register={register('email')}
-        label="이메일"
-        message={errors.email?.message}
-        type="text"
-        placeholder="예: abc@xyz.com"
       />
       <Input
         register={register('password')}
@@ -69,7 +68,7 @@ function SignupForm() {
         type="text"
         placeholder="정답 :"
       />
-      <Button type="submit">회원가입</Button>
+      <SubmitButton isSubmitting={isSubmitting}>회원가입</SubmitButton>
     </Form>
   );
 }

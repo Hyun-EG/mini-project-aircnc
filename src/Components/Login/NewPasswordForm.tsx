@@ -6,7 +6,7 @@ import {
 } from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
-import Button from '../Button.tsx';
+import SubmitButton from './SubmitButton.tsx';
 
 export type NewPasswordFormFields = NewPasswordFormSchemaType;
 
@@ -14,8 +14,9 @@ function NewPasswordForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<NewPasswordFormFields>({
+    mode: 'onTouched',
     resolver: zodResolver(NewPasswordFormSchema),
   });
 
@@ -38,7 +39,7 @@ function NewPasswordForm() {
         type="password"
         placeholder="새 비밀번호 확인"
       />
-      <Button type="submit">변경하기</Button>
+      <SubmitButton isSubmitting={isSubmitting}>변경하기</SubmitButton>
     </Form>
   );
 }

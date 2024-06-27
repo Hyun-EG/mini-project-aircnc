@@ -17,7 +17,7 @@ const SelectLabel = styled.label`
   display: inline-block;
   font-size: 14px;
   font-weight: bold;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 `;
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
