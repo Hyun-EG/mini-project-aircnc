@@ -53,3 +53,15 @@ export interface DateSelectProps {
 export interface GuestSelectProps {
   isOpen: boolean;
 }
+
+export interface Reservation {
+  room: RoomData;
+  userID: string;
+  checkInDate: Date;
+  checkOutDate: Date;
+}
+
+export interface Wishlist {
+  roomID: number;
+  userID: string;
+}

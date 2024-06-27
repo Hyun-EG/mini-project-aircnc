@@ -1,19 +1,21 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FindPasswordFormSchema } from '../../schema/userSchema.ts';
+import {
+  FindPasswordFormSchema,
+  FindPasswordFormSchemaType,
+} from '../../schema/userSchema.ts';
 import Form from '../Form.tsx';
 import Select from '../Select.tsx';
 import Input from '../Input.tsx';
-import Button from '../Button.tsx';
+import SubmitButton from './SubmitButton.tsx';
 
-type FindPasswordFormFields = z.infer<typeof FindPasswordFormSchema>;
+type FindPasswordFormFields = FindPasswordFormSchemaType;
 
 function FindPasswordForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FindPasswordFormFields>({
     resolver: zodResolver(FindPasswordFormSchema),
   });
@@ -36,7 +38,7 @@ function FindPasswordForm() {
         <option value="book">기억에 남는 책 이름은?</option>
       </Select>
       <Input register={register('answer')} type="text" placeholder="정답 :" />
-      <Button type="submit">비밀번호 찾기</Button>
+      <SubmitButton isSubmitting={isSubmitting}>비밀번호 찾기</SubmitButton>
     </Form>
   );
 }

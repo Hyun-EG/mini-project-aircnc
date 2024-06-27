@@ -13,8 +13,7 @@ const PASSWORD = {
   MIN_ERROR_MESSAGE: '비밀번호는 최소 8자리 이상으로 입력해 주세요.',
   MAX_ERROR_MESSAGE: '비밀번호는 최대 16자리 이하로 입력해 주세요.',
   FORMAT_REGEX: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).*$/,
-  FORMAT_ERROR_MESSAGE:
-    '비밀번호는 숫자, 영문 대문자, 특수문자를 한번 이상 사용한 조합으로 입력해 주세요.',
+  FORMAT_ERROR_MESSAGE: '올바른 비밀번호 조합으로 입력해 주세요.',
 };
 
 const CONFIRM_PASSWORD = {
@@ -42,18 +41,22 @@ export const UserSchema = z.object({
   answer: z.string(),
 });
 
-export const LoginFormSchema = UserSchema.pick({
+export const EmailFormSchema = UserSchema.pick({
   email: true,
+}).extend({
+  email: z.string().email({ message: EMAIL.FORMAT_ERROR_MESSSAGE }),
+});
+
+export const LoginFormSchema = UserSchema.pick({
   password: true,
 });
 
-export const SignupFormSchema = UserSchema.omit({ id: true })
+export const SignupFormSchema = UserSchema.omit({ id: true, email: true })
   .extend({
     nickname: z
       .string()
       .min(NICKNAME.MIN_LENGTH, { message: NICKNAME.MIN_ERROR_MESSAGE })
       .max(NICKNAME.MAX_LENGTH, { message: NICKNAME.MAX_ERROR_MESSAGE }),
-    email: z.string().email({ message: EMAIL.FORMAT_ERROR_MESSSAGE }),
     password: z
       .string()
       .min(PASSWORD.MIN_LENGTH, { message: PASSWORD.MIN_ERROR_MESSAGE })
@@ -99,3 +102,8 @@ export const NewPasswordFormSchema = UserSchema.pick({
 
 export type UserSchemaType = z.infer<typeof UserSchema>;
 export type User = Omit<UserSchemaType, 'confirmPassword'>;
+export type EmailFormSchemaType = z.infer<typeof EmailFormSchema>;
+export type LoginFormSchemaType = z.infer<typeof LoginFormSchema>;
+export type SignupFormSchemaType = z.infer<typeof SignupFormSchema>;
+export type FindPasswordFormSchemaType = z.infer<typeof FindPasswordFormSchema>;
+export type NewPasswordFormSchemaType = z.infer<typeof NewPasswordFormSchema>;

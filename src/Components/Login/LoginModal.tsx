@@ -5,12 +5,14 @@ import { RootState, AppDispatch } from '../../redux/store.ts';
 import {
   LoginModalStatus,
   setModalStatus,
+  clearModalState,
 } from '../../redux/slices/loginModalSlice.ts';
+import EmailForm from './EmailForm.tsx';
 import LoginForm from './LoginForm.tsx';
 import SignupForm from './SignupForm.tsx';
 import FindPasswordForm from './FindPasswordForm.tsx';
 import NewPasswordForm from './NewPasswordForm.tsx';
-import PasswordChangeMessage from './PasswordChangeMessage.tsx';
+import ModalMessage from './ModalMessage.tsx';
 import LogoImage from '../../assets/images/logo.svg';
 
 const LoginModalLayout = styled.div`
@@ -22,12 +24,14 @@ const LoginModalLayout = styled.div`
   padding: 32px;
   background-color: white;
   box-sizing: border-box;
-  overflow: scroll;
+  overflow-y: auto;
   @media (min-width: 769px) {
     top: 50%;
     left: 50%;
     width: fit-content;
+    min-width: 27.5rem;
     height: fit-content;
+    padding: 2rem;
     transform: translate(-50%, -50%);
     border-radius: 16px;
   }
@@ -73,9 +77,12 @@ const LoginModalLinkText = styled.nav`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  font-size: 14px;
 `;
 
-const LoginModalLinkNav = styled(LoginModalLinkText)``;
+const LoginModalLinkNav = styled(LoginModalLinkText)`
+  margin-top: 1rem;
+`;
 
 const LoginModalLinkButton = styled.button`
   padding: 0;
@@ -83,19 +90,18 @@ const LoginModalLinkButton = styled.button`
   display: inline-block;
   color: #ff385c;
   background-color: inherit;
+  font-size: 14px;
   border: none;
   cursor: pointer;
 `;
 
 function LoginModal() {
-  const modalStatus = useSelector(
-    (state: RootState) => state.loginModal.status,
-  );
+  const modalState = useSelector((state: RootState) => state.loginModal);
   const dispatch = useDispatch<AppDispatch>();
-  const [status, setStatus] = useState<LoginModalStatus>(modalStatus);
+  const [status, setStatus] = useState<LoginModalStatus>(modalState.status);
 
   const handleCloseModal = () => {
-    dispatch(setModalStatus(null));
+    dispatch(clearModalState());
   };
 
   const toPage = (status: LoginModalStatus) => {
@@ -105,8 +111,8 @@ function LoginModal() {
   };
 
   useEffect(() => {
-    setStatus(modalStatus);
-  }, [modalStatus]);
+    setStatus(modalState.status);
+  }, [modalState.status]);
 
   return (
     status && (
@@ -117,44 +123,30 @@ function LoginModal() {
             X
           </LoginModalCloseButton>
           <LoginModalLogo src={LogoImage} />
+          {status === 'email' && <EmailForm />}
           {status === 'login' && (
             <>
               <LoginForm />
-              <LoginModalLinkText>
-                <p>계정이 없거나 비밀번호를 잊으셨나요?</p>
+              {modalState.isFailed && (
                 <LoginModalLinkNav>
-                  <LoginModalLinkButton
-                    type="button"
-                    onClick={toPage('signup')}
-                  >
-                    가입하기
-                  </LoginModalLinkButton>
-                  <span>|</span>
-                  <LoginModalLinkButton
-                    type="button"
-                    onClick={toPage('findPassword')}
-                  >
+                  <LoginModalLinkText>
+                    혹시 비밀번호를 잃어버리셨나요?
+                  </LoginModalLinkText>
+                  <LoginModalLinkButton onClick={toPage('findPassword')}>
                     비밀번호 찾기
                   </LoginModalLinkButton>
                 </LoginModalLinkNav>
-              </LoginModalLinkText>
+              )}
             </>
           )}
-          {status === 'signup' && (
-            <>
-              <SignupForm />
-              <LoginModalLinkNav>
-                <p>이미 계정이 있으신가요?</p>
-                <LoginModalLinkButton type="button" onClick={toPage('login')}>
-                  로그인 하러 가기
-                </LoginModalLinkButton>
-              </LoginModalLinkNav>
-            </>
-          )}
+          {status === 'signup' && <SignupForm />}
           {status === 'findPassword' && <FindPasswordForm />}
           {status === 'newPassword' && <NewPasswordForm />}
+          {status === 'signUpComplete' && (
+            <ModalMessage message="회원가입이 완료되었습니다." />
+          )}
           {status === 'changeComplete' && (
-            <PasswordChangeMessage onClick={toPage('login')} />
+            <ModalMessage message="비밀번호 변경이 완료되었습니다." />
           )}
         </LoginModalLayout>
       </>

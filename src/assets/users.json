@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "email": "test1@test.com",
+    "password": "test1",
+    "nickname": "테스트1",
+    "question": "나의 보물 1호는?",
+    "answer": "테스트"
+  },
+  {
+    "id": 1,
+    "email": "test2@test.com",
+    "password": "test2",
+    "nickname": "테스트2",
+    "question": "나의 보물 1호는?",
+    "answer": "테스트"
+  },
+  {
+    "id": 2,
+    "email": "test3@test.com",
+    "password": "test3",
+    "nickname": "테스트3",
+    "question": "나의 보물 1호는?",
+    "answer": "테스트"
+  }
+]
