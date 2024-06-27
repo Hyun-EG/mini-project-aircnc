@@ -17,6 +17,7 @@ const FooterContainer = styled.footer`
   align-items: center;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  z-index: 1000; //네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
 `;
 
 const Button = styled.button`
