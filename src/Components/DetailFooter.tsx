@@ -16,30 +16,31 @@ const FooterContainer = styled.footer`
   justify-content: flex-end;
   align-items: center;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
-  margin-left: 10px;
+  margin-right: 10px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
 `;
 
 const LikeButton = styled(Button)`
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
+  background-color: white;
+  color: #ff385c;
+  border-color: #ff385c;
   border-radius: 5px;
 `;
 
 const ReserveButton = styled(Button)`
-  background-color: #4caf50;
+  background-color: #ff385c;
   color: white;
   border: none;
   border-radius: 5px;
 `;
 
-function Footer() {
+function DetailFooter() {
   const room = useSelector((state: RootState) => state.rooms.selectedRoom);
   if (!room) {
     return <h1>Loading</h1>;
@@ -49,7 +50,6 @@ function Footer() {
     const roomID = room.id;
     const userID = 'testID1'; // UserID
     addWishlist({ roomID, userID } /* userID는 추후 로그인 데이터로 대체 */);
-    alert('Wishlist에 추가되었습니다.');
   };
 
   const handleReserve = () => {
@@ -63,7 +63,6 @@ function Footer() {
       checkInDate,
       checkOutDate,
     });
-    alert('예약이 완료되었습니다.');
   };
 
   return (
@@ -74,4 +73,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default DetailFooter;
