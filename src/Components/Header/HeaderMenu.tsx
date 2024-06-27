@@ -9,8 +9,8 @@ import hamburgerBtn from '../../assets/images/hamburger-btn.svg';
 import headerProfile from '../../assets/images/header-profile.svg';
 
 const MenuContainer = styled.div`
-  width: 13vh;
-  height: 7vh;
+  width: 10vh;
+  height: 6.5vh;
   margin: 0 4vh;
   border: 1px solid lightgrey;
   border-radius: 20px;
