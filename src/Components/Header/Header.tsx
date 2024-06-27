@@ -27,8 +27,8 @@ const HeaderContainer = styled.div`
 const HeaderLogo = styled.img`
   cursor: pointer;
   margin: 0 3vh;
-  width: 17vh;
-  height: 20vh;
+  width: 15vh;
+  height: 10vh;
 
   @media (max-width: 768px) {
     width: 8vh;
