@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie';
 import { setUser } from './redux/slices/userSlice.ts';
 import AppRoutes from './Routes/AppRoutes.tsx';
 import GlobalStyle from './style/GlobalStyle.tsx';
+import GlobalFont from './style/GlobalFont.tsx';
 import theme from './style/theme.ts';
 import { User } from './schema/userSchema.ts';
 
@@ -52,6 +53,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
+      <GlobalFont />
       <AppRoutes />
     </ThemeProvider>
   );

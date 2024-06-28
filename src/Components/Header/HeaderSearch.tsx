@@ -14,7 +14,6 @@ import {
   resetSearch,
 } from '../../redux/slices/searchSlice.ts';
 import {
-  MockData,
   SearchBoxProps,
   LocationSelectProps,
   DateSelectProps,
@@ -270,7 +269,6 @@ export default function HeaderSearch(): JSX.Element {
     };
   }, []);
 
-  // 경로가 '/'인 경우 검색 조건 초기화
   useEffect(() => {
     if (locationPath === '/') {
       dispatch(resetSearch());
@@ -345,7 +343,7 @@ export default function HeaderSearch(): JSX.Element {
       location: locationPrefix,
       checkInDate: checkInDate ? formatDate(checkInDate) : null,
       checkOutDate: checkOutDate ? formatDate(checkOutDate) : null,
-      guestCount: guestCount,
+      guestCount,
     };
     navigate('/search', { state: searchParams });
   };

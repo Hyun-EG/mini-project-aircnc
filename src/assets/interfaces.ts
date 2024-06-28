@@ -38,20 +38,19 @@ export interface RoomDetailData {
   image_url: string;
 }
 
-export interface SearchBoxProps {
+export interface Toggleable {
   isOpen: boolean;
 }
 
-export interface LocationSelectProps {
-  isOpen: boolean;
-}
-
-export interface DateSelectProps {
-  isOpen: boolean;
-}
-
-export interface GuestSelectProps {
-  isOpen: boolean;
+export interface SearchBoxProps extends Toggleable {}
+export interface LocationSelectProps extends Toggleable {}
+export interface DateSelectProps extends Toggleable {}
+export interface GuestSelectProps extends Toggleable {}
+export interface CalendarProps extends Toggleable {
+  onDateChange: (date: Date) => void;
+  checkInDate: Date | null;
+  checkOutDate: Date | null;
+  className: string;
 }
 
 export interface Reservation {

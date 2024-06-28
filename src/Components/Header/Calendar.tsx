@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
+import { RootState } from '../../redux/store.ts';
+import {
+  setCurrentDate,
+  setNextMonthDate,
+} from '../../redux/slices/calendarSlice.ts';
+import { CalendarProps } from '../../assets/interfaces.ts';
 
 const GlobalStyles = createGlobalStyle`
   .react-calendar {
@@ -15,12 +22,10 @@ const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     align-items: center;
   }
-
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
     font-weight: 800;
   }
-
   .react-calendar__month-view__weekdays .react-calendar__month-view__weekdays__weekday {
     text-align: center;
     text-transform: uppercase;
@@ -28,9 +33,8 @@ const GlobalStyles = createGlobalStyle`
     font-weight: bold;
     margin-top: 2vh;
     margin-bottom: 1.5vh;
-    color: grey; 
+    color: grey;
   }
-
   .react-calendar__tile {
     background: white;
     font-size: 1.8vh;
@@ -39,26 +43,16 @@ const GlobalStyles = createGlobalStyle`
     cursor: pointer;
     border-radius: 0;
   }
-
-  .selected-date,
-  .date-in-range {
-    background: #f7f7f7;
+  .selected-date, .date-in-range {
+    background: #9a9a9a;
     color: black;
   }
-
   .react-calendar__navigation {
     display: none;
   }
 `;
 
-interface CalendarProps {
-  isOpen: boolean;
-  onDateChange: (date: Date) => void;
-  checkInDate: Date | null;
-  checkOutDate: Date | null;
-}
-
-const DateSelectContainer = styled.div<Pick<CalendarProps, 'isOpen'>>`
+const DateSelectContainer = styled.div<{ isOpen: boolean }>`
   width: 90vh;
   height: 33vh;
   position: absolute;
@@ -115,47 +109,42 @@ const NavigationButton = styled.button`
   font-size: 1.7vh;
 `;
 
-interface CalendarTileProperties {
-  date: Date;
-  view: string;
-}
+const formatDay = (locale: string | undefined, date: Date) => {
+  return date.getDate().toString();
+};
 
 export default function CalendarComponent({
   isOpen,
+  className,
   onDateChange,
   checkInDate,
   checkOutDate,
 }: CalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [nextMonthDate, setNextMonthDate] = useState(
-    new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
-  );
+  const dispatch = useDispatch();
+  const { currentDate, nextMonthDate } = useSelector((state: RootState) => ({
+    currentDate: state.calendar.currentDate
+      ? new Date(state.calendar.currentDate)
+      : new Date(),
+    nextMonthDate: state.calendar.nextMonthDate
+      ? new Date(state.calendar.nextMonthDate)
+      : new Date(),
+  }));
 
   useEffect(() => {
     if (isOpen) {
       const newCurrentDate = new Date();
-      setCurrentDate(newCurrentDate);
-      setNextMonthDate(
-        new Date(
-          newCurrentDate.getFullYear(),
-          newCurrentDate.getMonth() + 1,
-          1,
+      dispatch(setCurrentDate(newCurrentDate.toISOString()));
+      dispatch(
+        setNextMonthDate(
+          new Date(
+            newCurrentDate.getFullYear(),
+            newCurrentDate.getMonth() + 1,
+            1,
+          ).toISOString(),
         ),
       );
     }
-  }, [isOpen]);
-
-  useEffect(() => {
-    setNextMonthDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
-    );
-  }, [currentDate]);
-
-  const formatDay = (locale: string | undefined, date: Date) =>
-    date.getDate().toString();
-
-  const tileDisabled = ({ date }: CalendarTileProperties) =>
-    date < new Date(new Date().setHours(0, 0, 0, 0));
+  }, [isOpen, dispatch]);
 
   const handlePrevMonth = () => {
     const newCurrentDate = new Date(
@@ -163,7 +152,7 @@ export default function CalendarComponent({
       currentDate.getMonth() - 1,
       1,
     );
-    setCurrentDate(newCurrentDate);
+    dispatch(setCurrentDate(newCurrentDate.toISOString()));
   };
 
   const handleNextMonth = () => {
@@ -172,59 +161,52 @@ export default function CalendarComponent({
       currentDate.getMonth() + 1,
       1,
     );
-    setCurrentDate(newCurrentDate);
-  };
-
-  const formatNavigationLabel = (date: Date) => {
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
-  };
-
-  const isDateInRange = (date: Date) => {
-    if (!checkInDate || !checkOutDate) return false;
-    return date > checkInDate && date < checkOutDate;
-  };
-
-  const tileClassName = ({ date, view }: CalendarTileProperties) => {
-    if (view === 'month') {
-      if (checkInDate && date.toDateString() === checkInDate.toDateString()) {
-        return 'selected-date';
-      }
-      if (checkOutDate && date.toDateString() === checkOutDate.toDateString()) {
-        return 'selected-date';
-      }
-      if (isDateInRange(date)) {
-        return 'date-in-range';
-      }
-    }
-    return '';
+    dispatch(setCurrentDate(newCurrentDate.toISOString()));
   };
 
   const handleDateClick = (date: Date) => {
     onDateChange(date);
   };
 
+  const formatNavigationLabel = (date: Date) =>
+    `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+
+  const tileClassName = ({ date }: { date: Date }) => {
+    if (checkInDate && date.toDateString() === checkInDate.toDateString()) {
+      return 'selected-date';
+    }
+    if (checkOutDate && date.toDateString() === checkOutDate.toDateString()) {
+      return 'selected-date';
+    }
+    if (
+      checkInDate &&
+      checkOutDate &&
+      date > new Date(checkInDate) &&
+      date < new Date(checkOutDate)
+    ) {
+      return 'date-in-range';
+    }
+    return '';
+  };
+
+  const tileDisabled = ({ date }: { date: Date }) => date < new Date();
+
   return (
-    <DateSelectContainer isOpen={isOpen}>
+    <DateSelectContainer isOpen={isOpen} className={className}>
       <GlobalStyles />
       <NavigationContainer>
         <NavigationButton onClick={handlePrevMonth}>{'<'}</NavigationButton>
         <div>
           {formatNavigationLabel(currentDate)} &nbsp;
           <span className="next-month-label">
-            {formatNavigationLabel(
-              new Date(
-                currentDate.getFullYear(),
-                currentDate.getMonth() + 1,
-                1,
-              ),
-            )}
+            {formatNavigationLabel(nextMonthDate)}
           </span>
         </div>
         <NavigationButton onClick={handleNextMonth}>{'>'}</NavigationButton>
       </NavigationContainer>
       <CalendarWrapper>
         <Calendar
-          key={currentDate.getTime()}
+          key={currentDate.toISOString()}
           value={currentDate}
           formatDay={formatDay}
           tileDisabled={tileDisabled}
@@ -233,7 +215,7 @@ export default function CalendarComponent({
           showNeighboringMonth={false}
         />
         <Calendar
-          key={nextMonthDate.getTime()}
+          key={nextMonthDate.toISOString()}
           value={nextMonthDate}
           formatDay={formatDay}
           tileDisabled={tileDisabled}

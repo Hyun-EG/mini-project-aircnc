@@ -3,6 +3,7 @@ import searchReducer from './slices/searchSlice.ts';
 import roomDetailReducer from './slices/roomDetailSlice.ts';
 import loginModalReducer from './slices/loginModalSlice.ts';
 import userReducer from './slices/userSlice.ts';
+import calendarReducer from './slices/calendarSlice.ts'; // 새로운 리듀서 추가
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     rooms: roomDetailReducer,
     loginModal: loginModalReducer,
     user: userReducer,
+    calendar: calendarReducer,
   },
 });
 
