@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCookies } from 'react-cookie';
 import { RootState } from '../../redux/store.ts';
 import { setUser } from '../../redux/slices/userSlice.ts';
 import {
@@ -32,6 +33,8 @@ function LoginForm() {
     resolver: zodResolver(LoginFormSchema),
   });
 
+  const [, setCookie] = useCookies(['user']);
+
   const fetchUser = async () => {
     try {
       const response = await fetch('/src/assets/users.json');
@@ -61,6 +64,11 @@ function LoginForm() {
         throw new Error();
       }
 
+      setCookie('user', matchEmail[0].email, {
+        maxAge: 5 * 60,
+        secure: true,
+        sameSite: 'lax',
+      });
       dispatch(setUser(matchEmail[0]));
       dispatch(clearModalState());
     } catch (error) {
