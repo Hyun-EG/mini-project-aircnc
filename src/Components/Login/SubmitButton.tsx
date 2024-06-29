@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconDots } from '@tabler/icons-react';
 import Button from '../Button.tsx';
 
 interface SubmitButtonProps {
@@ -15,7 +16,7 @@ function SubmitButton({ isSubmitting, children }: SubmitButtonProps) {
       disabled={isSubmitting}
       type="submit"
     >
-      {isSubmitting ? '...' : children}
+      {isSubmitting ? <IconDots size={16} /> : children}
     </Button>
   );
 }
