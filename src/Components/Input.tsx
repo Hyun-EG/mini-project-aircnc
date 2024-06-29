@@ -5,7 +5,7 @@ import ErrorMessage from './ErrorMessage.tsx';
 
 const InputLayout = styled.input`
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem 1.5rem;
   border: 1px solid #999;
   border-radius: 16px;
   outline-color: #ff385c;
