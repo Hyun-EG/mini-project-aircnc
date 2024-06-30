@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import { AppDispatch, RootState } from '../../redux/store.ts';
 import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
@@ -83,6 +84,7 @@ export default function HeaderMenu() {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user.profile);
   const navigate = useNavigate();
+  const [, , removeCookie] = useCookies(['user']);
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
@@ -98,6 +100,7 @@ export default function HeaderMenu() {
             <MenuItem>예약 목록</MenuItem>
             <MenuItem
               onClick={() => {
+                removeCookie('user');
                 dispatch(clearUser());
                 navigate('/');
               }}

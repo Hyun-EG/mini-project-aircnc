@@ -5,8 +5,11 @@ const color = {
 };
 
 const fontWeight = {
-  normal: '400',
+  regular: '400',
+  medium: '500',
+  semiBold: '600',
   bold: '700',
+  extraBold: '800',
 };
 
 export type ColorTypes = typeof color;
