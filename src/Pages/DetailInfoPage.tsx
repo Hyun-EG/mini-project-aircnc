@@ -127,7 +127,12 @@ function DetailInfoPage() {
     (state: RootState) => state.rooms.selectedRoom,
   );
   const guestCount = useSelector((state: RootState) => state.search.guestCount);
-
+  const checkInDate = useSelector(
+    (state: RootState) => state.search.checkInDate,
+  );
+  const checkOutDate = useSelector(
+    (state: RootState) => state.search.checkOutDate,
+  );
   if (!selectedRoom) {
     return <h1>Loading...</h1>;
   }
@@ -152,6 +157,17 @@ function DetailInfoPage() {
         console.error('Failed to copy: ', err);
       });
   };
+  const calculateTotalPrice = () => {
+    const pricePerNight = selectedRoom.price;
+    if (checkOutDate && checkInDate) {
+      const nights =
+        (checkOutDate.getTime() - checkInDate.getTime()) /
+        (1000 * 60 * 60 * 24);
+      const totalPrice = pricePerNight * nights;
+      return totalPrice;
+    }
+    return selectedRoom.price;
+  };
 
   return (
     <>
@@ -169,9 +185,9 @@ function DetailInfoPage() {
             <BookingDetailsContent>
               <div>{`Price: ${formatNumber(selectedRoom.price)} KRW / day`}</div>
               {`Personnel: ${guestCount}`}
-              <div>{`Total Price: ${formatNumber(selectedRoom.price)}`}</div>
               <AddSubGuestBtn onClick={incrementGuestCount}>+</AddSubGuestBtn>
               <AddSubGuestBtn onClick={decrementGuestCount}>-</AddSubGuestBtn>
+              <div>{`Total Price: ${formatNumber(calculateTotalPrice()) !== formatNumber(selectedRoom.price) ? `${formatNumber(calculateTotalPrice())} KRW` : `${formatNumber(selectedRoom.price)} KRW / day`}`}</div>
             </BookingDetailsContent>
           </RoomBookingDetails>
         </InfoContainer>
