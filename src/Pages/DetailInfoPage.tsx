@@ -11,6 +11,7 @@ import DetailMap from '../Components/Map/DetailMap.tsx';
 import { setGuestCount } from '../redux/slices/searchSlice.ts';
 import backBtn from '../assets/images/backbtn.svg';
 import shareBtn from '../assets/images/sharebtn.svg';
+import formatNumber from '../util/formatNumber.ts';
 
 const BodyContainer = styled.div`
   margin: 13vh 20vh;
@@ -166,8 +167,9 @@ function DetailInfoPage() {
           <RoomBookingDetails>
             <DetailCalendar />
             <BookingDetailsContent>
-              <div>{`Price: ${selectedRoom.price}`}</div>
+              <div>{`Price: ${formatNumber(selectedRoom.price)} KRW / day`}</div>
               {`Personnel: ${guestCount}`}
+              <div>{`Total Price: ${formatNumber(selectedRoom.price)}`}</div>
               <AddSubGuestBtn onClick={incrementGuestCount}>+</AddSubGuestBtn>
               <AddSubGuestBtn onClick={decrementGuestCount}>-</AddSubGuestBtn>
             </BookingDetailsContent>
