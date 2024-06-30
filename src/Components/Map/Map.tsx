@@ -57,18 +57,21 @@ function Map({ width, height, listings }: MapProps) {
       bounds.extend(markerPosition);
 
       const contentString = `
-        <div>
-          <img src="${listing.image_url}" alt="${listing.name}" style="width: 100%; height: 20vh;" />
-          <p style="font-size: 2vh; font-weight: bold;">${listing.name}</p>
-          <p style="font-size: 1.5vh;">주소: ${listing.address}</p>
-          <p style="font-size: 1.5vh;">가격: ${listing.price}원</p>
-          <p style="font-size: 1.5vh;">옵션: ${listing.description}</p>
-        </div>
-      `;
+  <div style="max-width: 250px; background-color: #fff; padding-bottom: 2vh; line-height:15px; border-radius: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+    <img src="${listing.image_url}" alt="${listing.name}" style="width: 100%; height: 20vh; border-top-left-radius: 20px; border-top-right-radius: 20px;" />
+    <p style="font-size: 2vh; font-weight: bold; display:block; padding-bottom: 1vh;">${listing.name}</p>
+    <p style="font-size: 1.5vh;">주소: ${listing.address}</p>
+    <p style="font-size: 1.5vh;">가격: ${listing.price}원</p>
+    <p style="font-size: 1.5vh;">옵션: ${listing.description}</p>
+  </div>
+`;
 
       const infowindow = new naver.maps.InfoWindow({
         content: contentString,
+        borderWidth: 0,
         maxWidth: 250,
+        disableAnchor: true,
+        backgroundColor: 'transparent',
       });
 
       naver.maps.Event.addListener(marker, 'mouseover', function () {
