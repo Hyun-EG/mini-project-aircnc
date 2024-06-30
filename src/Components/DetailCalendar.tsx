@@ -9,9 +9,10 @@ import {
 } from '../redux/slices/searchSlice.ts';
 
 const CardContainer = styled.div`
-  width: 80%;
+  width: 100%;
   height: 50vh;
-  margin-left: 3vh;
+  display: flex;
+  position: relative;
   border-radius: 10px;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -21,12 +22,11 @@ const CardContainer = styled.div`
 
 const CalendarContainer = styled.div`
   width: 100%;
+  min-height: 50vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 400px;
   overflow: hidden;
-  position: relative;
+  position: absolute;
 `;
 
 const CustomCalendar = styled(CalendarComponent)`
