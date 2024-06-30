@@ -10,9 +10,9 @@ interface SubmitButtonProps {
 function SubmitButton({ isSubmitting, children }: SubmitButtonProps) {
   return (
     <Button
-      size="medium"
-      shape="full"
-      color="primary"
+      $size="medium"
+      $shape="full"
+      $color="primary"
       disabled={isSubmitting}
       type="submit"
     >

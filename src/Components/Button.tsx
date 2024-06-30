@@ -2,15 +2,15 @@ import styled, { css } from 'styled-components';
 import sb from '../util/styledBranch.ts';
 
 interface ButtonProps {
-  size: 'small' | 'medium' | 'large';
-  shape: 'circle' | 'rounded' | 'square' | 'full';
-  color: 'primary' | 'white';
-  border?: boolean;
+  $size: 'small' | 'medium' | 'large';
+  $shape: 'circle' | 'rounded' | 'square' | 'full';
+  $color: 'primary' | 'white';
+  $border?: boolean;
 }
 
 const Button = styled.button<ButtonProps>`
   ${(props) =>
-    props.border
+    props.$border
       ? css`
           border: 1px solid #999;
           box-sizing: border-box;
@@ -19,9 +19,9 @@ const Button = styled.button<ButtonProps>`
           border: none;
         `}
   ${(props) =>
-    sb(props.size, {
+    sb(props.$size, {
       small: css`
-        ${sb(props.shape, {
+        ${sb(props.$shape, {
           circle: css`
             width: 2.25rem;
             height: 2.25rem;
@@ -44,7 +44,7 @@ const Button = styled.button<ButtonProps>`
         font-size: 0.875rem;
       `,
       medium: css`
-        ${sb(props.shape, {
+        ${sb(props.$shape, {
           circle: css`
             width: 2.75rem;
             height: 2.75rem;
@@ -67,7 +67,7 @@ const Button = styled.button<ButtonProps>`
         font-size: 1rem;
       `,
       large: css`
-        ${sb(props.shape, {
+        ${sb(props.$shape, {
           circle: css`
             width: 3.375rem;
             height: 3.375rem;
@@ -91,7 +91,7 @@ const Button = styled.button<ButtonProps>`
       `,
     })}
   ${(props) =>
-    sb(props.color, {
+    sb(props.$color, {
       primary: css`
         color: #fff;
         background-color: ${props.theme.color.primary};
@@ -103,14 +103,6 @@ const Button = styled.button<ButtonProps>`
         font-weight: ${props.theme.fontWeight.regular};
       `,
     })}
-  /* width: 100%;
-  padding: 1rem 0;
-  border: none;
-  border-radius: 16px;
-  color: #fff;
-  background-color: #ff385c;
-  font-size: 1.25rem;
-  font-weight: 700; */
   cursor: pointer;
   &:hover {
     filter: brightness(90%);
@@ -118,7 +110,7 @@ const Button = styled.button<ButtonProps>`
 `;
 
 Button.defaultProps = {
-  border: false,
+  $border: false,
 };
 
 export default Button;

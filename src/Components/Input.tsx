@@ -32,7 +32,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ register = {}, label = '', message = '', ...props }, ref) => (
     <label htmlFor={register ? register.name : ''}>
       {label.length ? <InputLabel>{label}</InputLabel> : ''}
-      {createElement(InputLayout, { ref, ...register, ...props })}
+      {createElement(InputLayout, {
+        ref,
+        ...register,
+        ...props,
+      })}
       {message && <ErrorMessage>{message}</ErrorMessage>}
     </label>
   ),
