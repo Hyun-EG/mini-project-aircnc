@@ -40,13 +40,10 @@ const addReservation = async ({
   }
 
   reservation.push({
-    roomID: room.id,
+    room,
     userID,
-    price: totalPrice,
-    capacity: 4, // RoomData에는 지금 이게 없긴 하네..
     checkInDate,
     checkOutDate,
-    reservationConfirmDate: new Date(),
   });
 
   await new Promise<void>((resolve) => {

@@ -10,7 +10,7 @@ interface SearchState {
 
 const initialState: SearchState = {
   location: '',
-  checkInDate: new Date(),
+  checkInDate: new Date(), // 여기 Date 정보 number나 string으로 변환 필요할듯(nonserial)
   checkOutDate: new Date(Date.now() + 86400000),
   guestCount: 0,
 };
