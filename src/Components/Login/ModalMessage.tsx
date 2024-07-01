@@ -16,6 +16,9 @@ function ModalMessage({ message = '' }: MessageProps) {
     <>
       <MessageLayout>{message}</MessageLayout>
       <Button
+        $size="medium"
+        $shape="rounded"
+        $color="primary"
         onClick={() => {
           dispatch(setModalStatus('email'));
         }}

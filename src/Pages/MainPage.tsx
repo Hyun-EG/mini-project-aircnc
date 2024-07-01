@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CardGrid from '../Components/CardGrid.tsx';
-import { RoomData } from '../assets/interfaces.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 import Header from '../Components/Header/Header.tsx';
 
 const BodyContainer = styled.div`
@@ -10,13 +10,13 @@ const BodyContainer = styled.div`
 `;
 
 function MainPage() {
-  const [listings, setListings] = useState<RoomData[]>([]);
+  const [listings, setListings] = useState<RoomDetailData[]>([]);
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
         const response = await fetch('/src/assets/room_data.json');
-        const data: RoomData[] = await response.json();
+        const data: RoomDetailData[] = await response.json();
         setListings(data);
       } catch (error) {
         console.error('Error fetching listings:', error);

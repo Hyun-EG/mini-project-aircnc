@@ -1,47 +1,39 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
-import { RoomData } from '../assets/interfaces.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
   display: flex;
-  margin-top: 4vh;
 `;
 
 const CardGridContainer = styled.div`
   width: 60%;
   margin-top: 13vh;
-  overflow-y: auto;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  margin-top: 10vh;
-  text-align: center;
+  overflow: auto;
 `;
 
 function SearchResultPage() {
   const { location } = useSelector((state: RootState) => state.search);
-  const [listings, setListings] = useState<RoomData[]>([]);
+  const [listings, setListings] = useState<RoomDetailData[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
-  const [error, setError] = useState<string | null>(null);
-  const loader = useRef<HTMLDivElement>(null);
+  const loader = useRef(null);
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
         const response = await fetch('src/assets/room_data.json');
-        const rooms: RoomData[] = await response.json();
+        const rooms: RoomDetailData[] = await response.json();
         const filteredRooms = rooms.filter((room) =>
           room.city.includes(location),
         );
         setListings(filteredRooms);
       } catch (error) {
-        setError('정보 불러오기를 실패했습니다.');
+        console.error('Error fetching listings:', error);
       }
     };
 
@@ -50,15 +42,12 @@ function SearchResultPage() {
     }
   }, [location]);
 
-  const handleObserver = useCallback(
-    (entities: IntersectionObserverEntry[]) => {
-      const target = entities[0];
-      if (target.isIntersecting) {
-        setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
-      }
-    },
-    [listings.length],
-  );
+  const handleObserver = (entities: IntersectionObserverEntry[]) => {
+    const target = entities[0];
+    if (target.isIntersecting) {
+      setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
+    }
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
@@ -71,12 +60,11 @@ function SearchResultPage() {
     return () => {
       observer.disconnect();
     };
-  }, [handleObserver]);
+  }, [listings]);
 
   return (
     <SearchPageContainer>
       <Header />
-      {error && <ErrorMessage>{error}</ErrorMessage>}
       <CardGridContainer>
         <CardGrid listings={listings.slice(0, visibleCount)} />
         <div ref={loader} />

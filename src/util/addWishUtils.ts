@@ -14,7 +14,7 @@ const addWishlist = async ({ roomID, userID }: Wishlist) => {
 
   wishlist.push({ roomID, userID });
 
-  await new Promise((resolve) => {
+  await new Promise<void>((resolve) => {
     localStorage.setItem('wishlists', JSON.stringify(wishlist));
     resolve();
   });

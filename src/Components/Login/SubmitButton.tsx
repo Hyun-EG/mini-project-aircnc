@@ -1,4 +1,3 @@
-import React from 'react';
 import { IconDots } from '@tabler/icons-react';
 import Button from '../Button.tsx';
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { RoomData } from '../assets/interfaces.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
 
@@ -52,7 +52,7 @@ const Info = styled.p`
   color: #333;
 `;
 
-function Card(props: RoomData) {
+function Card(props: RoomDetailData) {
   const { id, image_url, name, address, price } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();

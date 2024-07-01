@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { RoomDetailData } from '../../assets/interfaces.ts';
 
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -15,7 +16,7 @@ const MapInstance = styled.div<{ width: string; height: string }>`
 interface MapProps {
   width: string;
   height: string;
-  listings: RoomData[];
+  listings: RoomDetailData[];
 }
 
 function Map({ width, height, listings }: MapProps) {
@@ -25,8 +26,8 @@ function Map({ width, height, listings }: MapProps) {
     const { naver } = window;
 
     const initialCenter = new naver.maps.LatLng(
-      parseFloat(listings[0].map_y),
-      parseFloat(listings[0].map_x),
+      listings[0].map_y,
+      listings[0].map_x,
     );
 
     const mapOptions = {
@@ -40,18 +41,18 @@ function Map({ width, height, listings }: MapProps) {
     };
 
     const map = new naver.maps.Map('map', mapOptions);
-    const bounds = new naver.maps.LatLngBounds();
+    const bounds = new naver.maps.LatLngBounds(initialCenter, initialCenter);
 
-    let openInfoWindow;
+    let openInfoWindow: naver.maps.InfoWindow | undefined;
 
     listings.forEach((listing) => {
       const markerPosition = new naver.maps.LatLng(
-        parseFloat(listing.map_y),
-        parseFloat(listing.map_x),
+        listing.map_y,
+        listing.map_x,
       );
       const marker = new naver.maps.Marker({
         position: markerPosition,
-        map: map,
+        map,
       });
 
       bounds.extend(markerPosition);
@@ -76,12 +77,12 @@ function Map({ width, height, listings }: MapProps) {
         backgroundColor: 'transparent',
       });
 
-      naver.maps.Event.addListener(marker, 'mouseover', function () {
+      naver.maps.Event.addListener(marker, 'mouseover', () => {
         infowindow.open(map, marker);
         openInfoWindow = infowindow;
       });
 
-      naver.maps.Event.addListener(marker, 'mouseout', function () {
+      naver.maps.Event.addListener(marker, 'mouseout', () => {
         if (openInfoWindow) {
           openInfoWindow.close();
         }
