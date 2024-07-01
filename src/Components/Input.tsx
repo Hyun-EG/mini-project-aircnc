@@ -5,7 +5,7 @@ import ErrorMessage from './ErrorMessage.tsx';
 
 const InputLayout = styled.input`
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem 1.5rem;
   border: 1px solid #999;
   border-radius: 16px;
   outline-color: #ff385c;
@@ -32,7 +32,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ register = {}, label = '', message = '', ...props }, ref) => (
     <label htmlFor={register ? register.name : ''}>
       {label.length ? <InputLabel>{label}</InputLabel> : ''}
-      {createElement(InputLayout, { ref, ...register, ...props })}
+      {createElement(InputLayout, {
+        ref,
+        ...register,
+        ...props,
+      })}
       {message && <ErrorMessage>{message}</ErrorMessage>}
     </label>
   ),

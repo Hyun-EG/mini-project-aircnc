@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RoomData } from '../../assets/interfaces.ts';
+import { RoomDetailData } from '../../assets/interfaces.ts';
 
 interface RoomsState {
-  selectedRoom: RoomData | null;
+  selectedRoom: RoomDetailData | null;
 }
 
 const initialState: RoomsState = {
@@ -13,7 +13,7 @@ const roomDetailSlice = createSlice({
   name: 'rooms',
   initialState,
   reducers: {
-    selectRoom(state, action: PayloadAction<RoomData>) {
+    selectRoom(state, action: PayloadAction<RoomDetailData>) {
       state.selectedRoom = action.payload;
     },
   },

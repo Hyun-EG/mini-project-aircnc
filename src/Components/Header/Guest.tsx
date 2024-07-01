@@ -1,134 +1,76 @@
-import React from 'react';
 import styled from 'styled-components';
+import { IconPlus, IconMinus } from '@tabler/icons-react';
+import Button from '../Button.tsx';
 
-interface GuestSelectProps {
-  isOpen: boolean;
-}
-
-const GuestSelectContainer = styled.div<GuestSelectProps>`
-  width: 30vh;
-  max-height: ${(props) => (props.isOpen ? '25vh' : '0')};
+const GuestSelectContainer = styled.div`
   position: absolute;
-  padding: 1vh 0;
-  top: 115%;
-  left: 0;
+  width: fit-content;
+  top: calc(100% + 0.5rem);
+  right: 0;
   background-color: white;
   border: 1px solid lightgrey;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition:
-    max-height 0.3s ease-out,
-    visibility 0.3s ease-out;
-  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
-  @media (max-width: 768px) {
-    width: 20vh;
-    height: 12vh;
-  }
-`;
-
-const GuestOption = styled.div`
-  width: 90%;
+  border-radius: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1vh;
-  border-bottom: 1px solid lightgrey;
-
-  &:last-child {
-    border-bottom: none;
+  gap: 1rem;
+  font-size: 1rem;
+  padding: 1rem;
+  @media (min-width: 601px) {
+    width: 30%;
   }
 `;
 
-const GuestOptionLabel = styled.div`
-  font-size: 1.5vh;
-  @media (max-width: 768px) {
-    font-size: 2vh;
-  }
-`;
+const GuestOptionLabel = styled.label``;
 
 const GuestOptionCounter = styled.div`
   display: flex;
   align-items: center;
-  font-size: 2vh;
+  gap: 1rem;
 `;
 
-const GuestOptionButton = styled.button`
-  width: 3vh;
-  height: 3vh;
+const GuestTotalCount = styled.span`
+  min-width: 2rem;
   display: flex;
   justify-content: center;
-  align-items: center;
-  border: 1px solid lightgrey;
-  border-radius: 50%;
-  background: none;
-  cursor: pointer;
-  font-size: 2vh;
-  margin: 0 1vh;
-  @media (max-width: 768px) {
-    width: 4vh;
-    height: 4vh;
-  }
-`;
-
-const ConfirmButton = styled.button`
-  width: 60%;
-  height: 5vh;
-  margin-top: 10px;
-  background-color: #ff385c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 2vh;
-  @media (max-width: 768px) {
-    width: 40%;
-  }
 `;
 
 type GuestType = 'total';
 
 interface GuestProps {
-  isOpen: boolean;
   counts: Record<GuestType, number>;
-  onChange: (type: GuestType, delta: number) => void;
-  onConfirm: () => void;
+  onChange: (delta: number) => void;
 }
 
-export default function Guest({
-  isOpen,
-  counts,
-  onChange,
-  onConfirm,
-}: GuestProps) {
+export default function Guest({ counts, onChange }: GuestProps) {
   return (
-    <GuestSelectContainer isOpen={isOpen}>
-      <GuestOption>
-        <GuestOptionLabel>인원</GuestOptionLabel>
-        <GuestOptionCounter>
-          <GuestOptionButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onChange('total', -1);
-            }}
-          >
-            -
-          </GuestOptionButton>
-          <div>{counts.total}</div>
-          <GuestOptionButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onChange('total', 1);
-            }}
-          >
-            +
-          </GuestOptionButton>
-        </GuestOptionCounter>
-      </GuestOption>
-      <ConfirmButton onClick={onConfirm}>확인</ConfirmButton>
+    <GuestSelectContainer>
+      <GuestOptionLabel>인원</GuestOptionLabel>
+      <GuestOptionCounter>
+        <Button
+          $size="small"
+          $shape="circle"
+          $color="white"
+          $border
+          onClick={() => {
+            onChange(-1);
+          }}
+        >
+          <IconMinus size={16} />
+        </Button>
+        <GuestTotalCount>{counts.total}</GuestTotalCount>
+        <Button
+          $size="small"
+          $shape="circle"
+          $color="white"
+          $border
+          onClick={() => {
+            onChange(1);
+          }}
+        >
+          <IconPlus size={16} />
+        </Button>
+      </GuestOptionCounter>
     </GuestSelectContainer>
   );
 }

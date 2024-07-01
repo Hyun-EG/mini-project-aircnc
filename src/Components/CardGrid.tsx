@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from './Card.tsx';
-import { RoomData } from '../assets/interfaces.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 
 const GridContainer = styled.div`
   display: grid;
@@ -11,7 +11,7 @@ const GridContainer = styled.div`
 `;
 
 interface CardGridProps {
-  listings: RoomData[];
+  listings: RoomDetailData[];
 }
 
 export default function CardGrid({ listings }: CardGridProps) {
