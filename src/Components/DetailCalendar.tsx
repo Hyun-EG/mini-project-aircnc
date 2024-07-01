@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store.ts';
@@ -37,7 +38,7 @@ const CustomCalendar = styled(CalendarComponent)`
   visibility: visible;
 `;
 
-function DetailCalendar() {
+export default function DetailCalendar() {
   const dispatch = useDispatch();
   const selectedRoom = useSelector(
     (state: RootState) => state.rooms.selectedRoom,
@@ -91,5 +92,3 @@ function DetailCalendar() {
     </CardContainer>
   );
 }
-
-export default DetailCalendar;

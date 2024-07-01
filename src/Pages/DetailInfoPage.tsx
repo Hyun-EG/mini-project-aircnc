@@ -68,19 +68,6 @@ const BookingDetailsContent = styled.div`
   margin-top: 5vh;
 `;
 
-const AddSubGuestBtn = styled.button`
-  width: 4vh;
-  height: 4vh;
-  margin-left: 2vh;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 3vh;
-  font-weight: bold;
-  color: #fff;
-  background: #ff385c;
-`;
-
 const MapTitle = styled.div`
   font-size: 3vh;
   margin-bottom: 2.5vh;

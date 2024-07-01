@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
@@ -152,7 +152,13 @@ export default function CalendarComponent({
       currentDate.getMonth() - 1,
       1,
     );
+    const newNextMonthDate = new Date(
+      nextMonthDate.getFullYear(),
+      nextMonthDate.getMonth() - 1,
+      1,
+    );
     dispatch(setCurrentDate(newCurrentDate.toISOString()));
+    dispatch(setNextMonthDate(newNextMonthDate.toISOString()));
   };
 
   const handleNextMonth = () => {
@@ -161,7 +167,13 @@ export default function CalendarComponent({
       currentDate.getMonth() + 1,
       1,
     );
+    const newNextMonthDate = new Date(
+      nextMonthDate.getFullYear(),
+      nextMonthDate.getMonth() + 1,
+      1,
+    );
     dispatch(setCurrentDate(newCurrentDate.toISOString()));
+    dispatch(setNextMonthDate(newNextMonthDate.toISOString()));
   };
 
   const handleDateClick = (date: Date) => {
@@ -206,7 +218,6 @@ export default function CalendarComponent({
       </NavigationContainer>
       <CalendarWrapper>
         <Calendar
-          key={currentDate.toISOString()}
           value={currentDate}
           formatDay={formatDay}
           tileDisabled={tileDisabled}
@@ -215,7 +226,6 @@ export default function CalendarComponent({
           showNeighboringMonth={false}
         />
         <Calendar
-          key={nextMonthDate.toISOString()}
           value={nextMonthDate}
           formatDay={formatDay}
           tileDisabled={tileDisabled}
