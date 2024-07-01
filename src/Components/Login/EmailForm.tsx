@@ -50,6 +50,7 @@ function EmailForm() {
       const matchEmail = users.filter((user) => user.email === data.email);
       if (!matchEmail.length) {
         dispatch(setModalStatus('signup'));
+        return;
       }
 
       dispatch(setEmail(matchEmail[0].email));
