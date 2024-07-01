@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { IconX } from '@tabler/icons-react';
 import { RootState, AppDispatch } from '../../redux/store.ts';
 import {
   LoginModalStatus,
@@ -13,6 +14,7 @@ import SignupForm from './SignupForm.tsx';
 import FindPasswordForm from './FindPasswordForm.tsx';
 import NewPasswordForm from './NewPasswordForm.tsx';
 import ModalMessage from './ModalMessage.tsx';
+import Button from '../Button.tsx';
 import LogoImage from '../../assets/images/logo.svg';
 
 const LoginModalLayout = styled.div`
@@ -52,15 +54,9 @@ const LoginModalBackground = styled.div`
   }
 `;
 
-const LoginModalCloseButton = styled.button`
-  width: 2rem;
-  height: 2rem;
+const LoginModalCloseButton = styled.div`
+  width: fit-content;
   margin-left: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  background-color: white;
   @media (min-width: 769px) {
     display: none;
   }
@@ -121,8 +117,15 @@ function LoginModal() {
       <>
         <LoginModalBackground onClick={handleCloseModal} />
         <LoginModalLayout>
-          <LoginModalCloseButton onClick={handleCloseModal}>
-            X
+          <LoginModalCloseButton>
+            <Button
+              $size="small"
+              $shape="circle"
+              $color="white"
+              onClick={handleCloseModal}
+            >
+              <IconX />
+            </Button>
           </LoginModalCloseButton>
           <LoginModalLogo src={LogoImage} />
           {status === 'email' && <EmailForm />}
