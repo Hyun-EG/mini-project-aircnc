@@ -110,6 +110,7 @@ const NavigationButton = styled.button`
 `;
 
 const formatDay = (locale: string | undefined, date: Date) => {
+  console.log(locale);
   return date.getDate().toString();
 };
 

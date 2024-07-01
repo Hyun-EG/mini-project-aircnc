@@ -7,10 +7,6 @@ const addReservation = async ({
   checkOutDate,
 }: Reservation) => {
   const reservation = JSON.parse(localStorage.getItem('reservedRoom') || '[]');
-  const pricePerNight = room.price;
-  const nights =
-    (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
-  const totalPrice = pricePerNight * nights;
 
   const isConflict = reservation.some((res: Reservation) => {
     const resRoom = res.room.id; // 이거 이상하다
