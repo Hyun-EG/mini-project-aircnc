@@ -90,10 +90,13 @@ const SearchButtonItem = styled.div<{ $openSelect: SelectMode }>`
     background-color: #ddd;
   }
   @media (min-width: 601px) {
-    min-width: 7.5rem;
+    min-width: 6rem;
+  }
+  @media (min-width: 769px) {
+    min-width: 7.75rem;
   }
   @media (min-width: 1024px) {
-    min-width: 10rem;
+    min-width: 11.5rem;
   }
 `;
 
@@ -129,6 +132,10 @@ const HeaderSearchButton = styled.div`
   }
 `;
 
+const HeaderSearchButtonConditionalText = styled.span`
+  margin-right: 0.5rem;
+`;
+
 interface SearchProps {
   windowWidth: number;
 }
@@ -150,7 +157,8 @@ export default function HeaderSearch({
     }
   }, [locationPath, dispatch]);
 
-  const checkIfMobile = () => windowWidth < 600;
+  const checkIfMobile = () => windowWidth < 769;
+  const checkIfDesktop = () => windowWidth > 1023;
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -329,14 +337,28 @@ export default function HeaderSearch({
         )}
       </SearchGuest>
       <HeaderSearchButton>
-        <Button
-          $size="medium"
-          $shape="circle"
-          $color="primary"
-          onClick={handleSearch}
-        >
-          <IconSearch color="white" />
-        </Button>
+        {checkIfDesktop() && openSelect.length ? (
+          <Button
+            $size="small"
+            $shape="rounded"
+            $color="primary"
+            onClick={handleSearch}
+          >
+            <HeaderSearchButtonConditionalText>
+              검색
+            </HeaderSearchButtonConditionalText>
+            <IconSearch color="white" />
+          </Button>
+        ) : (
+          <Button
+            $size="medium"
+            $shape="circle"
+            $color="primary"
+            onClick={handleSearch}
+          >
+            <IconSearch color="white" />
+          </Button>
+        )}
       </HeaderSearchButton>
     </SearchBox>
   );

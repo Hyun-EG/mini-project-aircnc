@@ -1,7 +1,9 @@
 // src/Components/Footer.tsx
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 import { RootState } from '../redux/store.ts';
+import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
 
@@ -15,30 +17,10 @@ const FooterContainer = styled.footer`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 1rem;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  z-index: 1000; //네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
-`;
-
-const Button = styled.button`
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-`;
-
-const LikeButton = styled(Button)`
-  background-color: white;
-  color: #ff385c;
-  border-color: #ff385c;
-  border-radius: 5px;
-`;
-
-const ReserveButton = styled(Button)`
-  background-color: #ff385c;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  z-index: 100; //네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
 `;
 
 function DetailFooter() {
@@ -76,8 +58,17 @@ function DetailFooter() {
 
   return (
     <FooterContainer>
-      <LikeButton onClick={handleLike}>좋아요</LikeButton>
-      <ReserveButton onClick={handleReserve}>예약하기</ReserveButton>
+      <Button $size="small" $shape="circle" $color="white" onClick={handleLike}>
+        {room ? <IconHeart color="red" /> : <IconHeartFilled color="red" />}
+      </Button>
+      <Button
+        $size="medium"
+        $shape="square"
+        $color="primary"
+        onClick={handleReserve}
+      >
+        예약하기
+      </Button>
     </FooterContainer>
   );
 }
