@@ -37,6 +37,13 @@ export default function DetailMap({ width, height, listing }: DetailMapProps) {
     const marker = new naver.maps.Marker({
       position: mapOptions.center,
       map,
+      icon: {
+        url: '/location_on.png',
+        size: new naver.maps.Size(36, 36),
+        scaledSize: new naver.maps.Size(36, 36),
+        origin: new naver.maps.Point(0, 0),
+        anchor: new naver.maps.Point(18, 36),
+      },
     });
   }, [listing]);
 
