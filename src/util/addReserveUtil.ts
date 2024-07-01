@@ -13,7 +13,7 @@ const addReservation = async ({
   const totalPrice = pricePerNight * nights;
 
   const isConflict = reservation.some((res: Reservation) => {
-    const resRoom = res.roomID;
+    const resRoom = res.room.id; // 이거 이상하다
     const resCheckIn = new Date(res.checkInDate);
     const resCheckOut = new Date(res.checkOutDate);
 
@@ -49,7 +49,7 @@ const addReservation = async ({
     reservationConfirmDate: new Date(),
   });
 
-  await new Promise((resolve) => {
+  await new Promise<void>((resolve) => {
     localStorage.setItem('reservedRoom', JSON.stringify(reservation));
     resolve();
   });

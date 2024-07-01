@@ -1,3 +1,4 @@
+// 현재 주소 반환하기..
 interface Coordinates {
   latitude: number;
   longitude: number;

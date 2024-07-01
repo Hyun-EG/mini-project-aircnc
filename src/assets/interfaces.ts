@@ -50,7 +50,7 @@ export interface CalendarProps extends Toggleable {
   onDateChange: (date: Date) => void;
   checkInDate: Date | null;
   checkOutDate: Date | null;
-  className: string;
+  className?: string;
 }
 
 export interface Reservation {

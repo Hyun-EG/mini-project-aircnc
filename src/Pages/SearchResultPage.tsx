@@ -42,7 +42,7 @@ function SearchResultPage() {
     }
   }, [location]);
 
-  const handleObserver = (entities) => {
+  const handleObserver = (entities: IntersectionObserverEntry[]) => {
     const target = entities[0];
     if (target.isIntersecting) {
       setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));

@@ -7,7 +7,7 @@ const isDateConflict = (
   roomID: number,
 ): boolean => {
   return reservations.some((res: Reservation) => {
-    const resRoom = res.roomID;
+    const resRoom = res.room.id;
     const resCheckIn = new Date(res.checkInDate);
     const resCheckOut = new Date(res.checkOutDate);
 
