@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import searchBtn from '../../assets/images/search-btn.svg';
+import { IconSearch } from '@tabler/icons-react';
 import CalendarComponent from './Calendar.tsx';
 import Guest from './Guest.tsx';
 import { RootState } from '../../redux/store.ts';
@@ -13,261 +13,136 @@ import {
   setGuestCount,
   resetSearch,
 } from '../../redux/slices/searchSlice.ts';
-import {
-  SearchBoxProps,
-  LocationSelectProps,
-  DateSelectProps,
-  GuestSelectProps,
-} from '../../assets/interfaces.ts';
+import HeaderSearchLocation from './HeaderSearchLocation.tsx';
+import Button from '../Button.tsx';
 import locationImg from '../../assets/images/airplane.png';
 import checkImg from '../../assets/images/calendar.png';
 import usersImg from '../../assets/images/users.png';
 
-const SearchBox = styled.div<SearchBoxProps>`
-  width: 90vh;
-  height: 7vh;
+type SelectMode = '' | 'location' | 'checkIn' | 'checkOut' | 'guest';
+
+const SearchBox = styled.menu<{ $openSelect: SelectMode }>`
+  width: fit-content;
+  margin: 0 auto;
   display: flex;
   border: 1px solid lightgrey;
   border-radius: 50px;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   position: relative;
-  @media (max-width: 768px) {
-    width: 50vh;
-    height: 7vh;
-  }
-  @media (max-width: 600px) {
-    width: 30vh;
-    height: 7vh;
-  }
+  ${(props) =>
+    props.$openSelect.length &&
+    css`
+      background-color: rgba(242, 242, 242);
+    `}
 `;
 
-const SearchLocation = styled.div<LocationSelectProps>`
-  width: 28vh;
-  height: 7vh;
-  border-radius: 50px;
+const SearchItem = styled.li<{ $openSelect: SelectMode; $isOpen: SelectMode }>`
+  ${(props) =>
+    props.$openSelect === props.$isOpen &&
+    css`
+      z-index: 10;
+      & > button {
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      }
+      & > button:hover {
+        filter: none;
+      }
+    `}
+  ${(props) =>
+    props.$openSelect !== props.$isOpen &&
+    css`
+      filter: brightness(95%);
+    `}
+    ${(props) =>
+    props.$openSelect.length === 0 &&
+    css`
+      filter: none;
+    `}
+`;
+
+const SearchLocation = styled(SearchItem)``;
+const SearchCheckIn = styled(SearchItem)``;
+const SearchCheckOut = styled(SearchItem)``;
+const SearchGuest = styled(SearchItem)``;
+
+const SearchButtonItem = styled.div<{ $openSelect: SelectMode }>`
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-left: 4vh;
-  position: relative;
-  background: ${(props) => (props.isOpen ? 'lightgrey' : 'transparent')};
-
+  align-items: flex-start;
   &::after {
-    content: '';
+    ${(props) =>
+      props.$openSelect.length
+        ? css`
+            content: none;
+          `
+        : css`
+            content: '';
+          `}
     position: absolute;
-    right: 0;
-    height: 60%;
-    border-right: 1px solid lightgrey;
-    transition: border-right 0.3s;
+    top: 50%;
+    right: -1.5rem;
+    width: 1px;
+    height: 75%;
+    transform: translateY(-50%);
+    background-color: #ddd;
   }
+  @media (min-width: 601px) {
+    min-width: 7.5rem;
+  }
+  @media (min-width: 1024px) {
+    min-width: 10rem;
+  }
+`;
 
-  &:hover {
-    background: lightgrey;
+const SearchButtonTitle = styled.span`
+  font-size: 0.75rem;
+`;
 
+const SearchButtonContent = styled.span`
+  font-size: 1rem;
+`;
+
+const HeaderSearchButton = styled.div`
+  position: relative;
+  z-index: 100;
+  & > button {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  @media (min-width: 601px) {
+    position: absolute;
+    right: 0.5rem;
+    transform: none;
+    & > button {
+      box-shadow: none;
+    }
     &::after {
-      border-right: none;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -0.5rem;
+      width: 0.5rem;
+      height: 100%;
     }
   }
-  @media (max-width: 768px) {
-    width: 20vh;
-    height: 7vh;
-  }
-  @media (max-width: 600px) {
-    width: 10vh;
-    padding-right: 1vh;
-    padding-left: 2vh;
-  }
 `;
 
-const LocationOption = styled.div`
-  width: 5vh;
-  height: 3vh;
-  margin: 1vh;
-  padding: 0.5vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid lightgrey;
-  border-radius: 20px;
-  font-size: 2vh;
-  cursor: pointer;
-  &:hover {
-    background-color: lightgrey;
-  }
-`;
+interface SearchProps {
+  windowWidth: number;
+}
 
-const LocationTitle = styled.div`
-  font-size: 2vh;
-  font-weight: bold;
-  @media (max-width: 768px) {
-    font-size: 1.5vh;
-  }
-  @media (max-width: 600px) {
-  }
-`;
-
-const LocationContent = styled.div`
-  font-size: 1.5vh;
-  @media (max-width: 768px) {
-    font-size: 1.2vh;
-  }
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-
-const LocationSelectContainer = styled.div<LocationSelectProps>`
-  width: 58vh;
-  max-height: ${(props) => (props.isOpen ? '12vh' : '0')};
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  top: calc(115%);
-  left: 0;
-  align-items: center;
-  background-color: white;
-  border: 1px solid lightgrey;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
-  @media (max-width: 768px) {
-    width: 35vh;
-    max-height: ${(props) => (props.isOpen ? '15vh' : '0')};
-  }
-`;
-
-const SearchDate = styled.div<DateSelectProps>`
-  width: 23vh;
-  height: 7vh;
-  border-radius: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 2vh;
-  position: relative;
-  background: ${(props) => (props.isOpen ? 'lightgrey' : 'transparent')};
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    height: 60%;
-    border-right: 1px solid lightgrey;
-    transition: border-right 0.3s;
-  }
-
-  &:hover {
-    background: lightgrey;
-
-    &::after {
-      border-right: none;
-    }
-  }
-  @media (max-width: 600px) {
-    width: 15vh;
-    padding-left: 2vh;
-  }
-`;
-
-const DateTitle = styled.div`
-  font-size: 2vh;
-  font-weight: bold;
-  @media (max-width: 768px) {
-    font-size: 1.5vh;
-  }
-`;
-
-const DateContent = styled.div`
-  font-size: 1.5vh;
-  @media (max-width: 768px) {
-    font-size: 1.2vh;
-  }
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-
-const SearchGuest = styled.div<GuestSelectProps>`
-  width: 20vh;
-  height: 7vh;
-  border-radius: 50px;
-  padding: 0 1vh 0 1vh;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: ${(props) => (props.isOpen ? 'lightgrey' : 'transparent')};
-  position: relative;
-
-  &:hover {
-    background: lightgrey;
-  }
-
-  @media (max-width: 600px) {
-    width: 9vh;
-    padding-left: 2vh;
-  }
-`;
-
-const GuestTitle = styled.div`
-  font-weight: bold;
-  font-size: 2vh;
-  @media (max-width: 768px) {
-    font-size: 1.5vh;
-  }
-`;
-
-const GuestContent = styled.div`
-  font-size: 1.5vh;
-  @media (max-width: 768px) {
-    font-size: 1.2vh;
-  }
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-
-const SearchBtnImg = styled.img`
-  width: 5vh;
-  margin-right: 1vh;
-  cursor: pointer;
-`;
-
-const locations = [
-  '서울',
-  '부산',
-  '울산',
-  '인천',
-  '대전',
-  '경기',
-  '제주',
-  '강원',
-];
-
-export default function HeaderSearch(): JSX.Element {
+export default function HeaderSearch({
+  windowWidth,
+}: SearchProps): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { location, checkInDate, checkOutDate, guestCount } = useSelector(
     (state: RootState) => state.search,
   );
-  const [openSelect, setOpenSelect] = useState<string>('');
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [openSelect, setOpenSelect] = useState<SelectMode>('');
   const locationPath = useLocation().pathname;
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     if (locationPath === '/') {
@@ -275,53 +150,7 @@ export default function HeaderSearch(): JSX.Element {
     }
   }, [locationPath, dispatch]);
 
-  const locationPhone = () => {
-    if (windowWidth <= 600) {
-      return <img src={locationImg} alt="location" width="15vh" />;
-    }
-
-    if (windowWidth <= 768) {
-      return '여행지';
-    }
-
-    return '여행지';
-  };
-
-  const checkInPhone = () => {
-    if (windowWidth <= 600) {
-      return <img src={checkImg} alt="check" width="15vh" />;
-    }
-
-    if (windowWidth <= 768) {
-      return '체크인';
-    }
-
-    return '체크인';
-  };
-
-  const checkOutPhone = () => {
-    if (windowWidth <= 600) {
-      return <img src={checkImg} alt="check" width="15vh" />;
-    }
-
-    if (windowWidth <= 768) {
-      return '체크아웃';
-    }
-
-    return '체크아웃';
-  };
-
-  const usersPhone = () => {
-    if (windowWidth <= 600) {
-      return <img src={usersImg} alt="users" width="15vh" />;
-    }
-
-    if (windowWidth <= 768) {
-      return '게스트';
-    }
-
-    return '게스트';
-  };
+  const checkIfMobile = () => windowWidth < 600;
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -349,100 +178,166 @@ export default function HeaderSearch(): JSX.Element {
   };
 
   return (
-    <SearchBox isOpen={false}>
-      <SearchLocation
-        onClick={() =>
-          setOpenSelect(openSelect === 'location' ? '' : 'location')
-        }
-        isOpen={openSelect === 'location'}
-      >
-        <LocationTitle>{locationPhone()}</LocationTitle>
-        <LocationContent>{location || '여행지 선택'}</LocationContent>
-      </SearchLocation>
-      <LocationSelectContainer isOpen={openSelect === 'location'}>
-        {locations.map((loc) => (
-          <LocationOption
-            key={loc}
-            onClick={() => {
-              dispatch(setLocation(loc));
+    <SearchBox $openSelect={openSelect}>
+      <SearchLocation $openSelect={openSelect} $isOpen="location">
+        <Button
+          $size="medium"
+          $shape="rounded"
+          $color="white"
+          onClick={() =>
+            setOpenSelect(openSelect === 'location' ? '' : 'location')
+          }
+        >
+          <SearchButtonItem $openSelect={openSelect}>
+            <SearchButtonTitle>
+              {checkIfMobile() ? (
+                <img src={locationImg} alt="여행지" width="15vh" />
+              ) : (
+                '여행지'
+              )}
+            </SearchButtonTitle>
+            {!checkIfMobile() && (
+              <SearchButtonContent>
+                {location || '여행지 선택'}
+              </SearchButtonContent>
+            )}
+          </SearchButtonItem>
+        </Button>
+        {openSelect === 'location' && (
+          <HeaderSearchLocation
+            onClick={(location) => {
+              dispatch(setLocation(location));
               setOpenSelect('');
             }}
-          >
-            {loc}
-          </LocationOption>
-        ))}
-      </LocationSelectContainer>
-      <SearchDate
-        onClick={() => setOpenSelect(openSelect === 'checkIn' ? '' : 'checkIn')}
-        isOpen={openSelect === 'checkIn'}
-      >
-        <DateTitle>{checkInPhone()}</DateTitle>
-        <DateContent>
-          {checkInDate ? formatDate(checkInDate) : '체크인 선택'}
-        </DateContent>
-      </SearchDate>
-      <CalendarComponent
-        isOpen={openSelect === 'checkIn'}
-        onDateChange={(date) => {
-          if (!checkInDate || (checkInDate && checkOutDate)) {
-            dispatch(setCheckInDate(date));
-            dispatch(setCheckOutDate(null));
-          } else if (checkInDate && !checkOutDate) {
-            if (date < checkInDate) {
+          />
+        )}
+      </SearchLocation>
+      <SearchCheckIn $openSelect={openSelect} $isOpen="checkIn">
+        <Button
+          $size="medium"
+          $shape="rounded"
+          $color="white"
+          onClick={() =>
+            setOpenSelect(openSelect === 'checkIn' ? '' : 'checkIn')
+          }
+        >
+          <SearchButtonItem $openSelect={openSelect}>
+            <SearchButtonTitle>
+              {checkIfMobile() ? (
+                <img src={checkImg} alt="체크인" width="15vh" />
+              ) : (
+                '체크인'
+              )}
+            </SearchButtonTitle>
+            {!checkIfMobile() && (
+              <SearchButtonContent>
+                {checkInDate ? formatDate(checkInDate) : '체크인 선택'}
+              </SearchButtonContent>
+            )}
+          </SearchButtonItem>
+        </Button>
+        <CalendarComponent
+          isOpen={openSelect === 'checkIn'}
+          onDateChange={(date) => {
+            if (!checkInDate || (checkInDate && checkOutDate)) {
+              dispatch(setCheckInDate(date));
+              dispatch(setCheckOutDate(null));
+            } else if (checkInDate && !checkOutDate) {
+              if (date < checkInDate) {
+                dispatch(setCheckOutDate(checkInDate));
+                dispatch(setCheckInDate(date));
+              } else {
+                dispatch(setCheckOutDate(date));
+                setOpenSelect('');
+              }
+            }
+          }}
+          checkInDate={checkInDate}
+          checkOutDate={checkOutDate}
+        />
+      </SearchCheckIn>
+      <SearchCheckOut $openSelect={openSelect} $isOpen="checkOut">
+        <Button
+          $size="medium"
+          $shape="rounded"
+          $color="white"
+          onClick={() =>
+            setOpenSelect(openSelect === 'checkOut' ? '' : 'checkOut')
+          }
+        >
+          <SearchButtonItem $openSelect={openSelect}>
+            <SearchButtonTitle>
+              {checkIfMobile() ? (
+                <img src={checkImg} alt="체크아웃" width="15vh" />
+              ) : (
+                '체크아웃'
+              )}
+            </SearchButtonTitle>
+            {!checkIfMobile() && (
+              <SearchButtonContent>
+                {checkOutDate ? formatDate(checkOutDate) : '체크아웃 선택'}
+              </SearchButtonContent>
+            )}
+          </SearchButtonItem>
+        </Button>
+        <CalendarComponent
+          isOpen={openSelect === 'checkOut'}
+          onDateChange={(date) => {
+            if (date && checkInDate && date < checkInDate) {
               dispatch(setCheckOutDate(checkInDate));
               dispatch(setCheckInDate(date));
             } else {
               dispatch(setCheckOutDate(date));
               setOpenSelect('');
             }
-          }
-        }}
-        checkInDate={checkInDate}
-        checkOutDate={checkOutDate}
-      />
-      <SearchDate
-        onClick={() =>
-          setOpenSelect(openSelect === 'checkOut' ? '' : 'checkOut')
-        }
-        isOpen={openSelect === 'checkOut'}
-      >
-        <DateTitle>{checkOutPhone()}</DateTitle>
-        <DateContent>
-          {checkOutDate ? formatDate(checkOutDate) : '체크아웃 선택'}
-        </DateContent>
-      </SearchDate>
-      <CalendarComponent
-        isOpen={openSelect === 'checkOut'}
-        onDateChange={(date) => {
-          if (date && checkInDate && date < checkInDate) {
-            dispatch(setCheckOutDate(checkInDate));
-            dispatch(setCheckInDate(date));
-          } else {
-            dispatch(setCheckOutDate(date));
-            setOpenSelect('');
-          }
-        }}
-        checkInDate={checkInDate}
-        checkOutDate={checkOutDate}
-      />
-      <SearchGuest
-        onClick={() => setOpenSelect(openSelect === 'guest' ? '' : 'guest')}
-        isOpen={openSelect === 'guest'}
-      >
-        <div>
-          <GuestTitle>{usersPhone()}</GuestTitle>
-          <GuestContent>인원: {guestCount}</GuestContent>
-        </div>
-        <Guest
-          isOpen={openSelect === 'guest'}
-          counts={{ total: guestCount }}
-          onChange={(type, delta) => {
-            dispatch(setGuestCount(guestCount + delta));
           }}
-          onConfirm={() => setOpenSelect('')}
+          checkInDate={checkInDate}
+          checkOutDate={checkOutDate}
         />
+      </SearchCheckOut>
+      <SearchGuest $openSelect={openSelect} $isOpen="guest">
+        <Button
+          $size="medium"
+          $shape="rounded"
+          $color="white"
+          onClick={() => setOpenSelect(openSelect === 'guest' ? '' : 'guest')}
+        >
+          <SearchButtonItem $openSelect={openSelect}>
+            <SearchButtonTitle>
+              {checkIfMobile() ? (
+                <img src={usersImg} alt="인원" width="15vh" />
+              ) : (
+                '인원'
+              )}
+            </SearchButtonTitle>
+            {!checkIfMobile() && (
+              <SearchButtonContent>인원: {guestCount}</SearchButtonContent>
+            )}
+          </SearchButtonItem>
+        </Button>
+        {openSelect === 'guest' && (
+          <Guest
+            counts={{ total: guestCount }}
+            onChange={(delta) => {
+              const newGuestCount = guestCount + delta;
+              if (newGuestCount < 0) {
+                return;
+              }
+              dispatch(setGuestCount(newGuestCount));
+            }}
+          />
+        )}
       </SearchGuest>
-      <SearchBtnImg src={searchBtn} alt="search-btn" onClick={handleSearch} />
+      <HeaderSearchButton>
+        <Button
+          $size="medium"
+          $shape="circle"
+          $color="primary"
+          onClick={handleSearch}
+        >
+          <IconSearch color="white" />
+        </Button>
+      </HeaderSearchButton>
     </SearchBox>
   );
 }

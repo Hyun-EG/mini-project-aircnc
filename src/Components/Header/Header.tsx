@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
@@ -7,15 +7,10 @@ import HeaderMenu from './HeaderMenu.tsx';
 import LoginModal from '../Login/LoginModal.tsx';
 import logoSmall from '../../assets/images/logo-small.svg';
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.header`
   width: 100%;
-  height: 13vh;
   top: 0;
-  display: flex;
   position: fixed;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid lightgray;
   z-index: 1000;
   background-color: #ffffff;
   @media (max-width: 600px) {
@@ -24,12 +19,15 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const HeaderTop = styled.section`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const HeaderLogo = styled.img`
   cursor: pointer;
-  margin: 0 3vh;
-  width: 15vh;
-  height: 10vh;
-
   @media (max-width: 768px) {
     width: 8vh;
     height: 8vh;
@@ -84,9 +82,11 @@ export default function Header() {
 
   return (
     <HeaderContainer>
-      {logoPhone()}
-      <HeaderSearch />
-      <HeaderMenu />
+      <HeaderTop>
+        {logoPhone()}
+        <HeaderMenu windowWidth={windowWidth} />
+      </HeaderTop>
+      <HeaderSearch windowWidth={windowWidth} />
       <LoginModal />
     </HeaderContainer>
   );

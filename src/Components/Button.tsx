@@ -12,7 +12,7 @@ const Button = styled.button<ButtonProps>`
   ${(props) =>
     props.$border
       ? css`
-          border: 1px solid #999;
+          border: 1px solid #ccc;
           box-sizing: border-box;
         `
       : css`
@@ -103,9 +103,12 @@ const Button = styled.button<ButtonProps>`
         font-weight: ${props.theme.fontWeight.regular};
       `,
     })}
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   &:hover {
-    filter: brightness(90%);
+    filter: brightness(95%);
   }
 `;
 
