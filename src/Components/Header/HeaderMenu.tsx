@@ -97,7 +97,13 @@ export default function HeaderMenu() {
       <DropdownMenu isOpen={isOpen}>
         {user ? (
           <>
-            <MenuItem>예약 목록</MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/booked');
+              }}
+            >
+              예약 목록
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 removeCookie('user');

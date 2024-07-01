@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
 const DetailContainer = styled.div`
-  width: 110vh;
+  width: 100%;
   height: 35vh;
   border: 1px solid lightgrey;
   border-radius: 20px;

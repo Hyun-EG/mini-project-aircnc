@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
@@ -14,14 +14,21 @@ const SearchPageContainer = styled.div`
 const CardGridContainer = styled.div`
   width: 60%;
   margin-top: 13vh;
-  overflow: auto;
+  overflow-y: auto;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  margin-top: 10vh;
+  text-align: center;
 `;
 
 function SearchResultPage() {
   const { location } = useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomData[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
-  const loader = useRef(null);
+  const [error, setError] = useState<string | null>(null);
+  const loader = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -33,7 +40,7 @@ function SearchResultPage() {
         );
         setListings(filteredRooms);
       } catch (error) {
-        console.error('Error fetching listings:', error);
+        setError('정보 불러오기를 실패했습니다.');
       }
     };
 
@@ -42,12 +49,15 @@ function SearchResultPage() {
     }
   }, [location]);
 
-  const handleObserver = (entities) => {
-    const target = entities[0];
-    if (target.isIntersecting) {
-      setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
-    }
-  };
+  const handleObserver = useCallback(
+    (entities: IntersectionObserverEntry[]) => {
+      const target = entities[0];
+      if (target.isIntersecting) {
+        setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
+      }
+    },
+    [listings.length],
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
@@ -60,11 +70,12 @@ function SearchResultPage() {
     return () => {
       observer.disconnect();
     };
-  }, [listings]);
+  }, [handleObserver]);
 
   return (
     <SearchPageContainer>
       <Header />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       <CardGridContainer>
         <CardGrid listings={listings.slice(0, visibleCount)} />
         <div ref={loader} />

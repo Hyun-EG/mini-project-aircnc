@@ -104,28 +104,26 @@ export default function Guest({
   onChange,
   onConfirm,
 }: GuestProps) {
+  const handleDecrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (counts.total > 0) {
+      onChange('total', -1);
+    }
+  };
+
+  const handleIncrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange('total', 1);
+  };
+
   return (
     <GuestSelectContainer isOpen={isOpen}>
       <GuestOption>
         <GuestOptionLabel>인원</GuestOptionLabel>
         <GuestOptionCounter>
-          <GuestOptionButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onChange('total', -1);
-            }}
-          >
-            -
-          </GuestOptionButton>
+          <GuestOptionButton onClick={handleDecrement}>-</GuestOptionButton>
           <div>{counts.total}</div>
-          <GuestOptionButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onChange('total', 1);
-            }}
-          >
-            +
-          </GuestOptionButton>
+          <GuestOptionButton onClick={handleIncrement}>+</GuestOptionButton>
         </GuestOptionCounter>
       </GuestOption>
       <ConfirmButton onClick={onConfirm}>확인</ConfirmButton>
