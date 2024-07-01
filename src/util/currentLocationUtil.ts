@@ -47,6 +47,10 @@ const getAddressFromCoordinates = async (
 
   const data = await response.json();
   if (data.results && data.results.length > 0) {
+    console.log(
+      data.results[0].region.area1.name,
+      data.results[0].region.area2.name,
+    );
     return `${data.results[0].region.area1.name} ${data.results[0].region.area2.name}`;
   }
 

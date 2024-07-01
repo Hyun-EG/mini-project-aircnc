@@ -7,10 +7,6 @@ const addReservation = async ({
   checkOutDate,
 }: Reservation) => {
   const reservation = JSON.parse(localStorage.getItem('reservedRoom') || '[]');
-  const pricePerNight = room.price;
-  const nights =
-    (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
-  const totalPrice = pricePerNight * nights;
 
   const isConflict = reservation.some((res: Reservation) => {
     const resRoom = res.room.id; // 이거 이상하다
@@ -40,13 +36,10 @@ const addReservation = async ({
   }
 
   reservation.push({
-    roomID: room.id,
+    room,
     userID,
-    price: totalPrice,
-    capacity: 4, // RoomData에는 지금 이게 없긴 하네..
     checkInDate,
     checkOutDate,
-    reservationConfirmDate: new Date(),
   });
 
   await new Promise<void>((resolve) => {

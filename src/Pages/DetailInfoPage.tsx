@@ -1,7 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { IconPlus, IconMinus } from '@tabler/icons-react';
+import {
+  IconChevronLeft,
+  IconShare,
+  IconPlus,
+  IconMinus,
+} from '@tabler/icons-react';
 import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import DetailCard from '../Components/DetailCard.tsx';
@@ -9,8 +14,6 @@ import DetailCalendar from '../Components/DetailCalendar.tsx';
 import DetailFooter from '../Components/DetailFooter.tsx';
 import DetailMap from '../Components/Map/DetailMap.tsx';
 import { setGuestCount } from '../redux/slices/searchSlice.ts';
-import backBtn from '../assets/images/backbtn.svg';
-import shareBtn from '../assets/images/sharebtn.svg';
 import formatNumber from '../util/formatNumber.ts';
 import Button from '../Components/Button.tsx';
 
@@ -26,20 +29,8 @@ const ContainerHeader = styled.div`
   justify-content: space-between;
 `;
 
-const BackBtn = styled.img`
-  width: 4vh;
-  height: 4vh;
-  cursor: pointer;
-`;
-
 const ContainerHeaderTitle = styled.div`
   font-size: 2vw;
-`;
-
-const ShareBtn = styled.img`
-  width: 4vh;
-  height: 4vh;
-  cursor: pointer;
 `;
 
 const InfoContainer = styled.div`
@@ -162,9 +153,23 @@ function DetailInfoPage() {
       <Header />
       <BodyContainer>
         <ContainerHeader>
-          <BackBtn onClick={() => navigate(-1)} src={backBtn} />
+          <Button
+            $size="medium"
+            $shape="circle"
+            $color="white"
+            onClick={() => navigate(-1)}
+          >
+            <IconChevronLeft />
+          </Button>
           <ContainerHeaderTitle>{selectedRoom.name}</ContainerHeaderTitle>
-          <ShareBtn onClick={copyUrlToClipboard} src={shareBtn} />
+          <Button
+            $size="medium"
+            $shape="circle"
+            $color="white"
+            onClick={copyUrlToClipboard}
+          >
+            <IconShare />
+          </Button>
         </ContainerHeader>
         <InfoContainer>
           <DetailCard />
