@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { RoomData } from '../assets/interfaces.ts';
 import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
+import formatNumber from '../util/formatNumber.ts';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -69,7 +70,7 @@ function Card(props: RoomData) {
       <TextContainer>
         <Title>{name}</Title>
         <Address>{address}</Address>
-        <Info>{price}원/박</Info>
+        <Info>{formatNumber(price)}원/박</Info>
       </TextContainer>
     </CardContainer>
   );

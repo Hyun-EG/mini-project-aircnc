@@ -43,6 +43,12 @@ const ReserveButton = styled(Button)`
 
 function DetailFooter() {
   const room = useSelector((state: RootState) => state.rooms.selectedRoom);
+  const checkInDate = useSelector(
+    (state: RootState) => state.search.checkInDate,
+  );
+  const checkOutDate = useSelector(
+    (state: RootState) => state.search.checkOutDate,
+  );
   if (!room) {
     return <h1>Loading</h1>;
   }
@@ -55,15 +61,17 @@ function DetailFooter() {
 
   const handleReserve = () => {
     const userID = 'testID1'; // UserID
-    const checkInDate = new Date('2024-06-27'); // 체크인 날짜
-    const checkOutDate = new Date('2024-06-30'); // 체크아웃 날짜
 
-    addReservation({
-      room,
-      userID,
-      checkInDate,
-      checkOutDate,
-    });
+    if (checkInDate !== null && checkOutDate !== null) {
+      addReservation({
+        room,
+        userID,
+        checkInDate,
+        checkOutDate,
+      });
+    } else {
+      alert('날짜 입력 형식이 잘못되었습니다!');
+    }
   };
 
   return (
