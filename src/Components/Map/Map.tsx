@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 const MapInstance = styled.div<{ width: string; height: string }>`
@@ -51,7 +51,7 @@ function Map({ width, height, listings }: MapProps) {
       );
       const marker = new naver.maps.Marker({
         position: markerPosition,
-        map: map,
+        map,
       });
 
       bounds.extend(markerPosition);
