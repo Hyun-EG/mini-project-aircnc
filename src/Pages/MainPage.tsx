@@ -15,7 +15,7 @@ function MainPage() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await fetch('/src/assets/room_data.json');
+        const response = await fetch('/room_data.json');
         const data: RoomDetailData[] = await response.json();
         setListings(data);
       } catch (error) {
