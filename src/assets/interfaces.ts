@@ -54,7 +54,7 @@ export interface CalendarProps extends Toggleable {
 }
 
 export interface Reservation {
-  room: RoomData;
+  room: RoomDetailData;
   userID: string;
   checkInDate: Date;
   checkOutDate: Date;

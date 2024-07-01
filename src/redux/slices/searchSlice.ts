@@ -10,8 +10,8 @@ interface SearchState {
 
 const initialState: SearchState = {
   location: '',
-  checkInDate: null,
-  checkOutDate: null,
+  checkInDate: new Date(),
+  checkOutDate: new Date(Date.now() + 86400000),
   guestCount: 0,
 };
 

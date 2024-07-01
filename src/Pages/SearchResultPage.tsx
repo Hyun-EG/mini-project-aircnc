@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
-import { RoomData } from '../assets/interfaces.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
   display: flex;
@@ -19,7 +19,7 @@ const CardGridContainer = styled.div`
 
 function SearchResultPage() {
   const { location } = useSelector((state: RootState) => state.search);
-  const [listings, setListings] = useState<RoomData[]>([]);
+  const [listings, setListings] = useState<RoomDetailData[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const loader = useRef(null);
 
@@ -27,7 +27,7 @@ function SearchResultPage() {
     const fetchListings = async () => {
       try {
         const response = await fetch('src/assets/room_data.json');
-        const rooms: RoomData[] = await response.json();
+        const rooms: RoomDetailData[] = await response.json();
         const filteredRooms = rooms.filter((room) =>
           room.city.includes(location),
         );

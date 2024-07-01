@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store.ts';
@@ -7,11 +6,13 @@ import {
   setCheckInDate,
   setCheckOutDate,
 } from '../redux/slices/searchSlice.ts';
+import isDateConflict from '../util/dateUtils.ts';
 
 const CardContainer = styled.div`
-  width: 80%;
+  width: 100%;
   height: 50vh;
-  margin-left: 3vh;
+  display: flex;
+  position: relative;
   border-radius: 10px;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -21,12 +22,11 @@ const CardContainer = styled.div`
 
 const CalendarContainer = styled.div`
   width: 100%;
+  min-height: 50vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 400px;
   overflow: hidden;
-  position: relative;
+  position: absolute;
 `;
 
 const CustomCalendar = styled(CalendarComponent)`
@@ -58,7 +58,20 @@ function DetailCalendar() {
       dispatch(setCheckInDate(date));
       dispatch(setCheckOutDate(null));
     } else if (date > checkInDate) {
-      dispatch(setCheckOutDate(date));
+      const reservations = JSON.parse(
+        localStorage.getItem('reservedRoom') || '[]',
+      );
+      const isConflict = isDateConflict(
+        checkInDate,
+        date,
+        reservations, // 현재까지 예약된 방 정보
+        selectedRoom.id,
+      );
+      if (isConflict) {
+        alert('이미 예약된 날자가 포함되어 있습니다.');
+      } else {
+        dispatch(setCheckOutDate(date));
+      }
     } else {
       dispatch(setCheckInDate(date));
       dispatch(setCheckOutDate(null));
@@ -69,7 +82,7 @@ function DetailCalendar() {
     <CardContainer>
       <CalendarContainer>
         <CustomCalendar
-          isOpen={true}
+          isOpen
           onDateChange={handleDateChange}
           checkInDate={checkInDate}
           checkOutDate={checkOutDate}
