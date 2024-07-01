@@ -1,7 +1,7 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { IconPlus, IconMinus } from '@tabler/icons-react';
 import { RootState } from '../redux/store.ts';
 import Header from '../Components/Header/Header.tsx';
 import DetailCard from '../Components/DetailCard.tsx';
@@ -12,6 +12,7 @@ import { setGuestCount } from '../redux/slices/searchSlice.ts';
 import backBtn from '../assets/images/backbtn.svg';
 import shareBtn from '../assets/images/sharebtn.svg';
 import formatNumber from '../util/formatNumber.ts';
+import Button from '../Components/Button.tsx';
 
 const BodyContainer = styled.div`
   margin: 13vh 20vh;
@@ -183,11 +184,26 @@ function DetailInfoPage() {
           <RoomBookingDetails>
             <DetailCalendar />
             <BookingDetailsContent>
-              <div>{`Price: ${formatNumber(selectedRoom.price)} KRW / day`}</div>
-              {`Personnel: ${guestCount}`}
-              <AddSubGuestBtn onClick={incrementGuestCount}>+</AddSubGuestBtn>
-              <AddSubGuestBtn onClick={decrementGuestCount}>-</AddSubGuestBtn>
-              <div>{`Total Price: ${formatNumber(calculateTotalPrice()) !== formatNumber(selectedRoom.price) ? `${formatNumber(calculateTotalPrice())} KRW` : `${formatNumber(selectedRoom.price)} KRW / day`}`}</div>
+              <div>{`가격: ${formatNumber(selectedRoom.price)}원 / 박`}</div>
+              <span>인원: </span>
+              <Button
+                $size="small"
+                $shape="circle"
+                $color="primary"
+                onClick={decrementGuestCount}
+              >
+                <IconMinus />
+              </Button>
+              <span>{guestCount}</span>
+              <Button
+                $size="small"
+                $shape="circle"
+                $color="primary"
+                onClick={incrementGuestCount}
+              >
+                <IconPlus />
+              </Button>
+              <div>{`총 가격: ${formatNumber(calculateTotalPrice()) !== formatNumber(selectedRoom.price) ? `${formatNumber(calculateTotalPrice())}원` : `${formatNumber(selectedRoom.price)}원 / 박`}`}</div>
             </BookingDetailsContent>
           </RoomBookingDetails>
         </InfoContainer>

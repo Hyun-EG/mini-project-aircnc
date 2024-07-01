@@ -27,7 +27,7 @@ const LoginModalLayout = styled.div`
   background-color: white;
   box-sizing: border-box;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 10000;
   @media (min-width: 769px) {
     top: 50%;
     left: 50%;
@@ -50,7 +50,7 @@ const LoginModalBackground = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 10000;
   }
 `;
 
