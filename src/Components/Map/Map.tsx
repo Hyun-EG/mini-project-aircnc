@@ -26,8 +26,8 @@ function Map({ width, height, listings }: MapProps) {
     const { naver } = window;
 
     const initialCenter = new naver.maps.LatLng(
-      parseFloat(listings[0].map_y),
-      parseFloat(listings[0].map_x),
+      listings[0].map_y,
+      listings[0].map_x,
     );
 
     const mapOptions = {
@@ -41,14 +41,14 @@ function Map({ width, height, listings }: MapProps) {
     };
 
     const map = new naver.maps.Map('map', mapOptions);
-    const bounds = new naver.maps.LatLngBounds();
+    const bounds = new naver.maps.LatLngBounds(initialCenter, initialCenter);
 
-    let openInfoWindow;
+    let openInfoWindow: naver.maps.InfoWindow | undefined;
 
     listings.forEach((listing) => {
       const markerPosition = new naver.maps.LatLng(
-        parseFloat(listing.map_y),
-        parseFloat(listing.map_x),
+        listing.map_y,
+        listing.map_x,
       );
       const marker = new naver.maps.Marker({
         position: markerPosition,
@@ -77,12 +77,12 @@ function Map({ width, height, listings }: MapProps) {
         backgroundColor: 'transparent',
       });
 
-      naver.maps.Event.addListener(marker, 'mouseover', function () {
+      naver.maps.Event.addListener(marker, 'mouseover', () => {
         infowindow.open(map, marker);
         openInfoWindow = infowindow;
       });
 
-      naver.maps.Event.addListener(marker, 'mouseout', function () {
+      naver.maps.Event.addListener(marker, 'mouseout', () => {
         if (openInfoWindow) {
           openInfoWindow.close();
         }

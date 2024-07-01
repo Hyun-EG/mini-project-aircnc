@@ -52,13 +52,14 @@ export default function DetailMap({ width, height, listing }: DetailMapProps) {
       maxWidth: 250,
     });
 
-    let openInfoWindow;
-    naver.maps.Event.addListener(marker, 'mouseover', function () {
+    let openInfoWindow: naver.maps.InfoWindow | undefined;
+
+    naver.maps.Event.addListener(marker, 'mouseover', () => {
       infowindow.open(map, marker);
       openInfoWindow = infowindow;
     });
 
-    naver.maps.Event.addListener(marker, 'mouseout', function () {
+    naver.maps.Event.addListener(marker, 'mouseout', () => {
       if (openInfoWindow) {
         openInfoWindow.close();
       }
