@@ -11,12 +11,8 @@ const HeaderContainer = styled.header`
   width: 100%;
   top: 0;
   position: fixed;
-  z-index: 1000;
+  z-index: 10;
   background-color: #ffffff;
-  @media (max-width: 600px) {
-    margin: 0;
-    padding: 0;
-  }
 `;
 
 const HeaderTop = styled.section`
@@ -24,6 +20,9 @@ const HeaderTop = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (min-width: 601px) {
+    margin-bottom: 1rem;
+  }
 `;
 
 const HeaderLogo = styled.img`
