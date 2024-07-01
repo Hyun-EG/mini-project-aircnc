@@ -13,7 +13,7 @@ import shareBtn from '../assets/images/sharebtn.svg';
 import formatNumber from '../util/formatNumber.ts';
 
 const BodyContainer = styled.div`
-  margin: 13vh 20vh;
+  margin: 17vh 20vh;
   padding: 3vh;
 `;
 

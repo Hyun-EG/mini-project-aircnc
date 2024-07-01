@@ -9,6 +9,7 @@ import { RoomData } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
   display: flex;
+  margin-top: 4vh;
 `;
 
 const CardGridContainer = styled.div`
