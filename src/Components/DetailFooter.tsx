@@ -1,8 +1,5 @@
-// src/Components/Footer.tsx
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
-import { RootState } from '../redux/store.ts';
 import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
@@ -22,7 +19,7 @@ const FooterContainer = styled.footer`
   gap: 1rem;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  z-index: 100; //네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
+  z-index: 100; // 네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
 `;
 
 const FooterPrice = styled.span`
@@ -56,14 +53,24 @@ function DetailFooter({
     const userID = 'testID1'; // UserID
 
     if (checkInDate !== null && checkOutDate !== null) {
-      addReservation({
-        room,
-        userID,
-        checkInDate,
-        checkOutDate,
-      });
+      const parsedCheckInDate = new Date(checkInDate);
+      const parsedCheckOutDate = new Date(checkOutDate);
+
+      if (
+        !Number.isNaN(parsedCheckInDate.getTime()) &&
+        !Number.isNaN(parsedCheckOutDate.getTime())
+      ) {
+        addReservation({
+          room,
+          userID,
+          checkInDate: parsedCheckInDate,
+          checkOutDate: parsedCheckOutDate,
+        });
+      } else {
+        alert('유효한 날짜를 입력해 주세요!');
+      }
     } else {
-      alert('날짜 입력 형식이 잘못되었습니다!');
+      alert('날짜를 입력해 주세요!');
     }
   };
 
