@@ -8,7 +8,6 @@ import {
   IconMinus,
 } from '@tabler/icons-react';
 import { RootState } from '../redux/store.ts';
-import Header from '../Components/Header/Header.tsx';
 import DetailCard from '../Components/DetailCard.tsx';
 import DetailCalendar from '../Components/DetailCalendar.tsx';
 import DetailFooter from '../Components/DetailFooter.tsx';
@@ -185,7 +184,7 @@ export default function DetailInfoPage() {
                 $color="primary"
                 onClick={decrementGuestCount}
               >
-                <IconMinus />
+                <IconMinus size={18} />
               </Button>
               <span>{guestCount}</span>
               <Button
@@ -194,7 +193,7 @@ export default function DetailInfoPage() {
                 $color="primary"
                 onClick={incrementGuestCount}
               >
-                <IconPlus />
+                <IconPlus size={18} />
               </Button>
               <div>{`총 가격: ${
                 formatNumber(calculateTotalPrice()) !==

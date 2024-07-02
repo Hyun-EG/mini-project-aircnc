@@ -17,18 +17,4 @@ export default createGlobalStyle`
   button {
     font-family: inherit;
   }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: #ff385c;
-    border: none;
-    border-radius: 6px;
-  }
 `;

@@ -8,11 +8,14 @@ import LoginModal from '../Login/LoginModal.tsx';
 import logoSmall from '../../assets/images/logo-small.svg';
 
 const HeaderContainer = styled.header`
-  width: 100%;
-  top: 0;
   position: sticky;
+  top: 0;
+  padding: 0.5rem;
   z-index: 1000;
   background-color: #ffffff;
+  @media (min-width: 481px) {
+    padding: 1rem 2rem 0.5rem;
+  }
 `;
 
 const HeaderTop = styled.section`
@@ -21,7 +24,7 @@ const HeaderTop = styled.section`
   justify-content: space-between;
   align-items: center;
   @media (min-width: 601px) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 `;
 

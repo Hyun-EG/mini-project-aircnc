@@ -5,10 +5,13 @@ import { RoomDetailData } from '../../assets/interfaces.ts';
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  display: flex;
+  display: none;
   right: 0;
   position: fixed !important;
   border-radius: 20px;
+  @media (min-width: 1280px) {
+    display: flex;
+  }
 `;
 
 interface MapProps {

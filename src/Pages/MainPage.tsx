@@ -7,9 +7,7 @@ import {
   getAddressFromCoordinates,
 } from '../util/currentLocationUtil.ts';
 
-const BodyContainer = styled.main`
-  padding: 20px;
-`;
+const BodyContainer = styled.main``;
 
 function MainPage() {
   const [listings, setListings] = useState<RoomDetailData[]>([]);
@@ -84,6 +82,7 @@ function MainPage() {
 
   return (
     <BodyContainer>
+      <h1 style={{ margin: '3rem 0' }}>최근 목록</h1>
       <CardGrid listings={listings} />
     </BodyContainer>
   );
