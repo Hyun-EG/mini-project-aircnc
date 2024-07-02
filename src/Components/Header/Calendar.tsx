@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
@@ -109,8 +109,7 @@ const NavigationButton = styled.button`
   font-size: 1.7vh;
 `;
 
-const formatDay = (locale: string | undefined, date: Date) => {
-  console.log(locale);
+const formatDay = (_locale: string | undefined, date: Date) => {
   return date.getDate().toString();
 };
 
@@ -130,6 +129,7 @@ export default function CalendarComponent({
       ? new Date(state.calendar.nextMonthDate)
       : new Date(),
   }));
+  const [renderKey, setRenderKey] = useState(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -146,6 +146,10 @@ export default function CalendarComponent({
       );
     }
   }, [isOpen, dispatch]);
+
+  useEffect(() => {
+    setRenderKey((prevKey) => prevKey + 1);
+  }, [checkInDate, checkOutDate]);
 
   const handlePrevMonth = () => {
     const newCurrentDate = new Date(
@@ -202,7 +206,7 @@ export default function CalendarComponent({
     return '';
   };
 
-  const tileDisabled = ({ date }: { date: Date }) => date < new Date();
+  const tileDisabled = () => false;
 
   return (
     <DateSelectContainer isOpen={isOpen} className={className}>
@@ -217,7 +221,7 @@ export default function CalendarComponent({
         </div>
         <NavigationButton onClick={handleNextMonth}>{'>'}</NavigationButton>
       </NavigationContainer>
-      <CalendarWrapper>
+      <CalendarWrapper key={renderKey}>
         <Calendar
           value={currentDate}
           formatDay={formatDay}

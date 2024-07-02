@@ -1,17 +1,16 @@
-// searchSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SearchState {
   location: string;
-  checkInDate: Date | null;
-  checkOutDate: Date | null;
+  checkInDate: string | null;
+  checkOutDate: string | null;
   guestCount: number;
 }
 
 const initialState: SearchState = {
   location: '',
-  checkInDate: new Date(), // 여기 Date 정보 number나 string으로 변환 필요할듯(nonserial)
-  checkOutDate: new Date(Date.now() + 86400000),
+  checkInDate: new Date().toISOString(),
+  checkOutDate: new Date(Date.now() + 86400000).toISOString(),
   guestCount: 0,
 };
 
@@ -22,10 +21,10 @@ const searchSlice = createSlice({
     setLocation: (state, action: PayloadAction<string>) => {
       state.location = action.payload;
     },
-    setCheckInDate: (state, action: PayloadAction<Date | null>) => {
+    setCheckInDate: (state, action: PayloadAction<string | null>) => {
       state.checkInDate = action.payload;
     },
-    setCheckOutDate: (state, action: PayloadAction<Date | null>) => {
+    setCheckOutDate: (state, action: PayloadAction<string | null>) => {
       state.checkOutDate = action.payload;
     },
     setGuestCount: (state, action: PayloadAction<number>) => {

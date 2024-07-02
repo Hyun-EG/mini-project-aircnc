@@ -99,7 +99,7 @@ const DetailFooterContent = styled.div`
   color: #ababab;
 `;
 
-function DetailInfoPage() {
+export default function DetailInfoPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedRoom = useSelector(
@@ -112,6 +112,7 @@ function DetailInfoPage() {
   const checkOutDate = useSelector(
     (state: RootState) => state.search.checkOutDate,
   );
+
   if (!selectedRoom) {
     return <h1>Loading...</h1>;
   }
@@ -136,11 +137,12 @@ function DetailInfoPage() {
         console.error('Failed to copy: ', err);
       });
   };
+
   const calculateTotalPrice = () => {
     const pricePerNight = selectedRoom.price;
     if (checkOutDate && checkInDate) {
       const nights =
-        (checkOutDate.getTime() - checkInDate.getTime()) /
+        (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
         (1000 * 60 * 60 * 24);
       const totalPrice = pricePerNight * nights;
       return totalPrice;
@@ -195,7 +197,12 @@ function DetailInfoPage() {
               >
                 <IconPlus />
               </Button>
-              <div>{`총 가격: ${formatNumber(calculateTotalPrice()) !== formatNumber(selectedRoom.price) ? `${formatNumber(calculateTotalPrice())}원` : `${formatNumber(selectedRoom.price)}원 / 박`}`}</div>
+              <div>{`총 가격: ${
+                formatNumber(calculateTotalPrice()) !==
+                formatNumber(selectedRoom.price)
+                  ? `${formatNumber(calculateTotalPrice())}원`
+                  : `${formatNumber(selectedRoom.price)}원 / 박`
+              }`}</div>
             </BookingDetailsContent>
           </RoomBookingDetails>
         </InfoContainer>
@@ -220,5 +227,3 @@ function DetailInfoPage() {
     </>
   );
 }
-
-export default DetailInfoPage;

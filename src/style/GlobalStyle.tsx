@@ -17,7 +17,7 @@ export default createGlobalStyle`
   button {
     font-family: inherit;
   }
-/* 
+
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -30,5 +30,5 @@ export default createGlobalStyle`
     background-color: #999;
     border: none;
     border-radius: 6px;
-  } */
+  }
 `;

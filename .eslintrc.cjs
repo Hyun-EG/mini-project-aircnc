@@ -35,6 +35,9 @@ module.exports = {
     'no-shadow': 'off',
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
+    'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
+    'no-alert': 'off',
+    'no-param-reassign': ['error', { props: false }],
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'import/extensions': [
       'error',

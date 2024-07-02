@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
@@ -21,7 +21,7 @@ function SearchResultPage() {
   const { location } = useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomDetailData[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
-  const loader = useRef(null);
+  const loader = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -42,12 +42,15 @@ function SearchResultPage() {
     }
   }, [location]);
 
-  const handleObserver = (entities: IntersectionObserverEntry[]) => {
-    const target = entities[0];
-    if (target.isIntersecting) {
-      setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
-    }
-  };
+  const handleObserver = useCallback(
+    (entities: IntersectionObserverEntry[]) => {
+      const target = entities[0];
+      if (target.isIntersecting) {
+        setVisibleCount((prev) => (prev < listings.length ? prev + 10 : prev));
+      }
+    },
+    [listings],
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
@@ -60,7 +63,7 @@ function SearchResultPage() {
     return () => {
       observer.disconnect();
     };
-  }, [listings]);
+  }, [handleObserver]);
 
   return (
     <SearchPageContainer>

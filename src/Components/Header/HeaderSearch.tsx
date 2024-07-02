@@ -160,7 +160,9 @@ export default function HeaderSearch({
   const checkIfMobile = () => windowWidth < 769;
   const checkIfDesktop = () => windowWidth > 1023;
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -247,21 +249,22 @@ export default function HeaderSearch({
         <CalendarComponent
           isOpen={openSelect === 'checkIn'}
           onDateChange={(date) => {
+            const dateString = date.toISOString();
             if (!checkInDate || (checkInDate && checkOutDate)) {
-              dispatch(setCheckInDate(date));
+              dispatch(setCheckInDate(dateString));
               dispatch(setCheckOutDate(null));
             } else if (checkInDate && !checkOutDate) {
-              if (date < checkInDate) {
+              if (date < new Date(checkInDate)) {
                 dispatch(setCheckOutDate(checkInDate));
-                dispatch(setCheckInDate(date));
+                dispatch(setCheckInDate(dateString));
               } else {
-                dispatch(setCheckOutDate(date));
+                dispatch(setCheckOutDate(dateString));
                 setOpenSelect('');
               }
             }
           }}
-          checkInDate={checkInDate}
-          checkOutDate={checkOutDate}
+          checkInDate={checkInDate ? new Date(checkInDate) : null}
+          checkOutDate={checkOutDate ? new Date(checkOutDate) : null}
         />
       </SearchCheckIn>
       <SearchCheckOut $openSelect={openSelect} $isOpen="checkOut">
@@ -291,16 +294,17 @@ export default function HeaderSearch({
         <CalendarComponent
           isOpen={openSelect === 'checkOut'}
           onDateChange={(date) => {
-            if (date && checkInDate && date < checkInDate) {
+            const dateString = date.toISOString();
+            if (date && checkInDate && date < new Date(checkInDate)) {
               dispatch(setCheckOutDate(checkInDate));
-              dispatch(setCheckInDate(date));
+              dispatch(setCheckInDate(dateString));
             } else {
-              dispatch(setCheckOutDate(date));
+              dispatch(setCheckOutDate(dateString));
               setOpenSelect('');
             }
           }}
-          checkInDate={checkInDate}
-          checkOutDate={checkOutDate}
+          checkInDate={checkInDate ? new Date(checkInDate) : null}
+          checkOutDate={checkOutDate ? new Date(checkOutDate) : null}
         />
       </SearchCheckOut>
       <SearchGuest $openSelect={openSelect} $isOpen="guest">
