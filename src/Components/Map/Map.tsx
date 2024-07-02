@@ -5,8 +5,6 @@ import { RoomDetailData } from '../../assets/interfaces.ts';
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  margin-top: 13vh;
-  margin-left: 1vh;
   display: flex;
   right: 0;
   position: fixed !important;

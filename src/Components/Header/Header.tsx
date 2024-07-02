@@ -10,7 +10,7 @@ import logoSmall from '../../assets/images/logo-small.svg';
 const HeaderContainer = styled.header`
   width: 100%;
   top: 0;
-  position: fixed;
+  position: sticky;
   z-index: 1000;
   background-color: #ffffff;
 `;

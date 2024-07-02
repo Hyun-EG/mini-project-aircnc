@@ -152,7 +152,6 @@ export default function DetailInfoPage() {
 
   return (
     <>
-      <Header />
       <BodyContainer>
         <ContainerHeader>
           <Button

@@ -2,19 +2,16 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
-import Header from '../Components/Header/Header.tsx';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
 import { RoomDetailData } from '../assets/interfaces.ts';
 
-const SearchPageContainer = styled.div`
+const SearchPageContainer = styled.main`
   display: flex;
-  margin-top: 10vh;
 `;
 
 const CardGridContainer = styled.div`
   width: 60%;
-  margin-top: 13vh;
   overflow: auto;
 `;
 
@@ -68,7 +65,6 @@ function SearchResultPage() {
 
   return (
     <SearchPageContainer>
-      <Header />
       <CardGridContainer>
         <CardGrid listings={listings.slice(0, visibleCount)} />
         <div ref={loader} />

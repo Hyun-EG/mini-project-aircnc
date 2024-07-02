@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import { setUser } from './redux/slices/userSlice.ts';
-import AppRoutes from './Routes/AppRoutes.tsx';
+import router from './Routes/router.tsx';
 import GlobalStyle from './style/GlobalStyle.tsx';
 import GlobalFont from './style/GlobalFont.tsx';
 import theme from './style/theme.ts';
@@ -54,7 +55,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <GlobalFont />
-      <AppRoutes />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
