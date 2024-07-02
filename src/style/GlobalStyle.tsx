@@ -27,7 +27,7 @@ export default createGlobalStyle`
   }
   
   ::-webkit-scrollbar-thumb {
-    background-color: #999;
+    background-color: #ff385c;
     border: none;
     border-radius: 6px;
   }

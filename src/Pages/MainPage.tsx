@@ -9,7 +9,7 @@ import {
 } from '../util/currentLocationUtil.ts';
 
 const BodyContainer = styled.div`
-  margin-top: 13vh;
+  margin-top: 20vh;
   padding: 20px;
 `;
 
