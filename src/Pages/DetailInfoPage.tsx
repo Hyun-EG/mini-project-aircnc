@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   IconChevronLeft,
-  IconShare,
+  IconCopy,
   IconPlus,
   IconMinus,
 } from '@tabler/icons-react';
@@ -14,30 +14,28 @@ import DetailFooter from '../Components/DetailFooter.tsx';
 import DetailMap from '../Components/Map/DetailMap.tsx';
 import { setGuestCount } from '../redux/slices/searchSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
+import {
+  GuestSelectContainer,
+  GuestOptionCounter,
+  GuestOptionLabel,
+  GuestTotalCount,
+} from '../Components/Header/Guest.tsx';
 import Button from '../Components/Button.tsx';
 
-const BodyContainer = styled.div`
-  margin: 17vh 20vh;
-  padding: 3vh;
-`;
-
-const ContainerHeader = styled.div`
-  width: 100%;
-  height: 3vh;
+const ContainerHeader = styled.header`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0 3rem;
 `;
 
-const ContainerHeaderTitle = styled.div`
-  font-size: 2vw;
+const ContainerHeaderTitle = styled.h2`
+  font-size: 1.5rem;
 `;
 
 const InfoContainer = styled.div`
-  width: 100%;
-  margin-top: 10vh;
-  overflow: hidden;
   display: flex;
-
+  overflow: hidden;
   @media (max-width: 1300px) {
     flex-direction: column;
     justify-content: center;
@@ -46,21 +44,42 @@ const InfoContainer = styled.div`
 `;
 
 const RoomBookingDetails = styled.div`
-  width: 60%;
+  width: 90%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  padding: 0 2rem;
+  border: 1px solid #ccc;
+  border-radius: 32px;
+  box-sizing: border-box;
+  @media (min-width: 1279px) {
+    width: fit-content;
+  }
+`;
+
+const BookingGuestContainer = styled(GuestSelectContainer)`
+  position: relative;
+  top: 0;
+  left: 0;
+  margin-top: -2rem;
+  @media (min-width: 601px) {
+    width: fit-content;
+  }
 `;
 
 const BookingDetailsContent = styled.div`
-  width: 100%;
-  font-size: 2.5vh;
-  font-weight: bold;
-  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+  gap: 0.5rem;
+  font-size: 1.375rem;
+  font-weight: ${(props) => props.theme.fontWeight.medium};
+  text-align: right;
 `;
 
-const MapTitle = styled.div`
-  font-size: 3vh;
-  margin-bottom: 2.5vh;
+const MapTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
 `;
 
 const MapContainer = styled.div`
@@ -69,14 +88,12 @@ const MapContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
-  font-size: 3vh;
-  font-weight: bold;
 `;
 
 const SeparationLine = styled.div`
   width: 100%;
   height: 0.1px;
-  margin: 6vh 0 5vh 0;
+  margin: 4rem 0;
   background-color: lightgrey;
 `;
 
@@ -84,6 +101,7 @@ const DetailFooterArea = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 6rem;
 `;
 
 const DetailFooterTitle = styled.div`
@@ -140,9 +158,10 @@ export default function DetailInfoPage() {
   const calculateTotalPrice = () => {
     const pricePerNight = selectedRoom.price;
     if (checkOutDate && checkInDate) {
-      const nights =
+      const nights = Math.round(
         (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
-        (1000 * 60 * 60 * 24);
+          (1000 * 60 * 60 * 24),
+      );
       const totalPrice = pricePerNight * nights;
       return totalPrice;
     }
@@ -151,77 +170,81 @@ export default function DetailInfoPage() {
 
   return (
     <>
-      <BodyContainer>
-        <ContainerHeader>
-          <Button
-            $size="medium"
-            $shape="circle"
-            $color="white"
-            onClick={() => navigate(-1)}
-          >
-            <IconChevronLeft />
-          </Button>
-          <ContainerHeaderTitle>{selectedRoom.name}</ContainerHeaderTitle>
-          <Button
-            $size="medium"
-            $shape="circle"
-            $color="white"
-            onClick={copyUrlToClipboard}
-          >
-            <IconShare />
-          </Button>
-        </ContainerHeader>
-        <InfoContainer>
-          <DetailCard />
-          <RoomBookingDetails>
-            <DetailCalendar />
-            <BookingDetailsContent>
-              <div>{`가격: ${formatNumber(selectedRoom.price)}원 / 박`}</div>
-              <span>인원: </span>
+      <ContainerHeader>
+        <Button
+          $size="medium"
+          $shape="circle"
+          $color="white"
+          onClick={() => navigate(-1)}
+        >
+          <IconChevronLeft />
+        </Button>
+        <ContainerHeaderTitle>{selectedRoom.name}</ContainerHeaderTitle>
+        <Button
+          $size="medium"
+          $shape="circle"
+          $color="white"
+          onClick={copyUrlToClipboard}
+        >
+          <IconCopy />
+        </Button>
+      </ContainerHeader>
+      <InfoContainer>
+        <DetailCard />
+        <RoomBookingDetails>
+          <DetailCalendar />
+          <BookingGuestContainer>
+            <GuestOptionLabel>인원</GuestOptionLabel>
+            <GuestOptionCounter>
               <Button
                 $size="small"
                 $shape="circle"
-                $color="primary"
+                $color="white"
+                $border
                 onClick={decrementGuestCount}
               >
-                <IconMinus size={18} />
+                <IconMinus size={16} />
               </Button>
-              <span>{guestCount}</span>
+              <GuestTotalCount>{guestCount}</GuestTotalCount>
               <Button
                 $size="small"
                 $shape="circle"
-                $color="primary"
+                $color="white"
+                $border
                 onClick={incrementGuestCount}
               >
-                <IconPlus size={18} />
+                <IconPlus size={16} />
               </Button>
-              <div>{`총 가격: ${
-                formatNumber(calculateTotalPrice()) !==
-                formatNumber(selectedRoom.price)
-                  ? `${formatNumber(calculateTotalPrice())}원`
-                  : `${formatNumber(selectedRoom.price)}원 / 박`
-              }`}</div>
-            </BookingDetailsContent>
-          </RoomBookingDetails>
-        </InfoContainer>
-        <SeparationLine />
-        <MapContainer>
-          <MapTitle>숙소 위치</MapTitle>
-          <DetailMap width="100%" height="50vh" listing={selectedRoom} />
-        </MapContainer>
-        <SeparationLine />
-        <DetailFooterArea>
-          <DetailFooterTitle>aircnc</DetailFooterTitle>
-          <DetailFooterContent>
-            (주) aircnc는 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의
-            예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
-            숙박업소는 법적으로 청소년 고용과 혼숙이 금지되어 있습니다. 따라서
-            청소년 혼숙으로 인한 입실거부는 정당하며, 이에 대한 법적 제재는 이용
-            당사자가 책임져야 합니다.
-          </DetailFooterContent>
-        </DetailFooterArea>
-      </BodyContainer>
-      <DetailFooter />
+            </GuestOptionCounter>
+          </BookingGuestContainer>
+          <BookingDetailsContent>
+            <span>{`${formatNumber(selectedRoom.price)}원 / 박`}</span>
+          </BookingDetailsContent>
+        </RoomBookingDetails>
+      </InfoContainer>
+      <SeparationLine />
+      <MapContainer>
+        <MapTitle>숙소 위치</MapTitle>
+        <DetailMap width="100%" height="50vh" listing={selectedRoom} />
+      </MapContainer>
+      <SeparationLine />
+      <DetailFooterArea>
+        <DetailFooterTitle>aircnc</DetailFooterTitle>
+        <DetailFooterContent>
+          (주) aircnc는 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의
+          예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+          <br />
+          숙박업소는 법적으로 청소년 고용과 혼숙이 금지되어 있습니다. 따라서
+          청소년 혼숙으로 인한 입실거부는 정당하며, 이에 대한 법적 제재는 이용
+          당사자가 책임져야 합니다.
+        </DetailFooterContent>
+      </DetailFooterArea>
+      <DetailFooter
+        room={selectedRoom}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        totalPrice={calculateTotalPrice()}
+      />
     </>
   );
 }

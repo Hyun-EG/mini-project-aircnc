@@ -9,20 +9,21 @@ import {
 
 const CardContainer = styled.div`
   width: 100%;
+  min-width: 16rem;
   height: 50vh;
   display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  @media (max-width: 768px) {
-    width: 60%;
-  }
 `;
 
 const CalendarContainer = styled.div`
   width: 100%;
   min-height: 50vh;
   display: flex;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
   position: absolute;

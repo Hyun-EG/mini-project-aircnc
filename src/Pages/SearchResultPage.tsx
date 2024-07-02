@@ -6,13 +6,24 @@ import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
 import { RoomDetailData } from '../assets/interfaces.ts';
 
-const SearchPageContainer = styled.main`
+const SearchPageContainer = styled.div`
   display: flex;
+  @media (min-width: 481px) {
+    margin: 0 -1rem;
+  }
 `;
 
-const CardGridContainer = styled.div`
-  width: 60%;
-  overflow: auto;
+const CardGridContainer = styled.section`
+  flex-basis: 60%;
+  flex-grow: 1;
+`;
+
+const CardGridWatcher = styled.div`
+  height: 1px;
+`;
+
+const MapMargin = styled.div`
+  flex-basis: 40%;
 `;
 
 function SearchResultPage() {
@@ -67,11 +78,12 @@ function SearchResultPage() {
     <SearchPageContainer>
       <CardGridContainer>
         <CardGrid listings={listings.slice(0, visibleCount)} />
-        <div ref={loader} />
+        <CardGridWatcher ref={loader} />
       </CardGridContainer>
+      <MapMargin />
       <Map
         width="39.5%"
-        height="100vh"
+        height="95vh"
         listings={listings.slice(0, visibleCount)}
       />
     </SearchPageContainer>

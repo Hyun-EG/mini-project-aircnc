@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import CardGrid from '../Components/CardGrid.tsx';
 import { RoomDetailData } from '../assets/interfaces.ts';
 import {
   getCurrentPosition,
   getAddressFromCoordinates,
 } from '../util/currentLocationUtil.ts';
-
-const BodyContainer = styled.main``;
 
 function MainPage() {
   const [listings, setListings] = useState<RoomDetailData[]>([]);
@@ -76,16 +73,11 @@ function MainPage() {
       }
     };
 
-    // fetchAddress();
+    fetchAddress();
     fetchListings();
   }, []);
 
-  return (
-    <BodyContainer>
-      <h1 style={{ margin: '3rem 0' }}>최근 목록</h1>
-      <CardGrid listings={listings} />
-    </BodyContainer>
-  );
+  return <CardGrid listings={listings} />;
 }
 
 export default MainPage;

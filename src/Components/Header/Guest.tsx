@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { IconPlus, IconMinus } from '@tabler/icons-react';
 import Button from '../Button.tsx';
 
-const GuestSelectContainer = styled.div`
+export const GuestSelectContainer = styled.div`
   position: absolute;
   width: fit-content;
   top: calc(100% + 0.5rem);
@@ -21,15 +21,15 @@ const GuestSelectContainer = styled.div`
   }
 `;
 
-const GuestOptionLabel = styled.label``;
+export const GuestOptionLabel = styled.label``;
 
-const GuestOptionCounter = styled.div`
+export const GuestOptionCounter = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
 
-const GuestTotalCount = styled.span`
+export const GuestTotalCount = styled.span`
   min-width: 2rem;
   display: flex;
   justify-content: center;

@@ -6,14 +6,16 @@ import { RootState } from '../redux/store.ts';
 import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
+import { RoomDetailData } from '../assets/interfaces.ts';
 
 const FooterContainer = styled.footer`
   position: fixed;
+  left: 0;
   bottom: 0;
   width: 100%;
   background-color: #fff;
   border-top: 1px solid #eaeaea;
-  padding: 10px 20px;
+  padding: 10px 1rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -23,14 +25,23 @@ const FooterContainer = styled.footer`
   z-index: 100; //네이버맵 컨트롤러가 더 위에 올라오길래 넣었당께
 `;
 
-function DetailFooter() {
-  const room = useSelector((state: RootState) => state.rooms.selectedRoom);
-  const checkInDate = useSelector(
-    (state: RootState) => state.search.checkInDate,
-  );
-  const checkOutDate = useSelector(
-    (state: RootState) => state.search.checkOutDate,
-  );
+const FooterPrice = styled.span`
+  font-size: 1.25rem;
+`;
+
+interface DetailFooterProps {
+  totalPrice: number;
+  room: RoomDetailData;
+  checkInDate: string | null;
+  checkOutDate: string | null;
+}
+
+function DetailFooter({
+  totalPrice,
+  room,
+  checkInDate,
+  checkOutDate,
+}: DetailFooterProps) {
   if (!room) {
     return <h1>Loading</h1>;
   }
@@ -58,6 +69,7 @@ function DetailFooter() {
 
   return (
     <FooterContainer>
+      <FooterPrice>{`총 가격: ${totalPrice}원`}</FooterPrice>
       <Button $size="small" $shape="circle" $color="white" onClick={handleLike}>
         {room ? <IconHeart color="red" /> : <IconHeartFilled color="red" />}
       </Button>

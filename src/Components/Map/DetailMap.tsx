@@ -34,6 +34,7 @@ export default function DetailMap({ width, height, listing }: DetailMapProps) {
     };
 
     const map = new naver.maps.Map('detailMap', mapOptions);
+    // eslint-disable-next-line no-unused-vars
     const marker = new naver.maps.Marker({
       position: mapOptions.center,
       map,
