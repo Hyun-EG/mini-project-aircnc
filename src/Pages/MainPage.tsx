@@ -26,8 +26,8 @@ function MainPage() {
         const position = await getCurrentPosition();
         console.log(position);
         const address = await getAddressFromCoordinates(
-          position.latitude,
-          position.longitude,
+          position.coords.latitude,
+          position.coords.longitude,
         );
         console.log('Current Address:', address);
       } catch (error: any) {
@@ -39,6 +39,9 @@ function MainPage() {
     const fetchListings = async () => {
       try {
         const response = await fetch('/room_data.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch room data');
+        }
         const data: RoomDetailData[] = await response.json();
         setListings(data);
       } catch (error) {
