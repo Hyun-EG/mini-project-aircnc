@@ -126,7 +126,7 @@ function Card(props: CardProps) {
       onMouseLeave={handleMouseLeave}
     >
       <ImageContainer>
-        <Image src={imageUrl} alt={name} />
+        <Image src={imageUrl || `public/defaultImage.jpg`} alt={name} />
       </ImageContainer>
       <TextContainer>
         <Title>{name}</Title>

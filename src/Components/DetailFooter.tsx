@@ -7,6 +7,7 @@ import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
 import { RoomDetailData } from '../assets/interfaces.ts';
+import formatNumber from '../util/formatNumber.ts';
 
 const FooterContainer = styled.footer`
   position: fixed;
@@ -69,7 +70,7 @@ function DetailFooter({
 
   return (
     <FooterContainer>
-      <FooterPrice>{`총 가격: ${totalPrice}원`}</FooterPrice>
+      <FooterPrice>{`총 가격: ${formatNumber(totalPrice)}원`}</FooterPrice>
       <Button $size="small" $shape="circle" $color="white" onClick={handleLike}>
         {room ? <IconHeart color="red" /> : <IconHeartFilled color="red" />}
       </Button>

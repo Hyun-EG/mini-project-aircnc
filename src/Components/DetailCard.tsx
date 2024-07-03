@@ -56,7 +56,10 @@ function DetailCard() {
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={selectedRoom.image_url} alt={selectedRoom.name} />
+        <Image
+          src={selectedRoom.image_url || `public/defaultImage.jpg`}
+          alt={selectedRoom.name}
+        />
       </ImageContainer>
       <TextContainer>
         <RoomTitle>{selectedRoom.name}</RoomTitle>
