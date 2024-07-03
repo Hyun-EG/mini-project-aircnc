@@ -38,7 +38,7 @@ function MainPage() {
 
     const fetchListings = async () => {
       try {
-        const response = await fetch('/public/room_data.json');
+        const response = await fetch('/room_data.json');
         const data: RoomDetailData[] = await response.json();
         setListings(data);
       } catch (error) {

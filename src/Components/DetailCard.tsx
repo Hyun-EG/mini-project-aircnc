@@ -58,7 +58,7 @@ function DetailCard() {
     <CardContainer>
       <ImageContainer>
         <Image
-          src={selectedRoom.image_url || `public/defaultImage.jpg`}
+          src={selectedRoom.image_url || `/defaultImage.jpg`}
           alt={selectedRoom.name}
         />
       </ImageContainer>
