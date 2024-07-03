@@ -17,10 +17,9 @@ function MainPage() {
         console.log('coordinates = ', position);
       } catch (error: any) {
         setLocationError(error.message);
-        console.error('Error getting coordinates', error);
+        console.error('Error getting coordinates:', error);
       }
     };
-    fetchCoordinates();
 
     const fetchLocation = async () => {
       try {
@@ -47,13 +46,21 @@ function MainPage() {
       }
     };
 
+    fetchCoordinates();
     fetchLocation();
     fetchListings();
   }, []);
 
   return (
     <div>
-      {locationError && <p>{locationError}</p>}
+      {locationError && (
+        <div>
+          <p>{locationError}</p>
+          <button onClick={() => window.location.reload()}>
+            위치 권한 재요청
+          </button>
+        </div>
+      )}
       <CardGrid listings={listings} />
     </div>
   );
