@@ -120,6 +120,31 @@ function Map({ width, height, listings }: MapProps) {
     });
 
     map.fitBounds(bounds);
+
+    // 지도 경계 좌표를 구하는 함수
+    const getBounds = (bounds: naver.maps.LatLngBounds) => {
+      const ne = bounds.getNE();
+      const sw = bounds.getSW();
+
+      // 북서(NW)와 남동(SE) 좌표 계산
+      const nw = new naver.maps.LatLng(ne.lat(), sw.lng());
+      const se = new naver.maps.LatLng(sw.lat(), ne.lng());
+
+      const coordinates = {
+        northEast: { lat: ne.lat(), lng: ne.lng() },
+        northWest: { lat: nw.lat(), lng: nw.lng() },
+        southEast: { lat: se.lat(), lng: se.lng() },
+        southWest: { lat: sw.lat(), lng: sw.lng() },
+      };
+
+      console.log('Map Bounds:', coordinates);
+    };
+
+    // bounds_changed 이벤트 리스너 추가
+    naver.maps.Event.addListener(map, 'bounds_changed', () => {
+      const currentBounds = map.getBounds() as naver.maps.LatLngBounds;
+      getBounds(currentBounds);
+    });
   }, [listings]);
 
   return <MapInstance id="map" width={width} height={height} />;
