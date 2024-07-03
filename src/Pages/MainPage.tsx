@@ -15,7 +15,7 @@ function MainPage() {
       try {
         const position = await getCurrentPosition();
         console.log('coordinates = ', position);
-      } catch (error) {
+      } catch (error: any) {
         setLocationError(error.message);
         console.error('Error getting coordinates');
       }
@@ -31,7 +31,7 @@ function MainPage() {
           position.longitude,
         );
         console.log('Current Address:', address);
-      } catch (error) {
+      } catch (error: any) {
         setLocationError(error.message);
         console.error('Error getting location:', error);
       }
