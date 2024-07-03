@@ -17,7 +17,7 @@ function MainPage() {
         console.log('coordinates = ', position);
       } catch (error: any) {
         setLocationError(error.message);
-        console.error('Error getting coordinates');
+        console.error('Error getting coordinates', error);
       }
     };
     fetchCoordinates();
