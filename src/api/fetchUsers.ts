@@ -1,15 +1,34 @@
-import { EmailFormSchemaType } from '../schema/userSchema.ts';
+import {
+  EmailFormSchemaType,
+  LoginFormSchemaType,
+} from '../schema/userSchema.ts';
 
 const baseUrl = 'http://54.180.158.55:8080/api/auth';
 
-export const validateEmail = async (email: EmailFormSchemaType['email']) => {
+interface ResponseResult {
+  resultCode: 200 | 4002;
+  resultMessage: string;
+}
+
+const getIsSuccessfulFromResponse = async (
+  response: Response,
+): Promise<boolean> => {
+  const body = await response.json();
+
+  console.log(body);
+  const result: ResponseResult = {
+    resultCode: body.result.result_code,
+    resultMessage: body.result.result_message,
+  };
+  return result.resultCode === 200;
+};
+
+export const getValidateEmail = async (email: EmailFormSchemaType['email']) => {
   const response = await fetch(`${baseUrl}/email/${email}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Origin: 'http://localhost:5173/',
-      'Access-Control-Request-Method': 'POST',
-      'Access-Control-Request-Headers': 'content-type',
     },
     body: null,
   });
@@ -18,11 +37,35 @@ export const validateEmail = async (email: EmailFormSchemaType['email']) => {
     throw new Error();
   }
 
-  const body = await response.json();
-  return {
-    resultCode: body.result.result_code,
-    resultMessage: body.result.result_message,
-  };
+  const isSuccessful = await getIsSuccessfulFromResponse(response);
+
+  return isSuccessful;
+};
+
+export const postLogin = async (
+  user: EmailFormSchemaType & LoginFormSchemaType,
+) => {
+  const response = await fetch(`${baseUrl}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: 'http://localhost:5173/',
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response) {
+    throw new Error();
+  }
+
+  const token = response.headers.get('authorization');
+  if (token) {
+    localStorage.setItem('token', token);
+  }
+
+  const isSuccessful = await getIsSuccessfulFromResponse(response);
+
+  return isSuccessful;
 };
 
 export const signUp = async () => {};

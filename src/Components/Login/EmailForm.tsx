@@ -9,18 +9,13 @@ import {
   EmailFormSchema,
   EmailFormSchemaType,
 } from '../../schema/userSchema.ts';
-import useValidateEmail from '../../hooks/useValidateEmail.tsx';
+import { useValidateEmail } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import LoginModalTitle from './LoginModalTitle.tsx';
 import SubmitButton from './SubmitButton.tsx';
 
 export type EmailFormFields = EmailFormSchemaType;
-
-interface ResponseResult {
-  resultCode: 200 | 4002;
-  resultMessage: string;
-}
 
 function EmailForm() {
   const dispatch = useDispatch();
@@ -36,9 +31,9 @@ function EmailForm() {
 
   const onSubmit: SubmitHandler<EmailFormFields> = async (data) => {
     try {
-      const response: ResponseResult = await validateEmail(data.email);
+      const isValid = await validateEmail(data.email);
 
-      if (response.resultCode === 200) {
+      if (isValid) {
         dispatch(setModalStatus('signup'));
         return;
       }

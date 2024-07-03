@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import { IconMenu2, IconUserCircle } from '@tabler/icons-react';
-import { AppDispatch, RootState } from '../../redux/store.ts';
+import { AppDispatch } from '../../redux/store.ts';
 import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
-import { clearUser } from '../../redux/slices/userSlice.ts';
 import Button from '../Button.tsx';
 
 const MenuContainer = styled.nav`
@@ -56,9 +54,8 @@ interface MenuProps {
 export default function HeaderMenu({ windowWidth }: MenuProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.user.profile);
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const [, , removeCookie] = useCookies(['user']);
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
@@ -82,13 +79,12 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
       )}
       {isOpen && (
         <DropdownMenu>
-          {user ? (
+          {token ? (
             <>
               <MenuItem>예약 목록</MenuItem>
               <MenuItem
                 onClick={() => {
-                  removeCookie('user');
-                  dispatch(clearUser());
+                  localStorage.removeItem('token');
                   navigate('/');
                 }}
               >

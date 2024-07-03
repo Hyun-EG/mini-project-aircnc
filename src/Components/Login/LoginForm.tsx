@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCookies } from 'react-cookie';
 import { RootState } from '../../redux/store.ts';
-import { setUser } from '../../redux/slices/userSlice.ts';
 import {
   setIsFailed,
   clearModalState,
@@ -11,8 +9,8 @@ import {
 import {
   LoginFormSchema,
   LoginFormSchemaType,
-  User,
 } from '../../schema/userSchema.ts';
+import { useLogin } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import LoginModalTitle from './LoginModalTitle.tsx';
@@ -23,6 +21,7 @@ export type LoginFormFields = LoginFormSchemaType;
 function LoginForm() {
   const dispatch = useDispatch();
   const email = useSelector((state: RootState) => state.loginModal.email);
+  const { mutateAsync: login } = useLogin();
 
   const {
     register,
@@ -33,50 +32,21 @@ function LoginForm() {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const [, setCookie] = useCookies(['user']);
-
-  const fetchUser = async () => {
-    try {
-      const response = await fetch('/src/assets/users.json');
-      const users = await response.json();
-
-      return users;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
   const onSubmit: SubmitHandler<LoginFormFields> = async (data) => {
     try {
-      const users: User[] = await fetchUser();
-      if (!users) {
-        throw new Error();
+      const isSuccesful = await login({ email, password: data.password });
+
+      if (isSuccesful) {
+        dispatch(clearModalState());
+        return;
       }
 
-      const matchEmail = users.filter((user) => user.email === email);
-      if (!matchEmail.length) {
-        throw new Error();
-      }
-
-      const isMatchPassword = matchEmail[0].password === data.password;
-      if (!isMatchPassword) {
-        throw new Error();
-      }
-
-      setCookie('user', matchEmail[0].email, {
-        maxAge: 5 * 60,
-        secure: true,
-        sameSite: 'lax',
-      });
-      dispatch(setUser(matchEmail[0]));
-      dispatch(clearModalState());
-    } catch (error) {
-      console.error(error);
       dispatch(setIsFailed(true));
       setError('password', {
         message: '비밀번호가 일치하지 않습니다.',
       });
+    } catch (error) {
+      console.error(error);
     }
   };
 
