@@ -32,7 +32,6 @@ const ANSWER = {
 };
 
 export const UserSchema = z.object({
-  id: z.number(),
   nickname: z.string(),
   email: z.string(),
   password: z.string(),
@@ -51,7 +50,7 @@ export const LoginFormSchema = UserSchema.pick({
   password: true,
 });
 
-export const SignupFormSchema = UserSchema.omit({ id: true, email: true })
+export const SignupFormSchema = UserSchema.omit({ email: true })
   .extend({
     nickname: z
       .string()
