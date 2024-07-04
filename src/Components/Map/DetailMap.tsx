@@ -34,18 +34,22 @@ export default function DetailMap({ width, height, listing }: DetailMapProps) {
     };
 
     const map = new naver.maps.Map('detailMap', mapOptions);
-    // eslint-disable-next-line no-unused-vars
-    const marker = new naver.maps.Marker({
-      position: mapOptions.center,
-      map,
-      icon: {
-        url: '/location_on.png',
-        size: new naver.maps.Size(36, 36),
-        scaledSize: new naver.maps.Size(36, 36),
-        origin: new naver.maps.Point(0, 0),
-        anchor: new naver.maps.Point(18, 36),
-      },
-    });
+
+    const createMarker = () => {
+      return new naver.maps.Marker({
+        position: mapOptions.center,
+        map,
+        icon: {
+          url: '/location_on.png',
+          size: new naver.maps.Size(36, 36),
+          scaledSize: new naver.maps.Size(36, 36),
+          origin: new naver.maps.Point(0, 0),
+          anchor: new naver.maps.Point(18, 36),
+        },
+      });
+    };
+
+    createMarker();
   }, [listing]);
 
   return <MapContainer id="detailMap" width={width} height={height} />;
