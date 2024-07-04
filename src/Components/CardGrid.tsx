@@ -4,7 +4,7 @@ import { RoomDetailData } from '../assets/interfaces.ts';
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
   gap: 25px;
   margin: 0;
   width: 100%;

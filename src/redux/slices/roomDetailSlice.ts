@@ -15,7 +15,7 @@ export const fetchRoomDetails = createAsyncThunk(
 
 interface RoomState {
   selectedRoom: RoomResponse | null;
-  reservedDate: any[];
+  reservedDate: any[]; // reservedDate 한번 추가해보고 타입 체크해서 명시해주기
 }
 
 const initialState: RoomState = {

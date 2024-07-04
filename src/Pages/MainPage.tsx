@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CardGrid from '../Components/CardGrid.tsx';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomDetailData, RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
 
 // 서울시청 좌표 37.566611, 126.978361
@@ -17,9 +17,9 @@ function MainPage() {
   useEffect(() => {
     const fetchCloseLists = async (map_x: number, map_y: number) => {
       try {
-        const radius = 0.05;
-        const url = `http://54.180.158.55:8080/api/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`;
-
+        const radius = 0.5;
+        const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`;
+        console.log(url);
         const response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -31,31 +31,21 @@ function MainPage() {
           throw new Error('Failed to fetch room data');
         }
 
-        const data: RoomDetailData[] = await response.json();
-        setListings(data);
+        const data = await response.json();
+        const roomData = data.body.room_response_list;
+        setListings(roomData);
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
 
-    const fetchListings = async () => {
-      try {
-        const response = await fetch('/room_data.json');
-        const data: RoomDetailData[] = await response.json();
-        setListings(data);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
-
-    fetchListings();
-    // if (location.loaded && !location.error) {
-    //   fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
-    //   setLocationError(null); // 위치 정보가 불러와지면 오류 메시지 제거
-    // } else if (location.error) {
-    //   setLocationError(location.error.message);
-    //   fetchCloseLists(DEFAULT_COORDINATES.lng, DEFAULT_COORDINATES.lat); // 기본 좌표로 데이터 가져오기
-    // }
+    if (location.loaded && !location.error) {
+      fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
+      setLocationError(null); // 위치 정보가 불러와지면 오류 메시지 제거
+    } else if (location.error) {
+      setLocationError(location.error.message);
+      fetchCloseLists(DEFAULT_COORDINATES.lng, DEFAULT_COORDINATES.lat); // 기본 좌표로 데이터 가져오기
+    }
   }, [location]);
 
   return (
