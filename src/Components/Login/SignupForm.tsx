@@ -10,6 +10,8 @@ import {
 import {
   SignupFormSchema,
   SignupFormSchemaType,
+  QUESTION_VALUES,
+  QUESTION_OBJECT,
 } from '../../schema/userSchema.ts';
 import { useSignUp } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
@@ -80,14 +82,19 @@ function SignupForm() {
         type="password"
         placeholder="비밀번호 확인"
       />
-      <Select register={register('question')} label="비밀번호 찾기 질문">
+      <Select
+        register={register('question')}
+        label="비밀번호 찾기 질문"
+        message={errors.question?.message}
+      >
         <option value="" hidden>
           비밀번호 찾기 질문을 선택해 주세요.
         </option>
-        <option value="treasure">나의 보물 1호는?</option>
-        <option value="friend">제일 친한 친구는?</option>
-        <option value="elementary_school">내가 졸업한 초등학교 이름은?</option>
-        <option value="book">기억에 남는 책 이름은?</option>
+        {QUESTION_VALUES.map((value) => (
+          <option value={value} key={value}>
+            {QUESTION_OBJECT[value]}
+          </option>
+        ))}
       </Select>
       <Input
         register={register('answer')}
