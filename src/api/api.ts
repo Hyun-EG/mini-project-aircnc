@@ -30,7 +30,7 @@ const onRequest = (config: InternalAxiosRequestConfig) => {
   return Promise.resolve(config);
 };
 
-const onResponse = (response: AxiosResponse) => {
+const onResponse = (response: AxiosResponse): AxiosResponse['data'] => {
   const { config, status } = response;
 
   logOnDev(
@@ -46,7 +46,7 @@ const onResponse = (response: AxiosResponse) => {
   return response.data;
 };
 
-const onError = (error: AxiosError | Error) => {
+const onError = (error: AxiosError | Error): AxiosResponse['data'] | Error => {
   if (axios.isAxiosError(error) && error.response) {
     const { message } = error;
     const { method, url } = error.config as AxiosRequestConfig;
@@ -72,6 +72,4 @@ const setUpInterceptors = (instance: AxiosInstance): AxiosInstance => {
   return instance;
 };
 
-setUpInterceptors(api);
-
-export default api;
+export default setUpInterceptors(api);

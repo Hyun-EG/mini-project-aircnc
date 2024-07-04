@@ -38,7 +38,7 @@ function FindPasswordForm() {
     try {
       const response = await findPassword({ ...data, email });
 
-      if (response.resultCode === 200) {
+      if (response.result.result_code === 200) {
         dispatch(setMessage(`임시 비밀번호는 ${response.body}입니다.`));
         dispatch(setModalStatus('message'));
         return;

@@ -36,7 +36,7 @@ function LoginForm() {
     try {
       const response = await logIn({ email, password: data.password });
 
-      if (response.resultCode === 200) {
+      if (response.result.result_code === 200) {
         dispatch(clearModalState());
         return;
       }
