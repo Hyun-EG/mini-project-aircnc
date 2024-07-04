@@ -8,8 +8,8 @@ import {
 import {
   EmailFormSchema,
   EmailFormSchemaType,
-  User,
 } from '../../schema/userSchema.ts';
+import { useValidateEmail } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import LoginModalTitle from './LoginModalTitle.tsx';
@@ -19,6 +19,7 @@ export type EmailFormFields = EmailFormSchemaType;
 
 function EmailForm() {
   const dispatch = useDispatch();
+  const { mutateAsync: validateEmail } = useValidateEmail();
 
   const {
     register,
@@ -28,32 +29,16 @@ function EmailForm() {
     resolver: zodResolver(EmailFormSchema),
   });
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch('/src/assets/users.json');
-      const users = await response.json();
-
-      return users;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
   const onSubmit: SubmitHandler<EmailFormFields> = async (data) => {
     try {
-      const users: User[] = await fetchUser();
-      if (!users) {
-        throw new Error();
-      }
+      const response = await validateEmail(data.email);
 
-      const matchEmail = users.filter((user) => user.email === data.email);
-      if (!matchEmail.length) {
+      if (response.resultCode === 200) {
         dispatch(setModalStatus('signup'));
         return;
       }
 
-      dispatch(setEmail(matchEmail[0].email));
+      dispatch(setEmail(data.email));
       dispatch(setModalStatus('login'));
     } catch (error) {
       console.error(error);

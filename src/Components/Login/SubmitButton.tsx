@@ -15,7 +15,7 @@ function SubmitButton({ isSubmitting, children }: SubmitButtonProps) {
       disabled={isSubmitting}
       type="submit"
     >
-      {isSubmitting ? <IconDots size={16} /> : children}
+      {isSubmitting ? <IconDots size={20} /> : children}
     </Button>
   );
 }

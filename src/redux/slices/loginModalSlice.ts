@@ -7,19 +7,20 @@ export type LoginModalStatus =
   | 'signup'
   | 'findPassword'
   | 'newPassword'
-  | 'signUpComplete'
-  | 'changeComplete'
+  | 'message'
   | null;
 
 export type LoginModalState = EmailFormSchemaType & {
   status: LoginModalStatus;
   isFailed: boolean;
+  message: string;
 };
 
 const initialState: LoginModalState = {
   status: null,
   email: '',
   isFailed: false,
+  message: '',
 };
 
 const loginModalSlice = createSlice({
@@ -35,6 +36,9 @@ const loginModalSlice = createSlice({
     setIsFailed: (state, action: PayloadAction<boolean>) => {
       state.isFailed = action.payload;
     },
+    setMessage: (state, action: PayloadAction<string>) => {
+      state.message = action.payload;
+    },
     clearModalState: (state) => {
       state.status = initialState.status;
       state.email = initialState.email;
@@ -43,6 +47,11 @@ const loginModalSlice = createSlice({
   },
 });
 
-export const { setModalStatus, setEmail, setIsFailed, clearModalState } =
-  loginModalSlice.actions;
+export const {
+  setModalStatus,
+  setEmail,
+  setIsFailed,
+  setMessage,
+  clearModalState,
+} = loginModalSlice.actions;
 export default loginModalSlice.reducer;
