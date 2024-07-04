@@ -1,10 +1,17 @@
+import { useSelector, useDispatch } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styled from 'styled-components';
+import { RootState } from '../../redux/store.ts';
+import {
+  setMessage,
+  setModalStatus,
+} from '../../redux/slices/loginModalSlice.ts';
 import {
   SignupFormSchema,
   SignupFormSchemaType,
 } from '../../schema/userSchema.ts';
+import { useSignUp } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Select from '../Select.tsx';
@@ -18,17 +25,36 @@ const SignupTitle = styled.h3`
 type SignupFormFields = SignupFormSchemaType;
 
 function SignupForm() {
+  const email = useSelector((state: RootState) => state.loginModal.email);
+  const dispatch = useDispatch();
+  const { mutateAsync: signUp } = useSignUp();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<SignupFormFields>({
     mode: 'onTouched',
     resolver: zodResolver(SignupFormSchema),
   });
 
-  const onSubmit: SubmitHandler<SignupFormFields> = (data) => {
-    console.log(errors, data);
+  const onSubmit: SubmitHandler<SignupFormFields> = async (data) => {
+    try {
+      const resultCode = await signUp({ ...data, email });
+
+      if (resultCode === 200) {
+        dispatch(setMessage('회원가입이 완료되었습니다.'));
+        dispatch(setModalStatus('message'));
+        return;
+      }
+
+      setError('nickname', {
+        message: '중복된 닉네임입니다.',
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

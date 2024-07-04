@@ -21,7 +21,7 @@ export type LoginFormFields = LoginFormSchemaType;
 function LoginForm() {
   const dispatch = useDispatch();
   const email = useSelector((state: RootState) => state.loginModal.email);
-  const { mutateAsync: login } = useLogin();
+  const { mutateAsync: logIn } = useLogin();
 
   const {
     register,
@@ -34,9 +34,9 @@ function LoginForm() {
 
   const onSubmit: SubmitHandler<LoginFormFields> = async (data) => {
     try {
-      const isSuccesful = await login({ email, password: data.password });
+      const resultCode = await logIn({ email, password: data.password });
 
-      if (isSuccesful) {
+      if (resultCode === 200) {
         dispatch(clearModalState());
         return;
       }

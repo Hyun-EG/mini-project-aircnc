@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { getValidateEmail, postLogin } from '../api/fetchUsers.ts';
+import { getValidateEmail, postLogIn, postSignUp } from '../api/fetchUsers.ts';
 
 export function useValidateEmail() {
   return useMutation({
@@ -12,7 +12,16 @@ export function useValidateEmail() {
 
 export function useLogin() {
   return useMutation({
-    mutationFn: postLogin,
+    mutationFn: postLogIn,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+}
+
+export function useSignUp() {
+  return useMutation({
+    mutationFn: postSignUp,
     onError: (error) => {
       console.error(error);
     },

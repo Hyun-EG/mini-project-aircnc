@@ -45,17 +45,17 @@ function MainPage() {
         //     }),
         //   },
         // );
-        const testEmail = await fetch(
-          'http://54.180.158.55:8080/api/auth/email/user1@gmail.com',
-          {
-            method: 'GET',
-          },
-        );
+        // const testEmail = await fetch(
+        //   'http://54.180.158.55:8080/api/auth/email/user1@gmail.com',
+        //   {
+        //     method: 'GET',
+        //   },
+        // );
 
         // const testResBody = await testRes.json();
-        const testEmailBody = await testEmail.json();
+        // const testEmailBody = await testEmail.json();
 
-        console.log(testEmailBody);
+        // console.log(testEmailBody);
         // console.log(testResBody);
 
         // const testData = await testRes.json();

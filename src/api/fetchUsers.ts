@@ -7,20 +7,30 @@ import {
 const baseUrl = 'http://54.180.158.55:8080/api/auth';
 
 type FetchMethod = 'GET' | 'POST';
+export type ResultCode = 200 | 4000 | 4001 | 4002 | 4003 | 4004;
 
-interface ResponseResult {
-  resultCode: 200 | 4000 | 4001 | 4002 | 4003 | 4004;
+export const RESULT_MESSAGE = {
+  200: '성공',
+  4000: 'SignUp Failed',
+  4001: 'Login Failed',
+  4002: 'Unusable Email',
+  4003: 'Unusable Nickname',
+  4004: 'Not Match Answer',
+} as const;
+
+export interface ResponseResult {
+  resultCode: ResultCode;
   resultMessage: string;
 }
 
-const isResponseSuccessful = async (response: Response) => {
+const responseToResultCode = async (response: Response) => {
   const body = await response.json();
 
   const result: ResponseResult = {
     resultCode: body.result.result_code,
     resultMessage: body.result.result_message,
   };
-  return result.resultCode === 200;
+  return result.resultCode;
 };
 
 interface FetchUserArgs<T> {
@@ -35,7 +45,7 @@ const fetchUser = async <T>({
   method,
   body = null,
   setToken = false,
-}: FetchUserArgs<T>): Promise<boolean> => {
+}: FetchUserArgs<T>): Promise<ResultCode> => {
   const response = await fetch(url, {
     method,
     headers: {
@@ -56,7 +66,7 @@ const fetchUser = async <T>({
     }
   }
 
-  const isSuccessful = await isResponseSuccessful(response);
+  const isSuccessful = await responseToResultCode(response);
 
   return isSuccessful;
 };
@@ -64,7 +74,7 @@ const fetchUser = async <T>({
 export const getValidateEmail = async (email: EmailFormSchemaType['email']) =>
   await fetchUser({ url: `${baseUrl}/email/${email}`, method: 'GET' });
 
-export const postLogin = async (
+export const postLogIn = async (
   user: EmailFormSchemaType & LoginFormSchemaType,
 ) =>
   await fetchUser<EmailFormSchemaType & LoginFormSchemaType>({

@@ -50,12 +50,16 @@ export const LoginFormSchema = UserSchema.pick({
   password: true,
 });
 
+export const NicknameFormSchema = UserSchema.pick({ nickname: true }).extend({
+  nickname: z
+    .string()
+    .min(NICKNAME.MIN_LENGTH, { message: NICKNAME.MIN_ERROR_MESSAGE })
+    .max(NICKNAME.MAX_LENGTH, { message: NICKNAME.MAX_ERROR_MESSAGE }),
+});
+
 export const SignupFormSchema = UserSchema.omit({ email: true })
+  .merge(NicknameFormSchema)
   .extend({
-    nickname: z
-      .string()
-      .min(NICKNAME.MIN_LENGTH, { message: NICKNAME.MIN_ERROR_MESSAGE })
-      .max(NICKNAME.MAX_LENGTH, { message: NICKNAME.MAX_ERROR_MESSAGE }),
     password: z
       .string()
       .min(PASSWORD.MIN_LENGTH, { message: PASSWORD.MIN_ERROR_MESSAGE })
@@ -103,6 +107,7 @@ export type UserSchemaType = z.infer<typeof UserSchema>;
 export type User = Omit<UserSchemaType, 'confirmPassword'>;
 export type EmailFormSchemaType = z.infer<typeof EmailFormSchema>;
 export type LoginFormSchemaType = z.infer<typeof LoginFormSchema>;
+export type NicknameFormSchemaType = z.infer<typeof NicknameFormSchema>;
 export type SignupFormSchemaType = z.infer<typeof SignupFormSchema>;
 export type FindPasswordFormSchemaType = z.infer<typeof FindPasswordFormSchema>;
 export type NewPasswordFormSchemaType = z.infer<typeof NewPasswordFormSchema>;
