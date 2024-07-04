@@ -1,93 +1,65 @@
 import { useState, useEffect } from 'react';
 import CardGrid from '../Components/CardGrid.tsx';
-import { RoomDetailData } from '../assets/interfaces.ts';
-import {
-  getCurrentPosition,
-  getAddressFromCoordinates,
-} from '../util/currentLocationUtil.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
+import useGeolocation from '../util/currentLocationUtil.ts';
+
+// 서울시청 좌표 37.566611, 126.978361
+const DEFAULT_COORDINATES = {
+  lat: 37.566611,
+  lng: 126.978361,
+};
 
 function MainPage() {
-  const [listings, setListings] = useState<RoomDetailData[]>([]);
+  const [listings, setListings] = useState<RoomResponse[]>([]); // 여기를 CardResponse로 고쳐야해
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const location = useGeolocation();
 
   useEffect(() => {
-    // alert(
-    //   '백엔드 작업이 너무 느려서 API를 연결하지 못했습니다. \n완성을 도대체 언제 하려고 그러는걸까요..? \n호기롭게 기능은 다 만들었지만 고도화중이라고 했는데;;; 너무 고도화하네..',
-    // );
-
-    // Fetch current position and address
-    const fetchAddress = async () => {
+    const fetchCloseLists = async (map_x: number, map_y: number) => {
       try {
-        const position = await getCurrentPosition();
-        const address = await getAddressFromCoordinates(
-          position.latitude,
-          position.longitude,
-        );
-        console.log('Current Address:', address);
-      } catch (error) {
-        console.error('Error getting address:', error);
-      }
-    };
+        const radius = 0.5;
+        const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`;
 
-    const fetchListings = async () => {
-      try {
-        // const testRes = await fetch(
-        //   'http://54.180.158.55:8080/api/auth/login',
-        //   {
-        //     method: 'POST',
-        //     headers: {
-        //       Origin: 'http://localhost:5173/',
-        //       'Access-Control-Request-Method': 'POST',
-        //       'Access-Control-Request-Headers': 'content-type',
-        //     },
-        //     body: JSON.stringify({
-        //       email: 'user1@gmail.com',
-        //       password: '1234',
-        //     }),
-        //   },
-        // );
-        // const testEmail = await fetch(
-        //   'http://54.180.158.55:8080/api/auth/email/user1@gmail.com',
-        //   {
-        //     method: 'GET',
-        //   },
-        // );
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        // const testResBody = await testRes.json();
-        // const testEmailBody = await testEmail.json();
+        if (!response.ok) {
+          throw new Error('Failed to fetch room data');
+        }
 
-        // console.log(testEmailBody);
-        // console.log(testResBody);
-
-        // const testData = await testRes.json();
-        // console.log(testData);
-
-        // const response = await fetch(
-        //   'http://54.180.158.55:8080/api/rooms/randoms',
-        //   {
-        //     method: 'GET',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       Origin: 'http://localhost:5173/',
-        //       'Access-Control-Request-Method': 'POST',
-        //       'Access-Control-Request-Headers': 'content-type',
-        //     },
-        //   },
-        // );
-
-        const response = await fetch('/src/assets/room_data.json');
-
-        const data: RoomDetailData[] = await response.json();
-        setListings(data);
+        const data = await response.json();
+        const roomData = data.body.room_response_list;
+        setListings(roomData);
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
 
-    // fetchAddress();
-    fetchListings();
-  }, []);
+    if (location.loaded && !location.error) {
+      fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
+      setLocationError(null); // 위치 정보가 불러와지면 오류 메시지 제거
+    } else if (location.error) {
+      setLocationError(location.error.message);
+      fetchCloseLists(DEFAULT_COORDINATES.lng, DEFAULT_COORDINATES.lat); // 기본 좌표로 데이터 가져오기
+    }
+  }, [location]);
 
-  return <CardGrid listings={listings} />;
+  return (
+    <div>
+      {locationError && (
+        <div>
+          <p>
+            현재 위치를 검색할 수 없습니다. 브라우저의 위치 권한을 허용해주세요.
+          </p>
+        </div>
+      )}
+      <CardGrid listings={listings} />
+    </div>
+  );
 }
 
 export default MainPage;

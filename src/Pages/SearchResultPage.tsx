@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 
 const SearchPageContainer = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const MapMargin = styled.div`
 
 function SearchResultPage() {
   const { location } = useSelector((state: RootState) => state.search);
-  const [listings, setListings] = useState<RoomDetailData[]>([]);
+  const [listings, setListings] = useState<RoomResponse[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const loader = useRef<HTMLDivElement | null>(null);
 
@@ -36,7 +36,7 @@ function SearchResultPage() {
     const fetchListings = async () => {
       try {
         const response = await fetch('src/assets/room_data.json');
-        const rooms: RoomDetailData[] = await response.json();
+        const rooms: RoomResponse[] = await response.json();
         const filteredRooms = rooms.filter((room) =>
           room.city.includes(location),
         );
