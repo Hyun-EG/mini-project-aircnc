@@ -33,11 +33,12 @@ const DetailContentArea = styled.div`
 `;
 
 const CheckIn = styled.div`
-  width: 50vh;
+  width: 100%;
   height: 12vh;
   border: 1px solid lightgrey;
   border-radius: 20px;
   margin-right: 2vh;
+  padding: 0 16vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -45,8 +46,8 @@ const CheckIn = styled.div`
 `;
 
 const CheckInTitle = styled.div`
-  font-size: 3vh;
-  font-weight: bold;
+  font-size: 2vh;
+  font-weight: 500;
   padding-bottom: 1vh;
 `;
 
@@ -55,10 +56,11 @@ const CheckInDate = styled.div`
 `;
 
 const CheckOut = styled.div`
-  width: 50vh;
+  width: 100%;
   height: 12vh;
   border: 1px solid lightgrey;
   border-radius: 20px;
+  padding: 0 16vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,8 +68,8 @@ const CheckOut = styled.div`
 `;
 
 const CheckOutTitle = styled.div`
-  font-size: 3vh;
-  font-weight: bold;
+  font-size: 2vh;
+  font-weight: 500;
   padding-bottom: 1vh;
 `;
 
@@ -76,9 +78,8 @@ const CheckOutDate = styled.div`
 `;
 
 const DetailContent = styled.div`
-  width: 81.5vh;
+  width: 87%;
   height: 14vh;
-  padding: 0 0 0 21vh;
   border: 1px solid lightgrey;
   border-radius: 20px;
   display: flex;
