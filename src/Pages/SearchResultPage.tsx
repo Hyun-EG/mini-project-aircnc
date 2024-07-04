@@ -27,9 +27,8 @@ const MapMargin = styled.div`
 `;
 
 function SearchResultPage() {
-  const { location, checkInDate, checkOutDate, guestCount } = useSelector(
-    (state: RootState) => state.search,
-  );
+  const { location, checkInDate, checkOutDate, guestCount, mode, coordinates } =
+    useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomResponse[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const loader = useRef<HTMLDivElement | null>(null);
@@ -58,28 +57,32 @@ function SearchResultPage() {
     };
 
     const fetchSearchByMap = async () => {
-      try {
-        const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/map?capacity=${guestCount}&check_in=${checkInDate}&check_out=${checkOutDate}&top=13.4&botton=13.2&right=13.1&left=13.3`;
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch room data');
-        }
-        const data = await response.json();
-        const roomData = data.body.room_response_list;
-        setListings(roomData);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
+      // try {
+      const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/map?capacity=${guestCount}&check_in=${checkInDate}&check_out=${checkOutDate}&top=${coordinates.top}&botton=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+      console.log(url);
+      //   const response = await fetch(url, {
+      //     method: 'GET',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   });
+      //   if (!response.ok) {
+      //     throw new Error('Failed to fetch room data');
+      //   }
+      //   const data = await response.json();
+      //   const roomData = data.body.room_response_list;
+      //   setListings(roomData);
+      // } catch (error) {
+      //   console.error('Error fetching listings:', error);
+      // }
     };
 
-    fetchSearchByHeader();
-    fetchSearchByMap();
-  }, [checkInDate, checkOutDate, guestCount, location]);
+    if (mode) {
+      fetchSearchByHeader();
+    } else {
+      fetchSearchByMap();
+    }
+  }, [checkInDate, checkOutDate, guestCount, location, coordinates, mode]);
 
   const handleObserver = useCallback(
     (entities: IntersectionObserverEntry[]) => {
