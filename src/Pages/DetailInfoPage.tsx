@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   IconChevronLeft,
@@ -7,6 +7,7 @@ import {
   IconPlus,
   IconMinus,
 } from '@tabler/icons-react';
+import { useEffect } from 'react';
 import { RootState } from '../redux/store.ts';
 import DetailCard from '../Components/DetailCard.tsx';
 import DetailCalendar from '../Components/DetailCalendar.tsx';
@@ -21,6 +22,7 @@ import {
   GuestTotalCount,
 } from '../Components/Header/Guest.tsx';
 import Button from '../Components/Button.tsx';
+import { fetchRoomDetails } from '../redux/slices/roomDetailSlice.ts';
 
 const ContainerHeader = styled.header`
   display: flex;
@@ -117,11 +119,13 @@ const DetailFooterContent = styled.div`
 `;
 
 export default function DetailInfoPage() {
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const selectedRoom = useSelector(
+  const roomDetails = useSelector(
     (state: RootState) => state.rooms.selectedRoom,
   );
+
   const guestCount = useSelector((state: RootState) => state.search.guestCount);
   const checkInDate = useSelector(
     (state: RootState) => state.search.checkInDate,
@@ -130,8 +134,14 @@ export default function DetailInfoPage() {
     (state: RootState) => state.search.checkOutDate,
   );
 
-  if (!selectedRoom) {
-    return <h1>Loading...</h1>;
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchRoomDetails(id));
+    }
+  }, [dispatch, id]);
+
+  if (!roomDetails) {
+    return <h1>loading...</h1>;
   }
 
   const incrementGuestCount = () => {
@@ -156,7 +166,7 @@ export default function DetailInfoPage() {
   };
 
   const calculateTotalPrice = () => {
-    const pricePerNight = selectedRoom.price;
+    const pricePerNight = roomDetails.price;
     if (checkOutDate && checkInDate) {
       const nights = Math.round(
         (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
@@ -165,7 +175,7 @@ export default function DetailInfoPage() {
       const totalPrice = pricePerNight * nights;
       return totalPrice;
     }
-    return selectedRoom.price;
+    return roomDetails.price;
   };
 
   return (
@@ -179,7 +189,7 @@ export default function DetailInfoPage() {
         >
           <IconChevronLeft />
         </Button>
-        <ContainerHeaderTitle>{selectedRoom.name}</ContainerHeaderTitle>
+        <ContainerHeaderTitle>{roomDetails.name}</ContainerHeaderTitle>
         <Button
           $size="medium"
           $shape="circle"
@@ -218,14 +228,14 @@ export default function DetailInfoPage() {
             </GuestOptionCounter>
           </BookingGuestContainer>
           <BookingDetailsContent>
-            <span>{`${formatNumber(selectedRoom.price)}원 / 박`}</span>
+            <span>{`${formatNumber(roomDetails.price)}원 / 박`}</span>
           </BookingDetailsContent>
         </RoomBookingDetails>
       </InfoContainer>
       <SeparationLine />
       <MapContainer>
         <MapTitle>숙소 위치</MapTitle>
-        <DetailMap width="100%" height="50vh" listing={selectedRoom} />
+        <DetailMap width="100%" height="50vh" listing={roomDetails} />
       </MapContainer>
       <SeparationLine />
       <DetailFooterArea>
@@ -240,7 +250,7 @@ export default function DetailInfoPage() {
         </DetailFooterContent>
       </DetailFooterArea>
       <DetailFooter
-        room={selectedRoom}
+        room={roomDetails}
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
         totalPrice={calculateTotalPrice()}
