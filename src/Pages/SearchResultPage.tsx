@@ -33,7 +33,10 @@ function SearchResultPage() {
   const loader = useRef<HTMLDivElement | null>(null);
   const cursorId = useRef<number | null>(null);
 
-  const formatDate = (isoDate: string) => {
+  const formatDate = (isoDate: string | null) => {
+    if (isoDate === null) {
+      return;
+    }
     const date = new Date(isoDate);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

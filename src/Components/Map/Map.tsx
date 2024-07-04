@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RoomResponse } from '../../assets/interfaces.ts';
-import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
+// import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
 import { RootState } from '../../redux/store.ts';
 
 declare global {
