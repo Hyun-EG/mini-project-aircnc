@@ -24,6 +24,19 @@ export interface RoomData {
   map_y: number;
 }
 
+export interface RoomResponse {
+  room_id: number;
+  name: string;
+  max_capacity: number;
+  map_x: number;
+  map_y: number;
+  image_url: string;
+  address: string;
+  city: string;
+  description: string;
+  price: number;
+}
+
 export interface RoomDetailData {
   id: number; // (room_id)
   name: string;
@@ -54,7 +67,7 @@ export interface CalendarProps extends Toggleable {
 }
 
 export interface Reservation {
-  room: RoomDetailData;
+  room: RoomResponse;
   userID: string;
   checkInDate: Date;
   checkOutDate: Date;

@@ -12,7 +12,7 @@ const CardContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer; // css추가
+  cursor: pointer;
 `;
 const ImageContainer = styled.div`
   width: 100%;
@@ -63,28 +63,25 @@ function Card(props: CardProps) {
   const dispatch = useDispatch();
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 
-  // id에 따라 페이지 이동..
-  const handleClick = () => {
-    dispatch(selectRoom(props));
-    navigate(`/detail/${id}`);
+  const handleClick = async () => {
+    try {
+      const response = await fetch(`http://54.180.158.55:8080/api/rooms/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch room details');
+      }
+      const data = await response.json();
+      console.log('Fetched data:', data); // 응답 데이터 로그
+      const roomData = {
+        room_response: data.body.room_response,
+        reserved_date: data.body.reserved_date,
+      };
+      dispatch(selectRoom(roomData));
+      console.log('roomData is ', roomData); // 변환된 데이터 로그
+      navigate(`/detail/${id}`);
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+    }
   };
-
-  // api연결부
-  // const handleClick = async () => {
-  //   try {
-  //     const response = await fetch(`http://54.180.158.55:8080/api/rooms/${id}`);
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch room details');
-  //     }
-  //     const data: RoomDetailData = await response.json();
-  //     dispatch(selectRoom(data));
-  //     navigate(`/detail/${id}`);
-  //   } catch (error) {
-  //     console.error('Error fetching room details:', error);
-  //   }
-  // };
-
-  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
 
   const handleMouseEnter = () => {
     if (!order && order !== 0) {

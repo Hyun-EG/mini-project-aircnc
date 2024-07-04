@@ -3,7 +3,7 @@ import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
 
 const FooterContainer = styled.footer`
@@ -29,7 +29,7 @@ const FooterPrice = styled.span`
 
 interface DetailFooterProps {
   totalPrice: number;
-  room: RoomDetailData;
+  room: RoomResponse;
   checkInDate: string | null;
   checkOutDate: string | null;
 }
@@ -45,7 +45,7 @@ function DetailFooter({
   }
 
   const handleLike = () => {
-    const roomID = room.id;
+    const roomID = room.room_id;
     const userID = 'testID1'; // UserID
     addWishlist({ roomID, userID } /* userID는 추후 로그인 데이터로 대체 */);
   };
