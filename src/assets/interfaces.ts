@@ -25,7 +25,7 @@ export interface RoomData {
 }
 
 export interface RoomDetailData {
-  id: number;
+  id: number; // (room_id)
   name: string;
   price: number;
   max_capacity: number;
