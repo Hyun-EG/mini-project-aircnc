@@ -103,6 +103,7 @@ const DetailFooterArea = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-bottom: 6rem;
 `;
 
@@ -113,6 +114,7 @@ const DetailFooterTitle = styled.div`
 `;
 
 const DetailFooterContent = styled.div`
+  text-align: center;
   font-size: 2vh;
   line-height: 3.5vh;
   color: #ababab;
