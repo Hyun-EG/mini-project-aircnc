@@ -8,7 +8,7 @@ import {
   IconMinus,
 } from '@tabler/icons-react';
 import { useEffect } from 'react';
-import { RootState } from '../redux/store.ts';
+import { RootState, AppDispatch } from '../redux/store.ts'; // AppDispatch 추가
 import DetailCard from '../Components/DetailCard.tsx';
 import DetailCalendar from '../Components/DetailCalendar.tsx';
 import DetailFooter from '../Components/DetailFooter.tsx';
@@ -120,7 +120,7 @@ const DetailFooterContent = styled.div`
 
 export default function DetailInfoPage() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const roomDetails = useSelector(
     (state: RootState) => state.rooms.selectedRoom,

@@ -5,13 +5,13 @@ export interface MockData {
   rooms: string;
 }
 
-// export interface RoomData {
-//   id: number;
-//   name: string;
-//   price: number;
-//   address: string;
-//   image_url: string;
-// }
+export interface CardResponse {
+  room_id: number;
+  name: string;
+  city: string;
+  description: string;
+  image_url: string;
+}
 
 export interface RoomData {
   id: number;
