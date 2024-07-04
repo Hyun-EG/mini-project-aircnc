@@ -5,27 +5,22 @@ export interface MockData {
   rooms: string;
 }
 
-// export interface RoomData {
-//   id: number;
-//   name: string;
-//   price: number;
-//   address: string;
-//   image_url: string;
-// }
-
-export interface RoomData {
-  id: number;
+export interface RoomResponse {
+  room_id: number;
   name: string;
-  price: number;
-  address: string;
-  city: string;
-  image_url: string;
+  max_capacity: number;
   map_x: number;
   map_y: number;
+  image_url: string;
+  address: string;
+  city: string;
+  description: string;
+  price: number;
+  order?: number;
 }
 
 export interface RoomDetailData {
-  id: number;
+  id: number; // (room_id)
   name: string;
   price: number;
   max_capacity: number;
@@ -54,7 +49,7 @@ export interface CalendarProps extends Toggleable {
 }
 
 export interface Reservation {
-  room: RoomDetailData;
+  room: RoomResponse;
   userID: string;
   checkInDate: Date;
   checkOutDate: Date;

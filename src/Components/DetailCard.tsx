@@ -49,6 +49,7 @@ function DetailCard() {
   const selectedRoom = useSelector(
     (state: RootState) => state.rooms.selectedRoom,
   );
+
   if (!selectedRoom) {
     return <h1>Loading</h1>;
   }
@@ -56,7 +57,10 @@ function DetailCard() {
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={selectedRoom.image_url} alt={selectedRoom.name} />
+        <Image
+          src={selectedRoom.image_url || `/defaultImage.jpg`}
+          alt={selectedRoom.name}
+        />
       </ImageContainer>
       <TextContainer>
         <RoomTitle>{selectedRoom.name}</RoomTitle>

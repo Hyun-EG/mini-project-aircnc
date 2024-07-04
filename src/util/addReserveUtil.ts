@@ -9,12 +9,12 @@ const addReservation = async ({
   const reservation = JSON.parse(localStorage.getItem('reservedRoom') || '[]');
 
   const isConflict = reservation.some((res: Reservation) => {
-    const resRoom = res.room.id; // 이거 이상하다
+    const resRoom = res.room.room_id; // 이거 이상하다
     const resCheckIn = new Date(res.checkInDate);
     const resCheckOut = new Date(res.checkOutDate);
 
     const isOverlapping =
-      room.id === resRoom &&
+      room.room_id === resRoom &&
       ((checkInDate < resCheckOut && checkOutDate > resCheckIn) || // 날짜가 겹치는 경우
         (checkInDate <= resCheckIn && checkOutDate >= resCheckOut)); // 완전히 포함하는 경우
 

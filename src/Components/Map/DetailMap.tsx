@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import { RoomDetailData } from '../../assets/interfaces.ts';
+import { RoomResponse } from '../../assets/interfaces.ts';
 
 const MapContainer = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -12,7 +12,7 @@ const MapContainer = styled.div<{ width: string; height: string }>`
 interface DetailMapProps {
   width: string;
   height: string;
-  listing: RoomDetailData;
+  listing: RoomResponse;
 }
 
 export default function DetailMap({ width, height, listing }: DetailMapProps) {

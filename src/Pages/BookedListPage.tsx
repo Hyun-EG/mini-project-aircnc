@@ -1,53 +1,87 @@
 // 로그인이 되었을 때만 표시되도록 처리
 import { styled } from 'styled-components';
-import Header from '../Components/Header/Header.tsx';
-import ReserDetail from '../Components/ReservationDetail.tsx';
 
 const BookedListContainer = styled.div`
   width: 100%;
   height: 100vh;
-  margin-top: 13vh;
+  margin-top: 3vh;
 `;
 
 const BookedListBody = styled.div`
+  display: flex;
+  justify-content: center;
   margin: 0 15vh;
 `;
 
 const BookedListTitle = styled.div`
-  padding: 3vh;
-  font-size: 3vh;
+  font-size: 4vh;
   font-weight: 400;
 `;
 
-const RoomReserArea = styled.div`
+const SeparationLine = styled.div`
+  width: 100%;
+  height: 0.1px;
+  margin: 2rem 0;
+  background-color: lightgrey;
+`;
+
+const ReserContainer = styled.div`
+  width: 100%;
+  height: 7vh;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
-const RoomCardContainer = styled.div`
+const ReserTitleRoom = styled.div`
   width: 40%;
-  margin-right: 5vh;
-  background: grey;
+  height: 4vh;
+  margin-right: 1vh;
+  padding-left: 2vh;
+  border-right: 1px solid lightgrey;
+  display: flex;
+  align-items: center;
 `;
 
-const ReserCardContainer = styled.div`
-  width: 60%;
+const ReserTitleDate = styled.div`
+  width: 20%;
+  height: 4vh;
+  border-right: 1px solid lightgrey;
+  margin-right: 1vh;
+  display: flex;
+  align-items: center;
+`;
+
+const ReserTitleGuest = styled.div`
+  width: 20%;
+  height: 4vh;
+  border-right: 1px solid lightgrey;
+  margin-right: 1vh;
+  display: flex;
+  align-items: center;
+`;
+
+const ReserTitlePrice = styled.div`
+  width: 20%;
+  height: 4vh;
+  display: flex;
+  align-items: center;
 `;
 
 export default function BookedListPage() {
   return (
     <div>
-      <Header />
       <BookedListContainer>
         <BookedListBody>
           <BookedListTitle>예약 목록</BookedListTitle>
-          <RoomReserArea>
-            <RoomCardContainer>방 컨테이너</RoomCardContainer>
-            <ReserCardContainer>
-              <ReserDetail />
-            </ReserCardContainer>
-          </RoomReserArea>
         </BookedListBody>
+        <SeparationLine />
+        <ReserContainer>
+          <ReserTitleRoom>방 이름</ReserTitleRoom>
+          <ReserTitleDate>날짜</ReserTitleDate>
+          <ReserTitleGuest>인원</ReserTitleGuest>
+          <ReserTitlePrice>가격</ReserTitlePrice>
+        </ReserContainer>
       </BookedListContainer>
     </div>
   );

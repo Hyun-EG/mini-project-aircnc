@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
 
@@ -12,7 +12,7 @@ const CardContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer; // css추가
+  cursor: pointer;
 `;
 const ImageContainer = styled.div`
   width: 100%;
@@ -53,22 +53,35 @@ const Info = styled.p`
   color: #333;
 `;
 
-type CardProps = RoomDetailData & {
+type CardProps = RoomResponse & {
   order?: number;
 };
 
 function Card(props: CardProps) {
-  const { id, image_url: imageUrl, name, address, price, order } = props;
+  const { room_id, image_url: imageUrl, name, city, price, order } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 
-  // id에 따라 페이지 이동..
-  const handleClick = () => {
-    dispatch(selectRoom(props));
-    navigate(`/detail/${id}`);
+  const handleClick = async () => {
+    try {
+      const response = await fetch(
+        `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch room details');
+      }
+      const data = await response.json();
+      const roomData = {
+        room_response: data.body.room_response,
+        reserved_date: data.body.reserved_date,
+      };
+      dispatch(selectRoom(roomData));
+      navigate(`/detail/${room_id}`);
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+    }
   };
-  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
 
   const handleMouseEnter = () => {
     if (!order && order !== 0) {
@@ -126,11 +139,11 @@ function Card(props: CardProps) {
       onMouseLeave={handleMouseLeave}
     >
       <ImageContainer>
-        <Image src={imageUrl} alt={name} />
+        <Image src={imageUrl || `/defaultImage.jpg`} alt={name} />
       </ImageContainer>
       <TextContainer>
         <Title>{name}</Title>
-        <Address>{address}</Address>
+        <Address>{city}</Address>
         <Info>{formatNumber(price)}원/박</Info>
       </TextContainer>
     </CardContainer>
