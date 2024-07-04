@@ -43,9 +43,9 @@ function SignupForm() {
 
   const onSubmit: SubmitHandler<SignupFormFields> = async (data) => {
     try {
-      const resultCode = await signUp({ ...data, email });
+      const response = await signUp({ ...data, email });
 
-      if (resultCode === 200) {
+      if (response.resultCode === 200) {
         dispatch(setMessage('회원가입이 완료되었습니다.'));
         dispatch(setModalStatus('message'));
         return;

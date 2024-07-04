@@ -114,7 +114,6 @@ export const SignupFormSchema = UserSchema.omit({ email: true })
   });
 
 export const FindPasswordFormSchema = UserSchema.pick({
-  email: true,
   question: true,
   answer: true,
 }).extend({

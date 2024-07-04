@@ -31,9 +31,9 @@ function EmailForm() {
 
   const onSubmit: SubmitHandler<EmailFormFields> = async (data) => {
     try {
-      const resultCode = await validateEmail(data.email);
+      const response = await validateEmail(data.email);
 
-      if (resultCode === 200) {
+      if (response.resultCode === 200) {
         dispatch(setModalStatus('signup'));
         return;
       }

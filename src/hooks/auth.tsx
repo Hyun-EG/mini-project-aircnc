@@ -1,5 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { getValidateEmail, postLogIn, postSignUp } from '../api/fetchUsers.ts';
+import {
+  getValidateEmail,
+  postFindPassword,
+  postLogIn,
+  postSignUp,
+} from '../api/fetchUsers.ts';
 
 export function useValidateEmail() {
   return useMutation({
@@ -22,6 +27,15 @@ export function useLogin() {
 export function useSignUp() {
   return useMutation({
     mutationFn: postSignUp,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+}
+
+export function useFindPassword() {
+  return useMutation({
+    mutationFn: postFindPassword,
     onError: (error) => {
       console.error(error);
     },

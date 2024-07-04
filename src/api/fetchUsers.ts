@@ -1,5 +1,6 @@
 import {
   EmailFormSchemaType,
+  FindPasswordFormSchemaType,
   LoginFormSchemaType,
   User,
 } from '../schema/userSchema.ts';
@@ -23,16 +24,6 @@ export interface ResponseResult {
   resultMessage: string;
 }
 
-const responseToResultCode = async (response: Response) => {
-  const body = await response.json();
-
-  const result: ResponseResult = {
-    resultCode: body.result.result_code,
-    resultMessage: body.result.result_message,
-  };
-  return result.resultCode;
-};
-
 interface FetchUserArgs<T> {
   url: string;
   method: FetchMethod;
@@ -40,12 +31,28 @@ interface FetchUserArgs<T> {
   setToken?: boolean;
 }
 
-const fetchUser = async <T>({
+interface FetchResult<T> {
+  resultCode: ResultCode;
+  body: T;
+}
+
+const responseToResultCode = async <T>(response: Response) => {
+  const body = await response.json();
+
+  const fetchResult: FetchResult<T> = {
+    resultCode: body.result.result_code,
+    body: body.body,
+  };
+
+  return fetchResult;
+};
+
+const fetchUser = async <T, K = null>({
   url,
   method,
   body = null,
   setToken = false,
-}: FetchUserArgs<T>): Promise<ResultCode> => {
+}: FetchUserArgs<T>): Promise<FetchResult<K>> => {
   const response = await fetch(url, {
     method,
     headers: {
@@ -66,9 +73,9 @@ const fetchUser = async <T>({
     }
   }
 
-  const isSuccessful = await responseToResultCode(response);
+  const result = await responseToResultCode<K>(response);
 
-  return isSuccessful;
+  return result;
 };
 
 export const getValidateEmail = async (email: EmailFormSchemaType['email']) =>
@@ -87,6 +94,15 @@ export const postLogIn = async (
 export const postSignUp = async (user: User) =>
   await fetchUser<User>({
     url: `${baseUrl}/signup`,
+    method: 'POST',
+    body: user,
+  });
+
+export const postFindPassword = async (
+  user: EmailFormSchemaType & FindPasswordFormSchemaType,
+) =>
+  await fetchUser<EmailFormSchemaType & FindPasswordFormSchemaType, string>({
+    url: `${baseUrl}/help`,
     method: 'POST',
     body: user,
   });

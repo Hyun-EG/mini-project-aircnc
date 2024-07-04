@@ -34,9 +34,9 @@ function LoginForm() {
 
   const onSubmit: SubmitHandler<LoginFormFields> = async (data) => {
     try {
-      const resultCode = await logIn({ email, password: data.password });
+      const response = await logIn({ email, password: data.password });
 
-      if (resultCode === 200) {
+      if (response.resultCode === 200) {
         dispatch(clearModalState());
         return;
       }
