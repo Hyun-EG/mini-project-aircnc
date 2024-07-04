@@ -2,6 +2,13 @@ import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { RoomDetailData } from '../../assets/interfaces.ts';
 
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    naver: any;
+  }
+}
+
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
@@ -49,6 +56,8 @@ function Map({ width, height, listings }: MapProps) {
     }
 
     const map = mapRef.current;
+    if (!map) return;
+
     const bounds = new naver.maps.LatLngBounds();
 
     let openInfoWindow: naver.maps.InfoWindow | undefined;
@@ -56,7 +65,7 @@ function Map({ width, height, listings }: MapProps) {
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current = [];
 
-    const setMarker = (listing) => {
+    listings.forEach((listing) => {
       const markerPosition = new naver.maps.LatLng(
         listing.map_y,
         listing.map_x,
@@ -123,14 +132,9 @@ function Map({ width, height, listings }: MapProps) {
       });
 
       naver.maps.Event.addListener(map, 'click', () => {
-        if (!openInfoWindow) {
-          return;
-        }
-        openInfoWindow.close();
+        if (openInfoWindow) openInfoWindow.close();
       });
-    };
-
-    listings.forEach(setMarker);
+    });
 
     map.fitBounds(bounds);
 
