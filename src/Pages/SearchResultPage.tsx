@@ -27,29 +27,59 @@ const MapMargin = styled.div`
 `;
 
 function SearchResultPage() {
-  const { location } = useSelector((state: RootState) => state.search);
+  const { location, checkInDate, checkOutDate, guestCount } = useSelector(
+    (state: RootState) => state.search,
+  );
   const [listings, setListings] = useState<RoomResponse[]>([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const loader = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchListings = async () => {
+    const fetchSearchByHeader = async () => {
       try {
-        const response = await fetch('src/assets/room_data.json');
-        const rooms: RoomResponse[] = await response.json();
-        const filteredRooms = rooms.filter((room) =>
-          room.city.includes(location),
-        );
-        setListings(filteredRooms);
+        // 백엔드 작업중
+        // const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city?capacity=${guestCount}&check_in=${checkInDate}&check_out=${checkOutDate}&city=${location}`;
+        const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch room data');
+        }
+        const data = await response.json();
+        const roomData = data.body.room_response_list;
+        setListings(roomData);
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
 
-    if (location) {
-      fetchListings();
-    }
-  }, [location]);
+    const fetchSearchByMap = async () => {
+      try {
+        const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/map?capacity=${guestCount}&check_in=${checkInDate}&check_out=${checkOutDate}&top=13.4&botton=13.2&right=13.1&left=13.3`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch room data');
+        }
+        const data = await response.json();
+        const roomData = data.body.room_response_list;
+        setListings(roomData);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
+
+    fetchSearchByHeader();
+    fetchSearchByMap();
+  }, [checkInDate, checkOutDate, guestCount, location]);
 
   const handleObserver = useCallback(
     (entities: IntersectionObserverEntry[]) => {
