@@ -1,33 +1,51 @@
-const getCurrentPosition = (): Promise<GeolocationPosition> => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+import { useState, useEffect } from 'react';
+
+interface locationType {
+  loaded: boolean;
+  coordinates?: { lat: number; lng: number };
+  error?: { code: number; message: string };
+}
+
+const useGeolocation = () => {
+  const [location, setLocation] = useState<locationType>({
+    loaded: false,
+    coordinates: { lat: 0, lng: 0 },
   });
-};
 
-const getAddressFromCoordinates = async (
-  latitude: number,
-  longitude: number,
-): Promise<any> => {
-  const API_KEY = import.meta.env.VITE_NAVER_MAP_API_KEY;
-  const API_KEY_ID = import.meta.env.VITE_NAVER_MAP_API_KEY_ID;
-
-  const url = `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${longitude},${latitude}&sourcecrs=epsg:4326&output=json&orders=legalcode`;
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'X-NCP-APIGW-API-KEY-ID': API_KEY_ID,
-        'X-NCP-APIGW-API-KEY': API_KEY,
+  // 성공에 대한 로직
+  const onSuccess = (location: {
+    coords: { latitude: number; longitude: number };
+  }) => {
+    setLocation({
+      loaded: true,
+      coordinates: {
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
       },
     });
-    if (!response.ok) {
-      throw new Error('Failed to fetch address');
+  };
+
+  // 에러에 대한 로직
+  const onError = (error: { code: number; message: string }) => {
+    setLocation({
+      loaded: true,
+      error,
+    });
+  };
+
+  useEffect(() => {
+    // navigator 객체 안에 geolocation이 없다면
+    // 위치 정보가 없는 것.
+    if (!('geolocation' in navigator)) {
+      onError({
+        code: 0,
+        message: 'Geolocation not supported',
+      });
     }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error('Failed to fetch address from coordinates');
-  }
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  }, []);
+
+  return location;
 };
 
-export { getCurrentPosition, getAddressFromCoordinates };
+export default useGeolocation;
