@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import { RoomDetailData } from '../../assets/interfaces.ts';
+import { RoomResponse } from '../../assets/interfaces.ts';
 
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -17,7 +17,7 @@ const MapInstance = styled.div<{ width: string; height: string }>`
 interface MapProps {
   width: string;
   height: string;
-  listings: RoomDetailData[];
+  listings: RoomResponse[];
 }
 
 function Map({ width, height, listings }: MapProps) {

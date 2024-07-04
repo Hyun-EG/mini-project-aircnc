@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from './Card.tsx';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 
 const GridContainer = styled.div`
   display: grid;
@@ -11,7 +11,7 @@ const GridContainer = styled.div`
 `;
 
 interface CardGridProps {
-  listings: RoomDetailData[];
+  listings: RoomResponse[];
 }
 
 export default function CardGrid({ listings }: CardGridProps) {
@@ -19,7 +19,7 @@ export default function CardGrid({ listings }: CardGridProps) {
     // props spreading is forbidden,, eslint설정 진짜 중요하다..;
     <GridContainer>
       {listings.map((listing, index) => (
-        <Card key={listing.id} {...listing} order={index} />
+        <Card key={listing.room_id} {...listing} order={index} />
       ))}
     </GridContainer>
   );

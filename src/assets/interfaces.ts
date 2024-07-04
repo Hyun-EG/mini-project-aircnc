@@ -11,17 +11,7 @@ export interface CardResponse {
   city: string;
   description: string;
   image_url: string;
-}
-
-export interface RoomData {
-  id: number;
-  name: string;
   price: number;
-  address: string;
-  city: string;
-  image_url: string;
-  map_x: number;
-  map_y: number;
 }
 
 export interface RoomResponse {
@@ -35,6 +25,7 @@ export interface RoomResponse {
   city: string;
   description: string;
   price: number;
+  order?: number;
 }
 
 export interface RoomDetailData {

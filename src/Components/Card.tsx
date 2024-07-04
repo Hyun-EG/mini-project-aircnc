@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { RoomDetailData } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
 
@@ -53,31 +53,31 @@ const Info = styled.p`
   color: #333;
 `;
 
-type CardProps = RoomDetailData & {
+type CardProps = RoomResponse & {
   order?: number;
 };
 
 function Card(props: CardProps) {
-  const { id, image_url: imageUrl, name, address, price, order } = props;
+  const { room_id, image_url: imageUrl, name, city, price, order } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 
   const handleClick = async () => {
     try {
-      const response = await fetch(`http://54.180.158.55:8080/api/rooms/${id}`);
+      const response = await fetch(
+        `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch room details');
       }
       const data = await response.json();
-      console.log('Fetched data:', data); // 응답 데이터 로그
       const roomData = {
         room_response: data.body.room_response,
         reserved_date: data.body.reserved_date,
       };
       dispatch(selectRoom(roomData));
-      console.log('roomData is ', roomData); // 변환된 데이터 로그
-      navigate(`/detail/${id}`);
+      navigate(`/detail/${room_id}`);
     } catch (error) {
       console.error('Error fetching room details:', error);
     }
@@ -143,7 +143,7 @@ function Card(props: CardProps) {
       </ImageContainer>
       <TextContainer>
         <Title>{name}</Title>
-        <Address>{address}</Address>
+        <Address>{city}</Address>
         <Info>{formatNumber(price)}원/박</Info>
       </TextContainer>
     </CardContainer>

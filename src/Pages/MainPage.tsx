@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CardGrid from '../Components/CardGrid.tsx';
-import { RoomDetailData, RoomResponse } from '../assets/interfaces.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
 
 // 서울시청 좌표 37.566611, 126.978361
@@ -10,7 +10,7 @@ const DEFAULT_COORDINATES = {
 };
 
 function MainPage() {
-  const [listings, setListings] = useState<RoomDetailData[]>([]); // 여기를 CardResponse로 고쳐야해
+  const [listings, setListings] = useState<RoomResponse[]>([]); // 여기를 CardResponse로 고쳐야해
   const [locationError, setLocationError] = useState<string | null>(null);
   const location = useGeolocation();
 
@@ -19,7 +19,7 @@ function MainPage() {
       try {
         const radius = 0.5;
         const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`;
-        console.log(url);
+
         const response = await fetch(url, {
           method: 'GET',
           headers: {

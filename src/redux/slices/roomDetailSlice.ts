@@ -3,8 +3,10 @@ import { RoomResponse } from '../../assets/interfaces.ts';
 
 export const fetchRoomDetails = createAsyncThunk(
   'rooms/fetchRoomDetails',
-  async (id: string) => {
-    const response = await fetch(`http://54.180.158.55:8080/api/rooms/${id}`);
+  async (room_id: string) => {
+    const response = await fetch(
+      `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
+    );
     const data = await response.json();
     return {
       room_response: data.body.room_response,
