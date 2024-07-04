@@ -38,24 +38,24 @@ function MainPage() {
       }
     };
 
-    const fetchListings = async () => {
-      try {
-        const response = await fetch('/room_data.json');
-        const data: RoomDetailData[] = await response.json();
-        setListings(data);
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
+    // const fetchListings = async () => {
+    //   try {
+    //     const response = await fetch('/room_data.json');
+    //     const data: RoomDetailData[] = await response.json();
+    //     setListings(data);
+    //   } catch (error) {
+    //     console.error('Error fetching listings:', error);
+    //   }
+    // };
 
-    fetchListings();
-    // if (location.loaded && !location.error) {
-    //   fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
-    //   setLocationError(null); // 위치 정보가 불러와지면 오류 메시지 제거
-    // } else if (location.error) {
-    //   setLocationError(location.error.message);
-    //   fetchCloseLists(DEFAULT_COORDINATES.lng, DEFAULT_COORDINATES.lat); // 기본 좌표로 데이터 가져오기
-    // }
+    // fetchListings();
+    if (location.loaded && !location.error) {
+      fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
+      setLocationError(null); // 위치 정보가 불러와지면 오류 메시지 제거
+    } else if (location.error) {
+      setLocationError(location.error.message);
+      fetchCloseLists(DEFAULT_COORDINATES.lng, DEFAULT_COORDINATES.lat); // 기본 좌표로 데이터 가져오기
+    }
   }, [location]);
 
   return (
