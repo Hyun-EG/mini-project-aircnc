@@ -1,15 +1,13 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { RootState } from '../../redux/store.ts';
 import { setModalStatus } from '../../redux/slices/loginModalSlice.ts';
 import Button from '../Button.tsx';
 
 const MessageLayout = styled.h3``;
 
-interface MessageProps {
-  message?: string;
-}
-
-function ModalMessage({ message = '' }: MessageProps) {
+function ModalMessage() {
+  const message = useSelector((state: RootState) => state.loginModal.message);
   const dispatch = useDispatch();
 
   return (

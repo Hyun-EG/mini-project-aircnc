@@ -1,4 +1,8 @@
 import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store.ts';
+import { setLocation } from '../redux/slices/searchSlice.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';

@@ -147,12 +147,7 @@ function LoginModal() {
           {status === 'signup' && <SignupForm />}
           {status === 'findPassword' && <FindPasswordForm />}
           {status === 'newPassword' && <NewPasswordForm />}
-          {status === 'signUpComplete' && (
-            <ModalMessage message="회원가입이 완료되었습니다." />
-          )}
-          {status === 'changeComplete' && (
-            <ModalMessage message="비밀번호 변경이 완료되었습니다." />
-          )}
+          {status === 'message' && <ModalMessage />}
         </LoginModalLayout>
       </>
     )

@@ -1,6 +1,5 @@
 // 로그인이 되었을 때만 표시되도록 처리
 import { styled } from 'styled-components';
-import Header from '../Components/Header/Header.tsx';
 import ReserDetail from '../Components/ReservationDetail.tsx';
 
 const BookedListContainer = styled.div`
@@ -37,7 +36,6 @@ const ReserCardContainer = styled.div`
 export default function BookedListPage() {
   return (
     <div>
-      <Header />
       <BookedListContainer>
         <BookedListBody>
           <BookedListTitle>예약 목록</BookedListTitle>

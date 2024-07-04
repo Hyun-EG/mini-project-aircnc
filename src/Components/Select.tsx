@@ -7,6 +7,7 @@ import {
 import { UseFormRegisterReturn } from 'react-hook-form';
 import styled from 'styled-components';
 import { IconSelector } from '@tabler/icons-react';
+import ErrorMessage from './ErrorMessage.tsx';
 
 const SelectWrapper = styled.section`
   position: relative;
@@ -50,10 +51,11 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   children: React.ReactNode;
   register?: UseFormRegisterReturn<string>;
   label?: string;
+  message?: string | undefined;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ children, register = {}, label = '', ...props }, ref) => {
+  ({ children, register = {}, label = '', message = '', ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false);
 
     const handleOnChange = () => {
@@ -79,6 +81,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             <IconSelector color={isSelected ? '#000' : '#777'} />
           </SelectIcon>
         </SelectWrapper>
+        {message && <ErrorMessage>{message}</ErrorMessage>}
       </label>
     );
   },

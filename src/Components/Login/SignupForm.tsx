@@ -1,10 +1,19 @@
+import { useSelector, useDispatch } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styled from 'styled-components';
+import { RootState } from '../../redux/store.ts';
+import {
+  setMessage,
+  setModalStatus,
+} from '../../redux/slices/loginModalSlice.ts';
 import {
   SignupFormSchema,
   SignupFormSchemaType,
+  QUESTION_VALUES,
+  QUESTION_OBJECT,
 } from '../../schema/userSchema.ts';
+import { useSignUp } from '../../hooks/auth.tsx';
 import Form from '../Form.tsx';
 import Input from '../Input.tsx';
 import Select from '../Select.tsx';
@@ -18,17 +27,36 @@ const SignupTitle = styled.h3`
 type SignupFormFields = SignupFormSchemaType;
 
 function SignupForm() {
+  const email = useSelector((state: RootState) => state.loginModal.email);
+  const dispatch = useDispatch();
+  const { mutateAsync: signUp } = useSignUp();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<SignupFormFields>({
     mode: 'onTouched',
     resolver: zodResolver(SignupFormSchema),
   });
 
-  const onSubmit: SubmitHandler<SignupFormFields> = (data) => {
-    console.log(errors, data);
+  const onSubmit: SubmitHandler<SignupFormFields> = async (data) => {
+    try {
+      const response = await signUp({ ...data, email });
+
+      if (response.resultCode === 200) {
+        dispatch(setMessage('회원가입이 완료되었습니다.'));
+        dispatch(setModalStatus('message'));
+        return;
+      }
+
+      setError('nickname', {
+        message: '중복된 닉네임입니다.',
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -54,14 +82,19 @@ function SignupForm() {
         type="password"
         placeholder="비밀번호 확인"
       />
-      <Select register={register('question')} label="비밀번호 찾기 질문">
+      <Select
+        register={register('question')}
+        label="비밀번호 찾기 질문"
+        message={errors.question?.message}
+      >
         <option value="" hidden>
           비밀번호 찾기 질문을 선택해 주세요.
         </option>
-        <option value="treasure">나의 보물 1호는?</option>
-        <option value="friend">제일 친한 친구는?</option>
-        <option value="elementary_school">내가 졸업한 초등학교 이름은?</option>
-        <option value="book">기억에 남는 책 이름은?</option>
+        {QUESTION_VALUES.map((value) => (
+          <option value={value} key={value}>
+            {QUESTION_OBJECT[value]}
+          </option>
+        ))}
       </Select>
       <Input
         register={register('answer')}
