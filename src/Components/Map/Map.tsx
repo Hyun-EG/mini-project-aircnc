@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { RoomDetailData } from '../../assets/interfaces.ts';
 
@@ -21,32 +21,42 @@ interface MapProps {
 }
 
 function Map({ width, height, listings }: MapProps) {
+  const mapRef = useRef<naver.maps.Map | null>(null);
+  const markersRef = useRef<naver.maps.Marker[]>([]);
+
   useEffect(() => {
     if (listings.length === 0) return;
 
     const { naver } = window;
 
-    const initialCenter = new naver.maps.LatLng(
-      listings[0].map_y,
-      listings[0].map_x,
-    );
+    if (!mapRef.current) {
+      const initialCenter = new naver.maps.LatLng(
+        listings[0].map_y,
+        listings[0].map_x,
+      );
 
-    const mapOptions = {
-      center: initialCenter,
-      zoom: 12,
-      zoomControl: true,
-      zoomControlOptions: {
-        style: naver.maps.ZoomControlStyle.SMALL,
-        position: naver.maps.Position.TOP_RIGHT,
-      },
-    };
+      const mapOptions = {
+        center: initialCenter,
+        zoom: 12,
+        zoomControl: true,
+        zoomControlOptions: {
+          style: naver.maps.ZoomControlStyle.SMALL,
+          position: naver.maps.Position.TOP_RIGHT,
+        },
+      };
 
-    const map = new naver.maps.Map('map', mapOptions);
-    const bounds = new naver.maps.LatLngBounds(initialCenter, initialCenter);
+      mapRef.current = new naver.maps.Map('map', mapOptions);
+    }
+
+    const map = mapRef.current;
+    const bounds = new naver.maps.LatLngBounds();
 
     let openInfoWindow: naver.maps.InfoWindow | undefined;
 
-    listings.forEach((listing) => {
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    const setMarker = (listing) => {
       const markerPosition = new naver.maps.LatLng(
         listing.map_y,
         listing.map_x,
@@ -64,6 +74,7 @@ function Map({ width, height, listings }: MapProps) {
         },
       });
 
+      markersRef.current.push(marker);
       bounds.extend(markerPosition);
 
       const contentString = `
@@ -117,16 +128,16 @@ function Map({ width, height, listings }: MapProps) {
         }
         openInfoWindow.close();
       });
-    });
+    };
+
+    listings.forEach(setMarker);
 
     map.fitBounds(bounds);
 
-    // 지도 경계 좌표를 구하는 함수
     const getBounds = (bounds: naver.maps.LatLngBounds) => {
       const ne = bounds.getNE();
       const sw = bounds.getSW();
 
-      // 북서(NW)와 남동(SE) 좌표 계산
       const nw = new naver.maps.LatLng(ne.lat(), sw.lng());
       const se = new naver.maps.LatLng(sw.lat(), ne.lng());
 
@@ -140,7 +151,6 @@ function Map({ width, height, listings }: MapProps) {
       console.log('Map Bounds:', coordinates);
     };
 
-    // bounds_changed 이벤트 리스너 추가
     naver.maps.Event.addListener(map, 'bounds_changed', () => {
       const currentBounds = map.getBounds() as naver.maps.LatLngBounds;
       getBounds(currentBounds);
