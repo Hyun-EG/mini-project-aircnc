@@ -4,7 +4,7 @@ import {
   postFindPassword,
   postLogIn,
   postSignUp,
-} from '../api/fetchUsers.ts';
+} from '../api/request.ts';
 
 export function useValidateEmail() {
   return useMutation({
