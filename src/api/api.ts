@@ -6,7 +6,8 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-const BASE_URL = ' http://52.79.187.32:8080/api';
+const BASE_URL =
+  'http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/';
 
 const logOnDev = (message: string) => {
   if (process.env.NODE_ENV === 'development') {
