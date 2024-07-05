@@ -123,10 +123,10 @@ export default function BookedListPage() {
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
         <ReserCotentContainer>
-          <ReserContentRoom>방 이름</ReserContentRoom>
-          <ReserContentDate>날짜</ReserContentDate>
-          <ReserContentGuest>인원</ReserContentGuest>
-          <ReserContentPrice>가격</ReserContentPrice>
+          <ReserContentRoom>qef</ReserContentRoom>
+          <ReserContentDate>qefqe</ReserContentDate>
+          <ReserContentGuest>qefqe</ReserContentGuest>
+          <ReserContentPrice>45145415</ReserContentPrice>
         </ReserCotentContainer>
       </BookedListContainer>
     </div>

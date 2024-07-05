@@ -37,6 +37,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
     'no-alert': 'off',
+    'consistent-return': 'off',
     'no-param-reassign': ['error', { props: false }],
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'import/extensions': [
