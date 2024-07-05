@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { RoomResponse } from '../assets/interfaces.ts';
 import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
+import { getRoom } from '../api/request.ts';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -65,18 +66,13 @@ function Card(props: CardProps) {
 
   const handleClick = async () => {
     try {
-      const response = await fetch(
-        `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch room details');
-      }
-      const data = await response.json();
-      const roomData = {
-        room_response: data.body.room_response,
-        reserved_date: data.body.reserved_date,
+      const roomData = await getRoom(room_id);
+      console.log(roomData);
+      const selectedRoomData = {
+        room_response: roomData.room_response,
+        reserved_date: roomData.reserved_date,
       };
-      dispatch(selectRoom(roomData));
+      dispatch(selectRoom(selectedRoomData));
       navigate(`/detail/${room_id}`);
     } catch (error) {
       console.error('Error fetching room details:', error);
@@ -115,39 +111,6 @@ function Card(props: CardProps) {
 
     setMyMarker(marker);
   };
-
-  // const handleMouseEnter = () => {
-  //   if (!order && order !== 0) {
-  //     return;
-  //   }
-
-  //   const map = document.getElementById('map');
-
-  //   if (!map) {
-  //     return;
-  //   }
-
-  //   const marker =
-  //     map.firstElementChild?.firstElementChild?.firstElementChild?.lastElementChild?.children
-  //       .item(1)
-  //       ?.children.item(order) as HTMLDivElement;
-
-  //   if (!marker) {
-  //     return;
-  //   }
-
-  //   marker.style.width = '36px';
-  //   marker.style.height = '36px';
-  //   marker.style.transform = 'translate(-4px, -4px)';
-  //   marker.style.zIndex = '10000';
-
-  //   const markerImage = marker.firstElementChild as HTMLImageElement;
-
-  //   markerImage.style.width = '36px';
-  //   markerImage.style.height = '36px';
-
-  //   setMyMarker(marker);
-  // };
 
   const handleMouseLeave = () => {
     if (!myMarker) {

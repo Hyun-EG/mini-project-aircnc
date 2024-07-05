@@ -73,11 +73,15 @@ export const postFindPassword = async (
     data: user,
   });
 
-export const getRoom = async (id: number) =>
-  await request({
-    url: `/rooms/${id}`,
-    method: 'GET',
-  });
+export const getRoom = async (id: number) => {
+  try {
+    const response = await api.get(`/rooms/${id}`);
+    console.log('response is ', response.body);
+    return response.body;
+  } catch (error) {
+    throw new Error('Failed to fetch room details');
+  }
+};
 
 export const getRandomRooms = async (
   map_x: number,
