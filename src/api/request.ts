@@ -130,12 +130,31 @@ export const getPayments = async () =>
     method: 'GET',
   });
 
-export const postPayment = async (roomId: number, payment: unknown) =>
-  await request({
-    url: `/payments/rooms/${roomId}`,
-    method: 'POST',
-    data: payment,
-  });
+export const postPayment = async (
+  roomId: number,
+  payment: {
+    price: number;
+    capacity: number;
+    check_in: string;
+    check_out: string;
+  },
+) => {
+  try {
+    const response = await request({
+      url: `/payments/rooms/${roomId}`,
+      method: 'POST',
+      data: payment,
+    });
+
+    if (response.result.result_code === 200) {
+      alert('예약이 성공했습니다');
+    } else {
+      alert('이미 예약된 방입니다');
+    }
+  } catch (error) {
+    alert('이미 예약된 방입니다');
+  }
+};
 
 export const getWishes = async () =>
   await request({
@@ -143,11 +162,22 @@ export const getWishes = async () =>
     method: 'GET',
   });
 
-export const postWish = async (id: number) =>
-  await request({
-    url: `/wishes/rooms/${id}`,
-    method: 'POST',
-  });
+export const postWish = async (id: number) => {
+  try {
+    const response = await request({
+      url: `/wishes/rooms/${id}`,
+      method: 'POST',
+    });
+
+    if (response.result.result_code === 200) {
+      alert('위시리스트에 추가되었습니다');
+    } else {
+      alert('이미 위시리스트에 추가된 숙소입니다');
+    }
+  } catch (error) {
+    alert('이미 위시리스트에 추가된 숙소입니다');
+  }
+};
 
 export const deleteWish = async (wishId: number, roomId: number) =>
   await request({
