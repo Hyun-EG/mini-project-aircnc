@@ -69,27 +69,11 @@ function WishListPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const storedWishList = JSON.parse(
-  //     localStorage.getItem('wishlists') || '[]',
-  //   );
-
-  //   const formattedWishList: RoomResponse[] = storedWishList.map(
-  //     (item: { roomID: number; userID: string; image_url: string }) => ({
-  //       room_id: item.roomID,
-  //       user_id: item.userID,
-  //       image_url: item.image_url,
-  //     }),
-  //   );
-
-  //   setWishList(formattedWishList);
-  //   setLoading(false);
-  // }, []);
   useEffect(() => {
     const fetchWishList = async () => {
       try {
         const response = await getWishes();
-        setWishList(response.body);
+        setWishList(response);
       } catch (error) {
         console.error('Failed to fetch wishlist:', error);
       } finally {
@@ -100,9 +84,7 @@ function WishListPage() {
     fetchWishList();
   }, []);
 
-  // eslint-disable-next-line camelcase
   const handleImageClick = (room_id: number) => {
-    // eslint-disable-next-line camelcase
     navigate(`/detail/${room_id}`);
   };
 

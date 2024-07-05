@@ -76,7 +76,6 @@ export const postFindPassword = async (
 export const getRoom = async (id: number) => {
   try {
     const response = await api.get(`/rooms/${id}`);
-    console.log('response is ', response.body);
     return response.body;
   } catch (error) {
     throw new Error('Failed to fetch room details');
@@ -163,11 +162,23 @@ export const postPayment = async (
   }
 };
 
-export const getWishes = async () =>
-  await request({
-    url: '/members/wishes',
-    method: 'GET',
-  });
+export const getWishes = async () => {
+  try {
+    const response = await request<
+      ResponseData<{
+        wish_response_list: { id: number; room_response: RoomResponse }[];
+      }>,
+      unknown
+    >({
+      url: '/members/wishes',
+      method: 'GET',
+    });
+
+    return response.body.wish_response_list.map((item) => item.room_response);
+  } catch (error) {
+    throw new Error('Failed to fetch wishlist');
+  }
+};
 
 export const postWish = async (id: number) => {
   try {
