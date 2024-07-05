@@ -1,59 +1,53 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getRoom } from '../../api/request.ts';
 import { RoomResponse } from '../../assets/interfaces.ts';
 
 export const fetchRoomDetails = createAsyncThunk(
-  'rooms/fetchRoomDetails',
-  async (room_id: string) => {
-    const response = await fetch(
-      `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
-    );
-    const data = await response.json();
-    return {
-      room_response: data.body.room_response,
-      reserved_date: data.body.reserved_date,
-    };
+  'roomDetail/fetchRoomDetails',
+  async (roomId: number, { rejectWithValue }) => {
+    try {
+      const response = await getRoom(roomId);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response ? error.response.data : error.message;
+      return rejectWithValue(errorMessage);
+    }
   },
 );
 
-interface Reservation {
-  roomName: string;
-  checkInDate: string;
-  checkOutDate: string;
-  guestCount: number;
-  totalPrice: number;
+interface RoomDetailState {
+  room: RoomResponse | null;
+  reserved_date: Date[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
 }
 
-interface RoomState {
-  selectedRoom: RoomResponse | null;
-  reservedDate: any[]; // reservedDate 타입 체크 후 명시
-  reservations: Reservation[]; // 예약 정보를 저장할 배열 추가
-}
-
-const initialState: RoomState = {
-  selectedRoom: null,
-  reservedDate: [],
-  reservations: [],
+const initialState: RoomDetailState = {
+  room: null,
+  reserved_date: [],
+  status: 'idle',
+  error: null,
 };
 
 const roomDetailSlice = createSlice({
-  name: 'rooms',
+  name: 'roomDetail',
   initialState,
-  reducers: {
-    selectRoom: (state, action) => {
-      state.selectedRoom = action.payload.room_response;
-      state.reservedDate = action.payload.reserved_date;
-    },
-    addReservation: (state, action: PayloadAction<Reservation>) => {
-      state.reservations.push(action.payload);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchRoomDetails.fulfilled, (state, action) => {
-      state.selectedRoom = action.payload.room_response;
-      state.reservedDate = action.payload.reserved_date;
-    });
+    builder
+      .addCase(fetchRoomDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchRoomDetails.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.room = action.payload.room_response || action.payload.room;
+        state.reserved_date = action.payload.reserved_date || [];
+      })
+      .addCase(fetchRoomDetails.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string; // action.payload가 undefined가 아닌 경우에만 string으로 타입 단언
+      });
   },
 });
 
-export const { selectRoom, addReservation } = roomDetailSlice.actions;
 export default roomDetailSlice.reducer;

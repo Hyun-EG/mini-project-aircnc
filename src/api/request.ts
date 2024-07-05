@@ -7,6 +7,7 @@ import {
 } from '../schema/userSchema.ts';
 import api from './api.ts';
 import { CITY_NAME } from '../schema/roomSchema.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 
 type FetchMethod = 'GET' | 'POST' | 'DELETE';
 
@@ -73,11 +74,14 @@ export const postFindPassword = async (
     data: user,
   });
 
-export const getRoom = async (id: number) =>
-  await request({
-    url: `/rooms/${id}`,
-    method: 'GET',
-  });
+export const getRoom = async (id: number) => {
+  try {
+    const response = await api.get(`/rooms/${id}`);
+    return response.body;
+  } catch (error) {
+    throw new Error('Failed to fetch room details');
+  }
+};
 
 export const getRandomRooms = async (
   map_x: number,
@@ -159,11 +163,23 @@ export const postPayment = async (
   }
 };
 
-export const getWishes = async () =>
-  await request({
-    url: '/members/wishes',
-    method: 'GET',
-  });
+export const getWishes = async () => {
+  try {
+    const response = await request<
+      ResponseData<{
+        wish_response_list: { id: number; room_response: RoomResponse }[];
+      }>,
+      unknown
+    >({
+      url: '/members/wishes',
+      method: 'GET',
+    });
+
+    return response.body.wish_response_list.map((item) => item.room_response);
+  } catch (error) {
+    throw new Error('Failed to fetch wishlist');
+  }
+};
 
 export const postWish = async (id: number) => {
   try {
