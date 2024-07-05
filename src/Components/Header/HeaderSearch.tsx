@@ -185,7 +185,7 @@ export default function HeaderSearch({
       checkOutDate: checkOutDate ? formatDate(checkOutDate) : null,
       guestCount,
     };
-    dispatch(setMode(true));
+    dispatch(setMode('city'));
     navigate('/search', { state: searchParams });
   };
 

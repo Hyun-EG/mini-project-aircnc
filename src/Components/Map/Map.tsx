@@ -1,16 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RoomResponse } from '../../assets/interfaces.ts';
-// import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
+import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
 import { RootState } from '../../redux/store.ts';
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    naver: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     naver: typeof naver;
+//   }
+// }
 
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -33,6 +33,7 @@ interface MapProps {
 function Map({ width, height, listings }: MapProps) {
   const mapRef = useRef<naver.maps.Map | null>(null);
   const markersRef = useRef<naver.maps.Marker[]>([]);
+  const [isAdded, setIsAdded] = useState(false);
   const dispatch = useDispatch();
   const { mode, coordinates } = useSelector((state: RootState) => state.search);
   useEffect(() => {
@@ -134,13 +135,15 @@ function Map({ width, height, listings }: MapProps) {
         infowindow.open(map, marker);
         openInfoWindow = infowindow;
       });
-
-      naver.maps.Event.addListener(map, 'click', () => {
-        if (openInfoWindow) openInfoWindow.close();
-      });
     });
 
-    map.fitBounds(bounds);
+    naver.maps.Event.addListener(map, 'click', () => {
+      if (openInfoWindow) openInfoWindow.close();
+    });
+
+    if (mode === 'city') {
+      map.fitBounds(bounds);
+    }
 
     const getBounds = (bounds: naver.maps.LatLngBounds) => {
       const ne = bounds.getNE();
@@ -152,14 +155,19 @@ function Map({ width, height, listings }: MapProps) {
         right: ne.lng(),
         left: sw.lat(),
       };
-      console.log(coordinate);
+      dispatch(setCoordinates(coordinate));
+      dispatch(setMode('map'));
     };
 
-    naver.maps.Event.addListener(map, 'bounds_changed', () => {
+    naver.maps.Event.addListener(map, 'idle', () => {
       const currentBounds = map.getBounds() as naver.maps.LatLngBounds;
       getBounds(currentBounds);
     });
-  }, [listings, dispatch, mode, coordinates]);
+
+    return () => {
+      naver.maps.Event.clearInstanceListeners(map);
+    };
+  }, [listings]);
 
   return <MapInstance id="map" width={width} height={height} />;
 }
