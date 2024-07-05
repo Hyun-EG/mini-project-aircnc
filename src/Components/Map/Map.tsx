@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { RoomResponse } from '../../assets/interfaces.ts';
+// import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
+import { RootState } from '../../redux/store.ts';
 
 declare global {
   interface Window {
@@ -30,7 +33,8 @@ interface MapProps {
 function Map({ width, height, listings }: MapProps) {
   const mapRef = useRef<naver.maps.Map | null>(null);
   const markersRef = useRef<naver.maps.Marker[]>([]);
-
+  const dispatch = useDispatch();
+  const { mode, coordinates } = useSelector((state: RootState) => state.search);
   useEffect(() => {
     if (listings.length === 0) return;
 
@@ -142,24 +146,20 @@ function Map({ width, height, listings }: MapProps) {
       const ne = bounds.getNE();
       const sw = bounds.getSW();
 
-      const nw = new naver.maps.LatLng(ne.lat(), sw.lng());
-      const se = new naver.maps.LatLng(sw.lat(), ne.lng());
-
-      const coordinates = {
-        northEast: { lat: ne.lat(), lng: ne.lng() },
-        northWest: { lat: nw.lat(), lng: nw.lng() },
-        southEast: { lat: se.lat(), lng: se.lng() },
-        southWest: { lat: sw.lat(), lng: sw.lng() },
+      const coordinate = {
+        top: ne.lat(),
+        bottom: sw.lat(),
+        right: ne.lng(),
+        left: sw.lat(),
       };
-
-      console.log('Map Bounds:', coordinates);
+      console.log(coordinate);
     };
 
     naver.maps.Event.addListener(map, 'bounds_changed', () => {
       const currentBounds = map.getBounds() as naver.maps.LatLngBounds;
       getBounds(currentBounds);
     });
-  }, [listings]);
+  }, [listings, dispatch, mode, coordinates]);
 
   return <MapInstance id="map" width={width} height={height} />;
 }

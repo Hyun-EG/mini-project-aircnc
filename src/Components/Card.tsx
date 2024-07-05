@@ -97,7 +97,7 @@ function Card(props: CardProps) {
     const marker =
       map.firstElementChild?.firstElementChild?.firstElementChild?.lastElementChild?.children
         .item(1)
-        ?.children.item(order) as HTMLDivElement;
+        ?.children.item(order) as HTMLDivElement | null;
 
     if (!marker) {
       return;
@@ -115,6 +115,39 @@ function Card(props: CardProps) {
 
     setMyMarker(marker);
   };
+
+  // const handleMouseEnter = () => {
+  //   if (!order && order !== 0) {
+  //     return;
+  //   }
+
+  //   const map = document.getElementById('map');
+
+  //   if (!map) {
+  //     return;
+  //   }
+
+  //   const marker =
+  //     map.firstElementChild?.firstElementChild?.firstElementChild?.lastElementChild?.children
+  //       .item(1)
+  //       ?.children.item(order) as HTMLDivElement;
+
+  //   if (!marker) {
+  //     return;
+  //   }
+
+  //   marker.style.width = '36px';
+  //   marker.style.height = '36px';
+  //   marker.style.transform = 'translate(-4px, -4px)';
+  //   marker.style.zIndex = '10000';
+
+  //   const markerImage = marker.firstElementChild as HTMLImageElement;
+
+  //   markerImage.style.width = '36px';
+  //   markerImage.style.height = '36px';
+
+  //   setMyMarker(marker);
+  // };
 
   const handleMouseLeave = () => {
     if (!myMarker) {

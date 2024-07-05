@@ -19,7 +19,7 @@ function MainPage() {
       try {
         const radius = 0.5;
         const url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`;
-
+        console.log(url);
         const response = await fetch(url, {
           method: 'GET',
           headers: {

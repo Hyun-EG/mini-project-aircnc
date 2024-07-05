@@ -45,7 +45,7 @@ function SignupForm() {
     try {
       const response = await signUp({ ...data, email });
 
-      if (response.resultCode === 200) {
+      if (response.result.result_code === 200) {
         dispatch(setMessage('회원가입이 완료되었습니다.'));
         dispatch(setModalStatus('message'));
         return;

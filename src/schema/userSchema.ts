@@ -56,7 +56,7 @@ const ANSWER = {
   MIN_LENGTH: 1,
   MAX_LENGTH: 12,
   CHECK_INPUT: 1,
-  MIN_ERROR_MESSAGE: '비밀번호 찾기 답을 정확히 입력해 주세요.',
+  MIN_ERROR_MESSAGE: '비밀번호 찾기 답을 입력해 주세요.',
   MAX_ERROR_MESSAGE: '비밀번호 찾기 답은 최대 12자리 이하로 입력해 주세요.',
   NO_INPUT_ERROR_MESSAGE: '비밀번호 찾기 답을 입력해 주세요.',
 };

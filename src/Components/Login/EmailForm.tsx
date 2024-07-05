@@ -33,7 +33,7 @@ function EmailForm() {
     try {
       const response = await validateEmail(data.email);
 
-      if (response.resultCode === 200) {
+      if (response.result.result_code === 200) {
         dispatch(setModalStatus('signup'));
         return;
       }
