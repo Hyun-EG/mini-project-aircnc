@@ -29,7 +29,6 @@ interface RequestArguments<T> {
   url: string;
   method: FetchMethod;
   data?: T;
-  setToken?: boolean;
 }
 
 const request = async <T, K = unknown>({
