@@ -48,7 +48,9 @@ function SearchResultPage() {
     try {
       let url;
       if (mode) {
-        url = `http://52.79.187.32:8080/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
+        // http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/
+        // http://52.79.187.32:8080/
+        url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
       } else {
         url = `http://52.79.187.32:8080/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
       }
@@ -110,9 +112,9 @@ function SearchResultPage() {
       try {
         let url;
         if (mode) {
-          url = `http://52.79.187.32:8080/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
+          url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
         } else {
-          url = `http://52.79.187.32:8080/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+          url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
         }
 
         if (cursorId.current) {
