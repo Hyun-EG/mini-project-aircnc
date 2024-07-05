@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
+import { IconHeart } from '@tabler/icons-react';
 import Button from './Button.tsx';
 import addReservation from '../util/addReserveUtil.ts';
 import addWishlist from '../util/addWishUtils.ts';
@@ -46,7 +46,11 @@ function DetailFooter({
   }
 
   const handleLike = async () => {
-    await postWish(room.room_id);
+    await addWishlist({
+      roomID: room.room_id,
+      userID: 'testID1',
+      image_url: room.image_url,
+    });
   };
 
   const handleReserve = async () => {
@@ -90,7 +94,6 @@ function DetailFooter({
     </FooterContainer>
   );
 }
-
 // export default DetailFooter;
 
 // function DetailFooter({

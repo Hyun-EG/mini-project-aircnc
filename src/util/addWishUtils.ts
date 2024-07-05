@@ -1,6 +1,7 @@
 import { Wishlist } from '../assets/interfaces.ts';
 
-const addWishlist = async ({ roomID, userID }: Wishlist) => {
+// eslint-disable-next-line camelcase
+const addWishlist = async ({ roomID, userID, image_url }: Wishlist) => {
   const wishlist = JSON.parse(localStorage.getItem('wishlists') || '[]');
 
   const alreadyAdded = wishlist.some(
@@ -9,10 +10,11 @@ const addWishlist = async ({ roomID, userID }: Wishlist) => {
 
   if (alreadyAdded) {
     alert('이미 위시리스트에 추가된 숙소입니다.');
-    return;
+    return; // 함수 종료
   }
 
-  wishlist.push({ roomID, userID });
+  // eslint-disable-next-line camelcase
+  wishlist.push({ roomID, userID, image_url });
 
   await new Promise<void>((resolve) => {
     localStorage.setItem('wishlists', JSON.stringify(wishlist));

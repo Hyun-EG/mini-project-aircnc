@@ -58,4 +58,5 @@ export interface Reservation {
 export interface Wishlist {
   roomID: number;
   userID: string;
+  image_url: string;
 }
