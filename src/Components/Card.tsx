@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { RoomResponse } from '../assets/interfaces.ts';
 import { fetchRoomDetails } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
+import { AppDispatch } from '../redux/store'; // Redux store의 타입을 가져옵니다.
 
 const CardContainer = styled.div`
   width: 100%;
@@ -14,6 +15,7 @@ const CardContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 `;
+
 const ImageContainer = styled.div`
   width: 100%;
   height: 0;
@@ -22,6 +24,7 @@ const ImageContainer = styled.div`
   overflow: hidden;
   position: relative;
 `;
+
 const Image = styled.img`
   position: absolute;
   padding: 10px;
@@ -33,19 +36,23 @@ const Image = styled.img`
   box-sizing: border-box;
   object-fit: cover;
 `;
+
 const TextContainer = styled.div`
   margin: 10px 10px;
 `;
+
 const Title = styled.h3`
   margin: 10px 0;
   font-size: 20px;
   color: #333;
 `;
+
 const Address = styled.p`
   margin: 10px 0;
   font-size: 15px;
   color: #666;
 `;
+
 const Info = styled.p`
   margin: 10px 0;
   font-size: 15px;
@@ -60,14 +67,21 @@ type CardProps = RoomResponse & {
 function Card(props: CardProps) {
   const { room_id, image_url: imageUrl, name, city, price, order } = props;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>(); // useDispatch에 AppDispatch 타입을 추가합니다.
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 
   const handleClick = async () => {
     try {
-      // fetchRoomDetails 액션을 디스패치합니다.
-      await dispatch(fetchRoomDetails(room_id));
-      navigate(`/detail/${room_id}`);
+      console.log(room_id);
+      const resultAction = await dispatch(fetchRoomDetails(room_id));
+      if (fetchRoomDetails.fulfilled.match(resultAction)) {
+        navigate(`/detail/${room_id}`);
+      } else if (fetchRoomDetails.rejected.match(resultAction)) {
+        console.error(
+          'Fetch failed:',
+          resultAction.payload || resultAction.error.message,
+        );
+      }
     } catch (error) {
       console.error('Error fetching room details:', error);
     }

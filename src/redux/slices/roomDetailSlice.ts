@@ -1,44 +1,44 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { RoomResponse } from '../../assets/interfaces.ts';
-import { getRoom } from '../../api/request.ts'; // 기존 API 함수 사용
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getRoom } from '../../api/request.ts';
 
 export const fetchRoomDetails = createAsyncThunk(
-  'rooms/fetchRoomDetails',
-  async (room_id: number) => {
-    const response = await getRoom(room_id); // 기존 API 함수 사용
-    return {
-      room_response: response.room_response,
-      reserved_date: response.reserved_date,
-    };
+  'roomDetail/fetchRoomDetails',
+  async (roomId: number, { rejectWithValue }) => {
+    try {
+      const response = await getRoom(roomId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.message,
+      );
+    }
   },
 );
 
-interface RoomState {
-  selectedRoom: RoomResponse | null;
-  reservedDate: any[]; // reservedDate 한번 추가해보고 타입 체크해서 명시해주기
-}
-
-const initialState: RoomState = {
-  selectedRoom: null,
-  reservedDate: [],
-};
-
 const roomDetailSlice = createSlice({
-  name: 'rooms',
-  initialState,
-  reducers: {
-    selectRoom: (state, action) => {
-      state.selectedRoom = action.payload.room_response;
-      state.reservedDate = action.payload.reserved_date;
-    },
+  name: 'roomDetail',
+  initialState: {
+    room: null,
+    reserved_date: null,
+    status: 'idle',
+    error: null,
   },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchRoomDetails.fulfilled, (state, action) => {
-      state.selectedRoom = action.payload.room_response;
-      state.reservedDate = action.payload.reserved_date;
-    });
+    builder
+      .addCase(fetchRoomDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchRoomDetails.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.room = action.payload.room_response || action.payload.room;
+        state.reserved_date = action.payload.reserved_date || [];
+      })
+      .addCase(fetchRoomDetails.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || action.error.message;
+      });
   },
 });
 
-export const { selectRoom } = roomDetailSlice.actions;
 export default roomDetailSlice.reducer;
