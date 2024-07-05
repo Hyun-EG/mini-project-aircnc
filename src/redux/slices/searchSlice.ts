@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { City } from '../../schema/roomSchema.ts';
 
 interface Coordinates {
   top: number;
@@ -7,8 +8,8 @@ interface Coordinates {
   right: number;
 }
 
-interface SearchState {
-  location: string;
+export interface SearchState {
+  location: City | '';
   checkInDate: string | null;
   checkOutDate: string | null;
   guestCount: number;

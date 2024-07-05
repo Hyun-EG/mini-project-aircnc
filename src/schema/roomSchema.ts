@@ -13,6 +13,8 @@ export const CITY_NAME = [
 
 export const CityEnum = z.enum(CITY_NAME);
 
+export type City = z.infer<typeof CityEnum>;
+
 export const RoomSchema = z.object({
   id: z.number(),
   name: z.string(),

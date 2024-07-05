@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconSearch } from '@tabler/icons-react';
-import CalendarComponent from './Calendar.tsx';
-import Guest from './Guest.tsx';
 import { RootState } from '../../redux/store.ts';
 import {
   setLocation,
@@ -13,8 +11,11 @@ import {
   setGuestCount,
   resetSearch,
   setMode,
+  SearchState,
 } from '../../redux/slices/searchSlice.ts';
 import HeaderSearchLocation from './HeaderSearchLocation.tsx';
+import CalendarComponent from './Calendar.tsx';
+import Guest from './Guest.tsx';
 import Button from '../Button.tsx';
 import locationImg from '../../assets/images/airplane.png';
 import checkImg from '../../assets/images/calendar.png';
@@ -141,6 +142,8 @@ interface SearchProps {
   windowWidth: number;
 }
 
+type HeaderSearchState = Omit<SearchState, 'coordinates' | 'mode'>;
+
 export default function HeaderSearch({
   windowWidth,
 }: SearchProps): JSX.Element {
@@ -152,11 +155,22 @@ export default function HeaderSearch({
   const [openSelect, setOpenSelect] = useState<SelectMode>('');
   const locationPath = useLocation().pathname;
 
+  const initialSearchState: HeaderSearchState = useMemo(() => {
+    return { location: '', checkInDate: '', checkOutDate: '', guestCount: 0 };
+  }, []);
+
+  const [searchState, setSearchState] =
+    useState<HeaderSearchState>(initialSearchState);
+
   useEffect(() => {
     if (locationPath === '/') {
       dispatch(resetSearch());
     }
   }, [locationPath, dispatch]);
+
+  useEffect(() => {
+    setSearchState({ location, checkInDate, checkOutDate, guestCount });
+  }, [location, checkInDate, checkOutDate, guestCount]);
 
   const checkIfMobile = () => windowWidth < 769;
   const checkIfDesktop = () => windowWidth > 1023;
@@ -171,9 +185,10 @@ export default function HeaderSearch({
   };
 
   const handleSearch = () => {
-    const locationPrefix = location.substring(0, 2);
-    const checkInOutDate = checkInDate && checkOutDate;
-    const chooseOne = location || checkInOutDate || guestCount > 0;
+    const locationPrefix = searchState.location.substring(0, 2);
+    const checkInOutDate = searchState.checkInDate && searchState.checkOutDate;
+    const chooseOne =
+      searchState.location || checkInOutDate || searchState.guestCount > 0;
 
     if (!chooseOne) {
       return;
@@ -181,10 +196,26 @@ export default function HeaderSearch({
 
     const searchParams = {
       location: locationPrefix,
-      checkInDate: checkInDate ? formatDate(checkInDate) : null,
-      checkOutDate: checkOutDate ? formatDate(checkOutDate) : null,
-      guestCount,
+      checkInDate: searchState.checkInDate
+        ? formatDate(searchState.checkInDate)
+        : null,
+      checkOutDate: searchState.checkOutDate
+        ? formatDate(searchState.checkOutDate)
+        : null,
+      guestCount: searchState.guestCount,
     };
+    dispatch(setLocation(locationPrefix));
+    dispatch(
+      setCheckInDate(
+        searchState.checkInDate ? formatDate(searchState.checkInDate) : null,
+      ),
+    );
+    dispatch(
+      setCheckOutDate(
+        searchState.checkOutDate ? formatDate(searchState.checkOutDate) : null,
+      ),
+    );
+    dispatch(setGuestCount(searchState.guestCount));
     dispatch(setMode('city'));
     navigate('/search', { state: searchParams });
   };
@@ -210,7 +241,7 @@ export default function HeaderSearch({
             </SearchButtonTitle>
             {!checkIfMobile() && (
               <SearchButtonContent>
-                {location || '여행지 선택'}
+                {searchState.location || '여행지 선택'}
               </SearchButtonContent>
             )}
           </SearchButtonItem>
@@ -218,7 +249,9 @@ export default function HeaderSearch({
         {openSelect === 'location' && (
           <HeaderSearchLocation
             onClick={(location) => {
-              dispatch(setLocation(location));
+              setSearchState((prev) => {
+                return { ...prev, location };
+              });
               setOpenSelect('');
             }}
           />
@@ -243,7 +276,9 @@ export default function HeaderSearch({
             </SearchButtonTitle>
             {!checkIfMobile() && (
               <SearchButtonContent>
-                {checkInDate ? formatDate(checkInDate) : '체크인 선택'}
+                {searchState.checkInDate
+                  ? formatDate(searchState.checkInDate)
+                  : '체크인 선택'}
               </SearchButtonContent>
             )}
           </SearchButtonItem>
@@ -252,21 +287,38 @@ export default function HeaderSearch({
           isOpen={openSelect === 'checkIn'}
           onDateChange={(date) => {
             const dateString = date.toISOString();
-            if (!checkInDate || (checkInDate && checkOutDate)) {
-              dispatch(setCheckInDate(dateString));
-              dispatch(setCheckOutDate(null));
-            } else if (checkInDate && !checkOutDate) {
-              if (date < new Date(checkInDate)) {
-                dispatch(setCheckOutDate(checkInDate));
-                dispatch(setCheckInDate(dateString));
+            if (
+              !searchState.checkInDate ||
+              (searchState.checkInDate && searchState.checkOutDate)
+            ) {
+              setSearchState((prev) => {
+                return { ...prev, checkInDate: dateString };
+              });
+              setSearchState((prev) => {
+                return { ...prev, checkOutDate: null };
+              });
+            } else if (searchState.checkInDate && !searchState.checkOutDate) {
+              if (date < new Date(searchState.checkInDate)) {
+                setSearchState((prev) => {
+                  return { ...prev, checkOutDate: searchState.checkInDate };
+                });
+                setSearchState((prev) => {
+                  return { ...prev, checkInDate: dateString };
+                });
               } else {
-                dispatch(setCheckOutDate(dateString));
+                setSearchState((prev) => {
+                  return { ...prev, checkOutDate: dateString };
+                });
                 setOpenSelect('');
               }
             }
           }}
-          checkInDate={checkInDate ? new Date(checkInDate) : null}
-          checkOutDate={checkOutDate ? new Date(checkOutDate) : null}
+          checkInDate={
+            searchState.checkInDate ? new Date(searchState.checkInDate) : null
+          }
+          checkOutDate={
+            searchState.checkOutDate ? new Date(searchState.checkOutDate) : null
+          }
         />
       </SearchCheckIn>
       <SearchCheckOut $openSelect={openSelect} $isOpen="checkOut">
@@ -288,7 +340,9 @@ export default function HeaderSearch({
             </SearchButtonTitle>
             {!checkIfMobile() && (
               <SearchButtonContent>
-                {checkOutDate ? formatDate(checkOutDate) : '체크아웃 선택'}
+                {searchState.checkOutDate
+                  ? formatDate(searchState.checkOutDate)
+                  : '체크아웃 선택'}
               </SearchButtonContent>
             )}
           </SearchButtonItem>
@@ -297,16 +351,30 @@ export default function HeaderSearch({
           isOpen={openSelect === 'checkOut'}
           onDateChange={(date) => {
             const dateString = date.toISOString();
-            if (date && checkInDate && date < new Date(checkInDate)) {
-              dispatch(setCheckOutDate(checkInDate));
-              dispatch(setCheckInDate(dateString));
+            if (
+              date &&
+              searchState.checkInDate &&
+              date < new Date(searchState.checkInDate)
+            ) {
+              setSearchState((prev) => {
+                return { ...prev, checkOutDate: searchState.checkInDate };
+              });
+              setSearchState((prev) => {
+                return { ...prev, checkInDate: dateString };
+              });
             } else {
-              dispatch(setCheckOutDate(dateString));
+              setSearchState((prev) => {
+                return { ...prev, checkOutDate: dateString };
+              });
               setOpenSelect('');
             }
           }}
-          checkInDate={checkInDate ? new Date(checkInDate) : null}
-          checkOutDate={checkOutDate ? new Date(checkOutDate) : null}
+          checkInDate={
+            searchState.checkInDate ? new Date(searchState.checkInDate) : null
+          }
+          checkOutDate={
+            searchState.checkOutDate ? new Date(searchState.checkOutDate) : null
+          }
         />
       </SearchCheckOut>
       <SearchGuest $openSelect={openSelect} $isOpen="guest">
@@ -325,7 +393,9 @@ export default function HeaderSearch({
               )}
             </SearchButtonTitle>
             {!checkIfMobile() && (
-              <SearchButtonContent>인원: {guestCount}</SearchButtonContent>
+              <SearchButtonContent>
+                인원: {searchState.guestCount}
+              </SearchButtonContent>
             )}
           </SearchButtonItem>
         </Button>
@@ -333,11 +403,13 @@ export default function HeaderSearch({
           <Guest
             counts={{ total: guestCount }}
             onChange={(delta) => {
-              const newGuestCount = guestCount + delta;
+              const newGuestCount = searchState.guestCount + delta;
               if (newGuestCount < 0) {
                 return;
               }
-              dispatch(setGuestCount(newGuestCount));
+              setSearchState((prev) => {
+                return { ...prev, guestCount: newGuestCount };
+              });
             }}
           />
         )}
