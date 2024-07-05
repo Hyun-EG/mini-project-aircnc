@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RoomResponse } from '../../assets/interfaces.ts';
 
 export const fetchRoomDetails = createAsyncThunk(
@@ -15,14 +15,24 @@ export const fetchRoomDetails = createAsyncThunk(
   },
 );
 
+interface Reservation {
+  roomName: string;
+  checkInDate: string;
+  checkOutDate: string;
+  guestCount: number;
+  totalPrice: number;
+}
+
 interface RoomState {
   selectedRoom: RoomResponse | null;
-  reservedDate: any[]; // reservedDate 한번 추가해보고 타입 체크해서 명시해주기
+  reservedDate: any[]; // reservedDate 타입 체크 후 명시
+  reservations: Reservation[]; // 예약 정보를 저장할 배열 추가
 }
 
 const initialState: RoomState = {
   selectedRoom: null,
   reservedDate: [],
+  reservations: [],
 };
 
 const roomDetailSlice = createSlice({
@@ -33,6 +43,9 @@ const roomDetailSlice = createSlice({
       state.selectedRoom = action.payload.room_response;
       state.reservedDate = action.payload.reserved_date;
     },
+    addReservation: (state, action: PayloadAction<Reservation>) => {
+      state.reservations.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchRoomDetails.fulfilled, (state, action) => {
@@ -42,5 +55,5 @@ const roomDetailSlice = createSlice({
   },
 });
 
-export const { selectRoom } = roomDetailSlice.actions;
+export const { selectRoom, addReservation } = roomDetailSlice.actions;
 export default roomDetailSlice.reducer;

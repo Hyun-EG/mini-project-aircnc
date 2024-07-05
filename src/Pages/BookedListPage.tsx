@@ -1,5 +1,6 @@
-// 로그인이 되었을 때만 표시되도록 처리
-import { styled } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import styled from 'styled-components';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -68,7 +69,7 @@ const ReserTitlePrice = styled.div`
   align-items: center;
 `;
 
-const ReserCotentContainer = styled.div`
+const ReserContentContainer = styled.div`
   width: 100%;
   height: 7vh;
   display: flex;
@@ -109,6 +110,10 @@ const ReserContentPrice = styled.div`
 `;
 
 export default function BookedListPage() {
+  const reservations = useSelector(
+    (state: RootState) => state.rooms.reservations,
+  );
+
   return (
     <div>
       <BookedListContainer>
@@ -122,12 +127,18 @@ export default function BookedListPage() {
           <ReserTitleGuest>인원</ReserTitleGuest>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
-        <ReserCotentContainer>
-          <ReserContentRoom>qef</ReserContentRoom>
-          <ReserContentDate>qefqe</ReserContentDate>
-          <ReserContentGuest>qefqe</ReserContentGuest>
-          <ReserContentPrice>45145415</ReserContentPrice>
-        </ReserCotentContainer>
+        {reservations.map((reservation, index) => (
+          <ReserContentContainer key={index}>
+            <ReserContentRoom>{reservation.roomName}</ReserContentRoom>
+            <ReserContentDate>
+              {reservation.checkInDate} ~ {reservation.checkOutDate}
+            </ReserContentDate>
+            <ReserContentGuest>{reservation.guestCount}</ReserContentGuest>
+            <ReserContentPrice>
+              {formatNumber(reservation.totalPrice)}원
+            </ReserContentPrice>
+          </ReserContentContainer>
+        ))}
       </BookedListContainer>
     </div>
   );

@@ -1,12 +1,12 @@
-import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import { IconHeart } from '@tabler/icons-react'; // IconHeartFilled?
+import styled from 'styled-components';
 import Button from './Button.tsx';
-// import addReservation from '../util/addReserveUtil.ts';
-// import addWishlist from '../util/addWishUtils.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
-import { postWish, postPayment } from '../api/request.ts';
+import { postPayment } from '../api/request.ts';
 import addWishlist from '../util/addWishUtils.ts';
+import { addReservation } from '../redux/slices/roomDetailSlice.ts';
 
 const FooterContainer = styled.footer`
   position: fixed;
@@ -42,6 +42,8 @@ function DetailFooter({
   checkInDate,
   checkOutDate,
 }: DetailFooterProps) {
+  const dispatch = useDispatch();
+
   if (!room) {
     return <h1>Loading</h1>;
   }
@@ -70,6 +72,16 @@ function DetailFooter({
           check_out: checkOutDate,
         };
         await postPayment(room.room_id, paymentData);
+
+        dispatch(
+          addReservation({
+            roomName: room.name,
+            checkInDate,
+            checkOutDate,
+            guestCount: room.max_capacity,
+            totalPrice,
+          }),
+        );
       } else {
         alert('유효한 날짜를 입력해 주세요!');
       }
