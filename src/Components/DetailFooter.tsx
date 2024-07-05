@@ -6,6 +6,7 @@ import Button from './Button.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
 import { postWish, postPayment } from '../api/request.ts';
+import addWishlist from '../util/addWishUtils.ts';
 
 const FooterContainer = styled.footer`
   position: fixed;
