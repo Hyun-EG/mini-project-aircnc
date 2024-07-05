@@ -81,6 +81,13 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
         <DropdownMenu>
           {token ? (
             <>
+              <MenuItem
+                onClick={() => {
+                  navigate('/wishlist');
+                }}
+              >
+                위시리스트
+              </MenuItem>
               <MenuItem>예약 목록</MenuItem>
               <MenuItem
                 onClick={() => {
