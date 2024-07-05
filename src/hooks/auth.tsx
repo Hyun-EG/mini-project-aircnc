@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import {
-  getValidateEmail,
+  getEmailValidation,
   postFindPassword,
   postLogIn,
   postSignUp,
@@ -8,7 +8,7 @@ import {
 
 export function useValidateEmail() {
   return useMutation({
-    mutationFn: getValidateEmail,
+    mutationFn: getEmailValidation,
     onError: (error) => {
       console.error(error);
     },

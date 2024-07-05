@@ -12,6 +12,7 @@ import {
   setCheckOutDate,
   setGuestCount,
   resetSearch,
+  setMode,
 } from '../../redux/slices/searchSlice.ts';
 import HeaderSearchLocation from './HeaderSearchLocation.tsx';
 import Button from '../Button.tsx';
@@ -184,6 +185,7 @@ export default function HeaderSearch({
       checkOutDate: checkOutDate ? formatDate(checkOutDate) : null,
       guestCount,
     };
+    dispatch(setMode(true));
     navigate('/search', { state: searchParams });
   };
 
