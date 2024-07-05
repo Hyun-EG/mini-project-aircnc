@@ -13,7 +13,7 @@ interface SearchState {
   checkOutDate: string | null;
   guestCount: number;
   coordinates: Coordinates;
-  mode: boolean;
+  mode: 'city' | 'map';
 }
 
 const initialState: SearchState = {
@@ -22,7 +22,7 @@ const initialState: SearchState = {
   checkOutDate: new Date(Date.now() + 86400000).toISOString(),
   guestCount: 0,
   coordinates: { top: 0, bottom: 0, right: 0, left: 0 },
-  mode: true,
+  mode: 'city',
 };
 
 const searchSlice = createSlice({
@@ -42,9 +42,10 @@ const searchSlice = createSlice({
       state.guestCount = action.payload;
     },
     setCoordinates: (state, action: PayloadAction<Coordinates>) => {
+      console.log(action.payload);
       state.coordinates = action.payload;
     },
-    setMode: (state, action: PayloadAction<boolean>) => {
+    setMode: (state, action: PayloadAction<'city' | 'map'>) => {
       state.mode = action.payload;
     },
     resetSearch: () => initialState,
