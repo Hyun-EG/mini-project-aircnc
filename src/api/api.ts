@@ -6,10 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-const BASE_URL =
-  window.location.hostname === 'localhost'
-    ? 'http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/'
-    : 'https://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/';
+const BASE_URL = 'https://www.entj.site/api';
 
 const logOnDev = (message: string) => {
   if (process.env.NODE_ENV === 'development') {

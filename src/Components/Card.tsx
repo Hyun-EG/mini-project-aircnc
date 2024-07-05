@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { RoomResponse } from '../assets/interfaces.ts';
-import { selectRoom } from '../redux/slices/roomDetailSlice.ts';
+import { fetchRoomDetails } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
-import { getRoom } from '../api/request.ts';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -66,13 +65,8 @@ function Card(props: CardProps) {
 
   const handleClick = async () => {
     try {
-      const roomData = await getRoom(room_id);
-      console.log(roomData);
-      const selectedRoomData = {
-        room_response: roomData.room_response,
-        reserved_date: roomData.reserved_date,
-      };
-      dispatch(selectRoom(selectedRoomData));
+      // fetchRoomDetails 액션을 디스패치합니다.
+      await dispatch(fetchRoomDetails(room_id));
       navigate(`/detail/${room_id}`);
     } catch (error) {
       console.error('Error fetching room details:', error);

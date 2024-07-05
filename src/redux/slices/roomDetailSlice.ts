@@ -1,16 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RoomResponse } from '../../assets/interfaces.ts';
+import { getRoom } from '../../api/request.ts'; // 기존 API 함수 사용
 
 export const fetchRoomDetails = createAsyncThunk(
   'rooms/fetchRoomDetails',
-  async (room_id: string) => {
-    const response = await fetch(
-      `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/${room_id}`,
-    );
-    const data = await response.json();
+  async (room_id: number) => {
+    const response = await getRoom(room_id); // 기존 API 함수 사용
     return {
-      room_response: data.body.room_response,
-      reserved_date: data.body.reserved_date,
+      room_response: response.room_response,
+      reserved_date: response.reserved_date,
     };
   },
 );
