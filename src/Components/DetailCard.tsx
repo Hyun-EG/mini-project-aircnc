@@ -47,7 +47,6 @@ const Info = styled.p`
 
 function DetailCard() {
   const selectedRoom = useSelector((state: RootState) => state.rooms.room);
-
   if (!selectedRoom) {
     return <h1>Loading</h1>;
   }

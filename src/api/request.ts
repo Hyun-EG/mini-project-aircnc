@@ -7,6 +7,7 @@ import {
 } from '../schema/userSchema.ts';
 import api from './api.ts';
 import { CITY_NAME } from '../schema/roomSchema.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 
 type FetchMethod = 'GET' | 'POST' | 'DELETE';
 

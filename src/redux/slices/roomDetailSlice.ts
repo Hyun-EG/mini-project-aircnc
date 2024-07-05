@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getRoom } from '../../api/request.ts';
+import { RoomResponse } from '../../assets/interfaces.ts';
 
 export const fetchRoomDetails = createAsyncThunk(
   'roomDetail/fetchRoomDetails',
@@ -7,22 +8,30 @@ export const fetchRoomDetails = createAsyncThunk(
     try {
       const response = await getRoom(roomId);
       return response;
-    } catch (error) {
-      return rejectWithValue(
-        error.response ? error.response.data : error.message,
-      );
+    } catch (error: any) {
+      const errorMessage = error.response ? error.response.data : error.message;
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
+interface RoomDetailState {
+  room: RoomResponse | null;
+  reserved_date: Date[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+const initialState: RoomDetailState = {
+  room: null,
+  reserved_date: [],
+  status: 'idle',
+  error: null,
+};
+
 const roomDetailSlice = createSlice({
   name: 'roomDetail',
-  initialState: {
-    room: null,
-    reserved_date: null,
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -36,7 +45,7 @@ const roomDetailSlice = createSlice({
       })
       .addCase(fetchRoomDetails.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload || action.error.message;
+        state.error = action.payload as string; // action.payload가 undefined가 아닌 경우에만 string으로 타입 단언
       });
   },
 });
