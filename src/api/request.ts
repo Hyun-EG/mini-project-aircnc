@@ -79,9 +79,13 @@ export const getRoom = async (id: number) =>
     method: 'GET',
   });
 
-export const getRandomRooms = async () =>
+export const getRandomRooms = async (
+  map_x: number,
+  map_y: number,
+  radius: number = 1,
+) =>
   await request({
-    url: '/rooms/randoms',
+    url: `/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`,
     method: 'GET',
   });
 

@@ -7,7 +7,9 @@ import axios, {
 } from 'axios';
 
 const BASE_URL =
-  'http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/';
+  window.location.hostname === 'localhost'
+    ? 'http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/'
+    : '/api';
 
 const logOnDev = (message: string) => {
   if (process.env.NODE_ENV === 'development') {

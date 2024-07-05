@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { IconHeart } from '@tabler/icons-react';
+import { IconHeart } from '@tabler/icons-react'; // IconHeartFilled?
 import Button from './Button.tsx';
-import addReservation from '../util/addReserveUtil.ts';
-import addWishlist from '../util/addWishUtils.ts';
+// import addReservation from '../util/addReserveUtil.ts';
+// import addWishlist from '../util/addWishUtils.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
 import { postWish, postPayment } from '../api/request.ts';
@@ -94,65 +94,5 @@ function DetailFooter({
     </FooterContainer>
   );
 }
-// export default DetailFooter;
-
-// function DetailFooter({
-//   totalPrice,
-//   room,
-//   checkInDate,
-//   checkOutDate,
-// }: DetailFooterProps) {
-//   if (!room) {
-//     return <h1>Loading</h1>;
-//   }
-
-//   const handleLike = () => {
-//     const roomID = room.room_id;
-//     const userID = 'testID1'; // UserID
-//     addWishlist({ roomID, userID } /* userID는 추후 로그인 데이터로 대체 */);
-//   };
-
-//   const handleReserve = () => {
-//     const userID = 'testID1'; // UserID
-
-//     if (checkInDate !== null && checkOutDate !== null) {
-//       const parsedCheckInDate = new Date(checkInDate);
-//       const parsedCheckOutDate = new Date(checkOutDate);
-
-//       if (
-//         !Number.isNaN(parsedCheckInDate.getTime()) &&
-//         !Number.isNaN(parsedCheckOutDate.getTime())
-//       ) {
-//         addReservation({
-//           room,
-//           userID,
-//           checkInDate: parsedCheckInDate,
-//           checkOutDate: parsedCheckOutDate,
-//         });
-//       } else {
-//         alert('유효한 날짜를 입력해 주세요!');
-//       }
-//     } else {
-//       alert('날짜를 입력해 주세요!');
-//     }
-//   };
-
-//   return (
-//     <FooterContainer>
-//       <FooterPrice>{`총 가격: ${formatNumber(totalPrice)}원`}</FooterPrice>
-//       <Button $size="small" $shape="circle" $color="white" onClick={handleLike}>
-//         {room ? <IconHeart color="red" /> : <IconHeartFilled color="red" />}
-//       </Button>
-//       <Button
-//         $size="medium"
-//         $shape="square"
-//         $color="primary"
-//         onClick={handleReserve}
-//       >
-//         예약하기
-//       </Button>
-//     </FooterContainer>
-//   );
-// }
 
 export default DetailFooter;
