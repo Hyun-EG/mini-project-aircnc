@@ -131,11 +131,14 @@ export const getRoomSearchMap = async (params: RoomSearchMap) =>
     method: 'GET',
   });
 
-export const getPayments = async () =>
-  await request({
-    url: '/members/payments',
-    method: 'GET',
-  });
+export const getPayments = async () => {
+  try {
+    const response = await api.get('/members/payments');
+    return response.body.payment_response_list;
+  } catch (error) {
+    throw new Error('Failed to fetch payments');
+  }
+};
 
 export const postPayment = async (
   roomId: number,
