@@ -53,8 +53,6 @@ export interface Reservation {
   price: number;
   checkInDate: Date;
   checkOutDate: Date;
-  // max_capacity: number;
-  // price: number;
 }
 
 export interface Wishlist {
