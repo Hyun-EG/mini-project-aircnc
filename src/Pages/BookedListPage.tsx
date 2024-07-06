@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Reservation } from '../assets/interfaces.ts';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -69,7 +69,7 @@ const ReserTitlePrice = styled.div`
   align-items: center;
 `;
 
-const ReserContentContainer = styled.div`
+const ReserCotentContainer = styled.div`
   width: 100%;
   height: 7vh;
   display: flex;
@@ -109,10 +109,54 @@ const ReserContentPrice = styled.div`
   align-items: center;
 `;
 
-export default function BookedListPage() {
-  const reservations = useSelector(
-    (state: RootState) => state.rooms.reservations,
+interface ReservationRowProps {
+  reservation: Reservation;
+}
+
+function ReservationRow(props: ReservationRowProps) {
+  const { reservation } = props;
+
+  const formatDate = (date: Date) => {
+    const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
+    return formattedDate;
+  };
+
+  return (
+    <ReserCotentContainer>
+      <ReserContentRoom>{reservation.room.name}</ReserContentRoom>
+      <ReserContentDate>
+        {formatDate(new Date(reservation.checkInDate))} -{' '}
+        {formatDate(new Date(reservation.checkOutDate))}
+      </ReserContentDate>
+      <ReserContentGuest>{reservation.room.max_capacity}</ReserContentGuest>
+      <ReserContentPrice>{reservation.room.price}</ReserContentPrice>
+    </ReserCotentContainer>
   );
+}
+
+function BookedListPage() {
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
+  useEffect(() => {
+    const reservation = JSON.parse(
+      localStorage.getItem('reservedRoom') || '[]',
+    );
+    setReservations(reservation);
+  }, []);
+
+  if (!reservations.length) {
+    return (
+      <div>
+        <BookedListContainer>
+          <BookedListBody>
+            <BookedListTitle>예약 목록</BookedListTitle>
+          </BookedListBody>
+          <SeparationLine />
+          <p>예약된 내역이 없습니다.</p>
+        </BookedListContainer>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -127,19 +171,15 @@ export default function BookedListPage() {
           <ReserTitleGuest>인원</ReserTitleGuest>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
-        {reservations.map((reservation, index) => (
-          <ReserContentContainer key={index}>
-            <ReserContentRoom>{reservation.roomName}</ReserContentRoom>
-            <ReserContentDate>
-              {reservation.checkInDate} ~ {reservation.checkOutDate}
-            </ReserContentDate>
-            <ReserContentGuest>{reservation.guestCount}</ReserContentGuest>
-            <ReserContentPrice>
-              {formatNumber(reservation.totalPrice)}원
-            </ReserContentPrice>
-          </ReserContentContainer>
+        {reservations.map((reservation) => (
+          <ReservationRow
+            key={reservation.room.room_id}
+            reservation={reservation}
+          />
         ))}
       </BookedListContainer>
     </div>
   );
 }
+
+export default BookedListPage;

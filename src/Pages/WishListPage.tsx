@@ -84,7 +84,9 @@ function WishListPage() {
     fetchWishList();
   }, []);
 
+  // eslint-disable-next-line camelcase
   const handleImageClick = (room_id: number) => {
+    // eslint-disable-next-line camelcase
     navigate(`/detail/${room_id}`);
   };
 
