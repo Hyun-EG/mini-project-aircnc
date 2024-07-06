@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Reservation } from '../assets/interfaces.ts';
+import { getPayments } from '../api/request.ts';
+import formatNumber from '../util/formatNumber.ts';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -115,7 +117,6 @@ interface ReservationRowProps {
 
 function ReservationRow(props: ReservationRowProps) {
   const { reservation } = props;
-
   const formatDate = (date: Date) => {
     const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
     return formattedDate;
@@ -129,7 +130,9 @@ function ReservationRow(props: ReservationRowProps) {
         {formatDate(new Date(reservation.checkOutDate))}
       </ReserContentDate>
       <ReserContentGuest>{reservation.room.max_capacity}</ReserContentGuest>
-      <ReserContentPrice>{reservation.room.price}</ReserContentPrice>
+      <ReserContentPrice>
+        {formatNumber(reservation.room.price)}
+      </ReserContentPrice>
     </ReserCotentContainer>
   );
 }
@@ -138,10 +141,22 @@ function BookedListPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
-    const reservation = JSON.parse(
-      localStorage.getItem('reservedRoom') || '[]',
-    );
-    setReservations(reservation);
+    const fetchReservations = async () => {
+      try {
+        const payments = await getPayments();
+
+        const reservationsData = payments.map((payment: any) => ({
+          room: payment.room_response,
+          checkInDate: payment.check_in,
+          checkOutDate: payment.check_out,
+        }));
+        setReservations(reservationsData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchReservations();
   }, []);
 
   if (!reservations.length) {
@@ -173,7 +188,11 @@ function BookedListPage() {
         </ReserTitleContainer>
         {reservations.map((reservation) => (
           <ReservationRow
-            key={reservation.room.room_id}
+            key={
+              reservation.room.room_id.toString() +
+              reservation.checkInDate.toString().replace(/-/g, '') +
+              reservation.checkOutDate.toString().replace(/-/g, '')
+            }
             reservation={reservation}
           />
         ))}

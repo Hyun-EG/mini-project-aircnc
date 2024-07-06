@@ -88,7 +88,13 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
               >
                 위시리스트
               </MenuItem>
-              <MenuItem>예약 목록</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  navigate('/booked');
+                }}
+              >
+                예약 목록
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   localStorage.removeItem('token');
