@@ -11,8 +11,10 @@ import {
   setGuestCount,
   resetSearch,
   setMode,
+  setCursorId,
   SearchState,
 } from '../../redux/slices/searchSlice.ts';
+import { City } from '../../schema/roomSchema.ts';
 import HeaderSearchLocation from './HeaderSearchLocation.tsx';
 import CalendarComponent from './Calendar.tsx';
 import Guest from './Guest.tsx';
@@ -142,7 +144,7 @@ interface SearchProps {
   windowWidth: number;
 }
 
-type HeaderSearchState = Omit<SearchState, 'coordinates' | 'mode'>;
+type HeaderSearchState = Omit<SearchState, 'coordinates' | 'mode' | 'cursorId'>;
 
 export default function HeaderSearch({
   windowWidth,
@@ -194,17 +196,7 @@ export default function HeaderSearch({
       return;
     }
 
-    const searchParams = {
-      location: locationPrefix,
-      checkInDate: searchState.checkInDate
-        ? formatDate(searchState.checkInDate)
-        : null,
-      checkOutDate: searchState.checkOutDate
-        ? formatDate(searchState.checkOutDate)
-        : null,
-      guestCount: searchState.guestCount,
-    };
-    dispatch(setLocation(locationPrefix));
+    dispatch(setLocation(locationPrefix as City));
     dispatch(
       setCheckInDate(
         searchState.checkInDate ? formatDate(searchState.checkInDate) : null,
@@ -217,7 +209,8 @@ export default function HeaderSearch({
     );
     dispatch(setGuestCount(searchState.guestCount));
     dispatch(setMode('city'));
-    navigate('/search', { state: searchParams });
+    dispatch(setCursorId(null));
+    navigate('/search');
   };
 
   return (

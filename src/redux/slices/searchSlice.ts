@@ -15,6 +15,7 @@ export interface SearchState {
   guestCount: number;
   coordinates: Coordinates;
   mode: 'city' | 'map';
+  cursorId: number | null;
 }
 
 const initialState: SearchState = {
@@ -24,13 +25,14 @@ const initialState: SearchState = {
   guestCount: 0,
   coordinates: { top: 0, bottom: 0, right: 0, left: 0 },
   mode: 'city',
+  cursorId: null,
 };
 
 const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
-    setLocation: (state, action: PayloadAction<string>) => {
+    setLocation: (state, action: PayloadAction<City>) => {
       state.location = action.payload;
     },
     setCheckInDate: (state, action: PayloadAction<string | null>) => {
@@ -43,11 +45,13 @@ const searchSlice = createSlice({
       state.guestCount = action.payload;
     },
     setCoordinates: (state, action: PayloadAction<Coordinates>) => {
-      console.log(action.payload);
       state.coordinates = action.payload;
     },
     setMode: (state, action: PayloadAction<'city' | 'map'>) => {
       state.mode = action.payload;
+    },
+    setCursorId: (state, action: PayloadAction<number | null>) => {
+      state.cursorId = action.payload;
     },
     resetSearch: () => initialState,
   },
@@ -60,6 +64,7 @@ export const {
   setGuestCount,
   setCoordinates,
   setMode,
+  setCursorId,
   resetSearch,
 } = searchSlice.actions;
 

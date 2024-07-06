@@ -63,6 +63,8 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+    'react-hooks/exhaustive-deps': 'off',
+    'no-return-await': 'off',
   },
   settings: {
     react: {

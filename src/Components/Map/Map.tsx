@@ -153,6 +153,8 @@ function Map({ width, height, listings }: MapProps) {
     });
 
     if (mode === 'city') {
+      console.log(mode);
+      console.log(bounds);
       map.fitBounds(bounds);
     }
 
@@ -165,6 +167,9 @@ function Map({ width, height, listings }: MapProps) {
 
     return () => {
       naver.maps.Event.clearInstanceListeners(map);
+      markersRef.current.forEach((marker) => {
+        naver.maps.Event.clearInstanceListeners(marker);
+      });
     };
   }, [listings]);
 
