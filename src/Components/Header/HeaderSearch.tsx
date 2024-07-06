@@ -397,7 +397,7 @@ export default function HeaderSearch({
             counts={{ total: guestCount }}
             onChange={(delta) => {
               const newGuestCount = searchState.guestCount + delta;
-              if (newGuestCount < 0) {
+              if (newGuestCount < 1) {
                 return;
               }
               setSearchState((prev) => {

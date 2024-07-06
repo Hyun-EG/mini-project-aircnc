@@ -22,7 +22,7 @@ const initialState: SearchState = {
   location: '',
   checkInDate: new Date().toISOString(),
   checkOutDate: new Date(Date.now() + 86400000).toISOString(),
-  guestCount: 0,
+  guestCount: 1,
   coordinates: { top: 0, bottom: 0, right: 0, left: 0 },
   mode: 'city',
   cursorId: null,
