@@ -9,6 +9,13 @@ import api from './api.ts';
 import { CITY_NAME } from '../schema/roomSchema.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 
+export type DateType = `${number}-${number}-${number}`;
+
+export type SimpleRoomResponse = Pick<
+  RoomResponse,
+  'room_id' | 'name' | 'city' | 'description'
+>;
+
 type FetchMethod = 'GET' | 'POST' | 'DELETE';
 
 const RESULT_CODE = [200, 4000, 4001, 4002, 4003, 4004] as const;
@@ -74,38 +81,44 @@ export const postFindPassword = async (
     data: user,
   });
 
-export const getRoom = async (id: number) => {
-  try {
-    const response = await api.get(`/rooms/${id}`);
-    return response.body;
-  } catch (error) {
-    throw new Error('Failed to fetch room details');
-  }
-};
+export interface RoomResponseData {
+  room_response: RoomResponse;
+  reserved_date: DateType[];
+}
 
-export const getRandomRooms = async (
-  map_x: number,
-  map_y: number,
-  radius: number = 1,
-) =>
-  await request({
-    url: `/rooms/randoms?map_x=${map_x}&map_y=${map_y}&radius=${radius}`,
+export const getRoom = async (roomId: Pick<RoomResponse, 'room_id'>) =>
+  await request<RoomResponseData>({
+    url: `/rooms/${roomId}`,
     method: 'GET',
   });
 
-// 룸 조건 검색은 파라미터가 복잡해서 임시로 만든 것임
-type DateType = `${number}-${number}-${number}`;
+export interface RandomRoomRequestParam {
+  map_x: number;
+  map_y: number;
+  raidus: number;
+}
 
-interface RoomSearchCity extends Record<string, unknown> {
-  capacity?: number;
-  check_in?: DateType;
-  check_out?: DateType;
-  city?: (typeof CITY_NAME)[number];
+export interface RandomRoomResponseData {
+  room_response_list: SimpleRoomResponse[];
+}
+
+export const getRandomRooms = async (params: RandomRoomRequestParam) =>
+  await request<RandomRoomResponseData>({
+    url: '/rooms/randoms',
+    method: 'GET',
+    data: params,
+  });
+
+export interface RoomSearchCity extends Record<string, unknown> {
+  capacity: number;
+  check_in: DateType;
+  check_out: DateType;
+  city: (typeof CITY_NAME)[number];
   cursor_id?: number;
 }
 
-interface RoomSearchMap extends Record<string, unknown> {
-  capacity?: number;
+export interface RoomSearchMap extends Record<string, unknown> {
+  capacity: number;
   top: number;
   bottom: number;
   left: number;
@@ -113,32 +126,45 @@ interface RoomSearchMap extends Record<string, unknown> {
   cursor_id?: number;
 }
 
+export interface RoomSearchResponseData {
+  room_response_list: RoomResponse[];
+  last: boolean;
+}
+
 export const getRoomSearchCity = async (params: RoomSearchCity) =>
-  await request({
+  await request<RoomSearchResponseData>({
     url: `/rooms/city${Object.keys(params).length ? '?' : ''}${Object.keys(
       params,
     )
-      .map((key) => `key=${params[key]}`)
+      .map((key) => `${key}=${params[key]}`)
       .join('&')}`,
     method: 'GET',
   });
 
 export const getRoomSearchMap = async (params: RoomSearchMap) =>
-  await request({
+  await request<RoomSearchResponseData>({
     url: `/rooms/map${Object.keys(params)
-      .map((key) => `key=${params[key]}`)
+      .map((key) => `${key}=${params[key]}`)
       .join('&')}`,
     method: 'GET',
   });
 
-export const getPayments = async () => {
-  try {
-    const response = await api.get('/members/payments');
-    return response.body.payment_response_list;
-  } catch (error) {
-    throw new Error('Failed to fetch payments');
-  }
-};
+export interface PaymentResponse {
+  room_response: SimpleRoomResponse;
+  price: number;
+  check_in: DateType;
+  check_out: DateType;
+}
+
+export interface PaymentsResponseData {
+  payment_response_list: PaymentResponse[];
+}
+
+export const getPayments = async () =>
+  await request<PaymentsResponseData>({
+    url: '/members/payments',
+    method: 'GET',
+  });
 
 export const postPayment = async (
   roomId: number,
@@ -148,60 +174,38 @@ export const postPayment = async (
     check_in: string;
     check_out: string;
   },
-) => {
-  try {
-    const response = await request({
-      url: `/payments/rooms/${roomId}`,
-      method: 'POST',
-      data: payment,
-    });
+) =>
+  await request<PaymentResponse>({
+    url: `/payments/rooms/${roomId}`,
+    method: 'POST',
+    data: payment,
+  });
 
-    if (response.result.result_code === 200) {
-      alert('예약이 성공했습니다');
-    } else {
-      alert('이미 예약된 방입니다');
-    }
-  } catch (error) {
-    alert('이미 예약된 방입니다');
-  }
-};
+export interface WishResponse {
+  id: number;
+  room_response: SimpleRoomResponse;
+}
 
-export const getWishes = async () => {
-  try {
-    const response = await request<
-      ResponseData<{
-        wish_response_list: { id: number; room_response: RoomResponse }[];
-      }>,
-      unknown
-    >({
-      url: '/members/wishes',
-      method: 'GET',
-    });
+export interface WishesReponseData {
+  wish_response_list: WishResponse[];
+}
 
-    return response.body.wish_response_list.map((item) => item.room_response);
-  } catch (error) {
-    throw new Error('Failed to fetch wishlist');
-  }
-};
+export const getWishes = async () =>
+  await request<WishesReponseData>({
+    url: '/members/wishes',
+    method: 'GET',
+  });
 
-export const postWish = async (id: number) => {
-  try {
-    const response = await request({
-      url: `/wishes/rooms/${id}`,
-      method: 'POST',
-    });
+export const postWish = async (roomId: Pick<RoomResponse, 'room_id'>) =>
+  await request({
+    url: `/wishes/rooms/${roomId}`,
+    method: 'POST',
+  });
 
-    if (response.result.result_code === 200) {
-      alert('위시리스트에 추가되었습니다');
-    } else {
-      alert('이미 위시리스트에 추가된 숙소입니다');
-    }
-  } catch (error) {
-    alert('이미 위시리스트에 추가된 숙소입니다');
-  }
-};
-
-export const deleteWish = async (wishId: number, roomId: number) =>
+export const deleteWish = async (
+  wishId: Pick<WishResponse, 'id'>,
+  roomId: Pick<RoomResponse, 'room_id'>,
+) =>
   await request({
     url: `/wishes/${wishId}/rooms/${roomId}`,
     method: 'DELETE',
