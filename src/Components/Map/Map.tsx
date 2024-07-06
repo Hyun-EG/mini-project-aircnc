@@ -47,26 +47,22 @@ function Map({ width, height, listings }: MapProps) {
 
     const { naver } = window;
 
-    if (!mapRef.current) {
-      const initialCenter = new naver.maps.LatLng(
-        listings[0].map_y,
-        listings[0].map_x,
-      );
+    const initialCenter = new naver.maps.LatLng(
+      listings[0].map_y,
+      listings[0].map_x,
+    );
 
-      const mapOptions = {
-        center: initialCenter,
-        zoom: 12,
-        zoomControl: true,
-        zoomControlOptions: {
-          style: naver.maps.ZoomControlStyle.SMALL,
-          position: naver.maps.Position.TOP_RIGHT,
-        },
-      };
+    const mapOptions = {
+      center: initialCenter,
+      zoom: 12,
+      zoomControl: true,
+      zoomControlOptions: {
+        style: naver.maps.ZoomControlStyle.SMALL,
+        position: naver.maps.Position.TOP_RIGHT,
+      },
+    };
 
-      mapRef.current = new naver.maps.Map('map', mapOptions);
-    }
-
-    const map = mapRef.current;
+    const map = new naver.maps.Map('map', mapOptions);
     if (!map) return;
 
     const initialMapBounds = getBounds(map);
