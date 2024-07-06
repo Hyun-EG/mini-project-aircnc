@@ -32,7 +32,7 @@ const Spinner = styled.div`
 
 function MainPage() {
   const [listings, setListings] = useState<RoomResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true); // 초기에는 true로 설정
   const [locationError, setLocationError] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const location = useGeolocation();
@@ -53,7 +53,7 @@ function MainPage() {
         setFetchError('숙소 정보를 불러오는 데 실패했습니다.');
         console.error('Error fetching listings:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); // API 요청이 완료되면 loading 상태를 false로 변경
       }
     };
 
@@ -62,10 +62,11 @@ function MainPage() {
       setLocationError(null);
     } else if (location.error) {
       setLocationError(location.error.message);
-      setLoading(false);
+      setLoading(false); // 위치 정보를 가져오지 못할 경우도 loading 상태를 false로 변경
     }
   }, [location]);
 
+  // 위치 정보를 확인하는 중일 때는 스피너를 표시
   if (loading) {
     return (
       <SpinnerContainer>
@@ -74,10 +75,14 @@ function MainPage() {
     );
   }
 
+  // 위치 정보가 확인되었을 때는 리스트를 렌더링
   return (
     <div>
       {locationError && (
         <div>
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
           <p>
             현재 위치를 검색할 수 없습니다. 브라우저의 위치 권한을 허용해주세요.
           </p>

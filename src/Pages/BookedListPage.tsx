@@ -1,5 +1,8 @@
-// 로그인이 되었을 때만 표시되도록 처리
-import { styled } from 'styled-components';
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Reservation } from '../assets/interfaces.ts';
+import { getPayments } from '../api/request.ts';
+import formatNumber from '../util/formatNumber.ts';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -108,7 +111,68 @@ const ReserContentPrice = styled.div`
   align-items: center;
 `;
 
-export default function BookedListPage() {
+interface ReservationRowProps {
+  reservation: Reservation;
+}
+
+function ReservationRow(props: ReservationRowProps) {
+  const { reservation } = props;
+  const formatDate = (date: Date) => {
+    const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
+    return formattedDate;
+  };
+
+  return (
+    <ReserCotentContainer>
+      <ReserContentRoom>{reservation.room.name}</ReserContentRoom>
+      <ReserContentDate>
+        {formatDate(new Date(reservation.checkInDate))} -{' '}
+        {formatDate(new Date(reservation.checkOutDate))}
+      </ReserContentDate>
+      <ReserContentGuest>{reservation.room.max_capacity}</ReserContentGuest>
+      <ReserContentPrice>
+        {formatNumber(reservation.room.price)}
+      </ReserContentPrice>
+    </ReserCotentContainer>
+  );
+}
+
+function BookedListPage() {
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const payments = await getPayments();
+
+        const reservationsData = payments.map((payment: any) => ({
+          room: payment.room_response,
+          checkInDate: payment.check_in,
+          checkOutDate: payment.check_out,
+        }));
+        setReservations(reservationsData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+  if (!reservations.length) {
+    return (
+      <div>
+        <BookedListContainer>
+          <BookedListBody>
+            <BookedListTitle>예약 목록</BookedListTitle>
+          </BookedListBody>
+          <SeparationLine />
+          <p>예약된 내역이 없습니다.</p>
+        </BookedListContainer>
+      </div>
+    );
+  }
+
   return (
     <div>
       <BookedListContainer>
@@ -122,13 +186,19 @@ export default function BookedListPage() {
           <ReserTitleGuest>인원</ReserTitleGuest>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
-        <ReserCotentContainer>
-          <ReserContentRoom>qef</ReserContentRoom>
-          <ReserContentDate>qefqe</ReserContentDate>
-          <ReserContentGuest>qefqe</ReserContentGuest>
-          <ReserContentPrice>45145415</ReserContentPrice>
-        </ReserCotentContainer>
+        {reservations.map((reservation) => (
+          <ReservationRow
+            key={
+              reservation.room.room_id.toString() +
+              reservation.checkInDate.toString().replace(/-/g, '') +
+              reservation.checkOutDate.toString().replace(/-/g, '')
+            }
+            reservation={reservation}
+          />
+        ))}
       </BookedListContainer>
     </div>
   );
 }
+
+export default BookedListPage;

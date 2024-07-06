@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { RoomResponse } from '../assets/interfaces.ts';
+import { getWishes } from '../api/request.ts';
 
 const WishListContainer = styled.div`
   width: 100%;
@@ -69,20 +70,18 @@ function WishListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedWishList = JSON.parse(
-      localStorage.getItem('wishlists') || '[]',
-    );
+    const fetchWishList = async () => {
+      try {
+        const response = await getWishes();
+        setWishList(response);
+      } catch (error) {
+        console.error('Failed to fetch wishlist:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const formattedWishList: RoomResponse[] = storedWishList.map(
-      (item: { roomID: number; userID: string; image_url: string }) => ({
-        room_id: item.roomID,
-        user_id: item.userID,
-        image_url: item.image_url,
-      }),
-    );
-
-    setWishList(formattedWishList);
-    setLoading(false);
+    fetchWishList();
   }, []);
 
   // eslint-disable-next-line camelcase

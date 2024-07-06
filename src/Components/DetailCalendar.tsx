@@ -39,9 +39,7 @@ const CustomCalendar = styled(CalendarComponent)`
 
 export default function DetailCalendar() {
   const dispatch = useDispatch();
-  const selectedRoom = useSelector(
-    (state: RootState) => state.rooms.selectedRoom,
-  );
+  const selectedRoom = useSelector((state: RootState) => state.rooms.room);
   const checkInDate = useSelector(
     (state: RootState) => state.search.checkInDate,
   );

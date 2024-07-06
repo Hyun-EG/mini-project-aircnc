@@ -32,13 +32,13 @@ function EmailForm() {
   const onSubmit: SubmitHandler<EmailFormFields> = async (data) => {
     try {
       const response = await validateEmail(data.email);
+      dispatch(setEmail(data.email));
 
       if (response.result.result_code === 200) {
         dispatch(setModalStatus('signup'));
         return;
       }
 
-      dispatch(setEmail(data.email));
       dispatch(setModalStatus('login'));
     } catch (error) {
       console.error(error);

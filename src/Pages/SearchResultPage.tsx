@@ -60,7 +60,11 @@ function SearchResultPage() {
         // http://52.79.187.32:8080/
         url = `https://www.entj.site/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
       } else {
+<<<<<<< HEAD
         url = `https://www.entj.site/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+=======
+        url = `https://www.entj.site/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+>>>>>>> dev
       }
 
       if (cursorId) {
