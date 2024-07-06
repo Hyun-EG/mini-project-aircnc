@@ -38,6 +38,7 @@ function SearchResultPage() {
     cursorId,
   } = useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomResponse[]>([]);
+  const [stopFetching, setStopFetching] = useState<boolean>(false);
   const loader = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
 
@@ -54,6 +55,9 @@ function SearchResultPage() {
 
   const fetchMoreListings = useCallback(async () => {
     try {
+      if (stopFetching) {
+        return;
+      }
       let url;
       if (mode === 'city') {
         // http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/
@@ -81,7 +85,7 @@ function SearchResultPage() {
 
       const data = await response.json();
       const roomData = data.body.room_response_list;
-
+      setStopFetching(data.body.last);
       setListings((prevListings) => [...prevListings, ...roomData]);
 
       dispatch(setCursorId(roomData[roomData.length - 1].room_id));
@@ -146,9 +150,8 @@ function SearchResultPage() {
 
         const data = await response.json();
         const roomData = data.body.room_response_list;
-
+        setStopFetching(data.body.last);
         setListings(roomData);
-
         if (roomData.length > 0) {
           dispatch(setCursorId(roomData[roomData.length - 1].room_id));
         }
