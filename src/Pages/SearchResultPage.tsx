@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store.ts';
+import { setCursorId } from '../redux/slices/searchSlice.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
@@ -27,11 +28,18 @@ const MapMargin = styled.div`
 `;
 
 function SearchResultPage() {
-  const { location, checkInDate, checkOutDate, guestCount, mode, coordinates } =
-    useSelector((state: RootState) => state.search);
+  const {
+    location,
+    checkInDate,
+    checkOutDate,
+    guestCount,
+    mode,
+    coordinates,
+    cursorId,
+  } = useSelector((state: RootState) => state.search);
   const [listings, setListings] = useState<RoomResponse[]>([]);
   const loader = useRef<HTMLDivElement | null>(null);
-  const cursorId = useRef<number | null>(null);
+  const dispatch = useDispatch();
 
   const formatDate = (isoDate: string | null) => {
     if (isoDate === null) {
@@ -50,13 +58,13 @@ function SearchResultPage() {
       if (mode === 'city') {
         // http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/
         // http://52.79.187.32:8080/
-        url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
+        url = `https://www.entj.site/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
       } else {
-        url = `http://52.79.187.32:8080/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+        url = `https://www.entj.site/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
       }
 
-      if (cursorId.current) {
-        url += `&cursor_id=${cursorId.current}`;
+      if (cursorId) {
+        url += `&cursor_id=${cursorId}`;
       }
 
       console.log(url);
@@ -76,13 +84,20 @@ function SearchResultPage() {
 
       setListings((prevListings) => [...prevListings, ...roomData]);
 
-      if (roomData.length > 0) {
-        cursorId.current = roomData[roomData.length - 1].room_id;
-      }
+      dispatch(setCursorId(roomData[roomData.length - 1].room_id));
     } catch (error) {
       console.error('Error fetching listings:', error);
     }
-  }, [checkInDate, checkOutDate, guestCount, location, mode, coordinates]);
+  }, [
+    checkInDate,
+    checkOutDate,
+    guestCount,
+    location,
+    mode,
+    coordinates,
+    cursorId,
+    dispatch,
+  ]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -109,19 +124,15 @@ function SearchResultPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setListings([]);
       try {
         let url;
         if (mode === 'city') {
-          url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
+          url = `https://www.entj.site/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
         } else {
-          url = `http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+          url = `https://www.entj.site/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
         }
 
-        if (cursorId.current) {
-          url += `&cursor_id=${cursorId.current}`;
-        }
-
-        console.log(url);
         const response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -139,7 +150,7 @@ function SearchResultPage() {
         setListings(roomData);
 
         if (roomData.length > 0) {
-          cursorId.current = roomData[roomData.length - 1].room_id + 1;
+          dispatch(setCursorId(roomData[roomData.length - 1].room_id));
         }
       } catch (error) {
         console.error('Error fetching listings:', error);
@@ -147,7 +158,15 @@ function SearchResultPage() {
     };
 
     fetchData();
-  }, [checkInDate, checkOutDate, guestCount, location, mode, coordinates]);
+  }, [
+    checkInDate,
+    checkOutDate,
+    guestCount,
+    location,
+    mode,
+    coordinates,
+    dispatch,
+  ]);
 
   return (
     <SearchPageContainer>

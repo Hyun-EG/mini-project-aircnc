@@ -1,16 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RoomResponse } from '../../assets/interfaces.ts';
 import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
 import { RootState } from '../../redux/store.ts';
-
-// declare global {
-//   interface Window {
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     naver: typeof naver;
-//   }
-// }
 
 const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -33,9 +26,22 @@ interface MapProps {
 function Map({ width, height, listings }: MapProps) {
   const mapRef = useRef<naver.maps.Map | null>(null);
   const markersRef = useRef<naver.maps.Marker[]>([]);
-  const [isAdded, setIsAdded] = useState(false);
   const dispatch = useDispatch();
-  const { mode, coordinates } = useSelector((state: RootState) => state.search);
+  const { mode } = useSelector((state: RootState) => state.search);
+
+  const getBounds = useCallback((map: naver.maps.Map) => {
+    const bounds = map.getBounds() as naver.maps.LatLngBounds;
+    const ne = bounds.getNE();
+    const sw = bounds.getSW();
+
+    return {
+      top: ne.lat(),
+      bottom: sw.lat(),
+      right: ne.lng(),
+      left: sw.lng(),
+    };
+  }, []);
+
   useEffect(() => {
     if (listings.length === 0) return;
 
@@ -63,7 +69,12 @@ function Map({ width, height, listings }: MapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    const bounds = new naver.maps.LatLngBounds();
+    const initialMapBounds = getBounds(map);
+
+    const bounds = new naver.maps.LatLngBounds(
+      new naver.maps.LatLng(initialMapBounds.bottom, initialMapBounds.left),
+      new naver.maps.LatLng(initialMapBounds.top, initialMapBounds.right),
+    );
 
     let openInfoWindow: naver.maps.InfoWindow | undefined;
 
@@ -142,30 +153,23 @@ function Map({ width, height, listings }: MapProps) {
     });
 
     if (mode === 'city') {
+      console.log(mode);
+      console.log(bounds);
       map.fitBounds(bounds);
     }
 
-    const getBounds = (bounds: naver.maps.LatLngBounds) => {
-      const ne = bounds.getNE();
-      const sw = bounds.getSW();
+    naver.maps.Event.addListener(map, 'idle', () => {
+      const coordinate = getBounds(map);
 
-      const coordinate = {
-        top: ne.lat(),
-        bottom: sw.lat(),
-        right: ne.lng(),
-        left: sw.lat(),
-      };
       dispatch(setCoordinates(coordinate));
       dispatch(setMode('map'));
-    };
-
-    naver.maps.Event.addListener(map, 'idle', () => {
-      const currentBounds = map.getBounds() as naver.maps.LatLngBounds;
-      getBounds(currentBounds);
     });
 
     return () => {
       naver.maps.Event.clearInstanceListeners(map);
+      markersRef.current.forEach((marker) => {
+        naver.maps.Event.clearInstanceListeners(marker);
+      });
     };
   }, [listings]);
 

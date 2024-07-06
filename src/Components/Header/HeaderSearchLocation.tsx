@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Button from '../Button.tsx';
-import { CITY_NAME } from '../../schema/roomSchema.ts';
+import { CITY_NAME, City } from '../../schema/roomSchema.ts';
 
 const SearchLocationLayout = styled.menu`
   position: absolute;
@@ -21,7 +21,7 @@ const SearchLocationLayout = styled.menu`
 `;
 
 interface SearchLocationProps {
-  onClick: (location: string) => void;
+  onClick: (location: City) => void;
 }
 
 function HeaderSearchLocation({ onClick }: SearchLocationProps) {

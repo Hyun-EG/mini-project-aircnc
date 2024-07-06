@@ -50,7 +50,7 @@ export interface CalendarProps extends Toggleable {
 
 export interface Reservation {
   room: RoomResponse;
-  userID: string;
+  price: number;
   checkInDate: Date;
   checkOutDate: Date;
 }
@@ -58,4 +58,5 @@ export interface Reservation {
 export interface Wishlist {
   roomID: number;
   userID: string;
+  image_url: string;
 }

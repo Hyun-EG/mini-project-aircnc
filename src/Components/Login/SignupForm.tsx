@@ -43,6 +43,7 @@ function SignupForm() {
 
   const onSubmit: SubmitHandler<SignupFormFields> = async (data) => {
     try {
+      console.log('SignUpForm email: ', email);
       const { confirmPassword: _, ...userWithoutEmail } = data;
       const response = await signUp({ ...userWithoutEmail, email });
 
