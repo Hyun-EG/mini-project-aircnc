@@ -39,17 +39,12 @@ const CustomCalendar = styled(CalendarComponent)`
 
 export default function DetailCalendar() {
   const dispatch = useDispatch();
-  const selectedRoom = useSelector((state: RootState) => state.rooms.room);
   const checkInDate = useSelector(
     (state: RootState) => state.search.checkInDate,
   );
   const checkOutDate = useSelector(
     (state: RootState) => state.search.checkOutDate,
   );
-
-  if (!selectedRoom) {
-    return <h1>Loading...</h1>;
-  }
 
   const handleDateChange = (date: Date) => {
     const dateString = date.toISOString();

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store.ts';
+import { RoomResponse } from '../assets/interfaces.ts';
 
 const CardContainer = styled.div`
   width: 60%;
@@ -45,24 +46,21 @@ const Info = styled.p`
   color: #333;
 `;
 
-function DetailCard() {
-  const selectedRoom = useSelector((state: RootState) => state.rooms.room);
-  if (!selectedRoom) {
-    return <h1>Loading</h1>;
-  }
-  // image_url이 카멜케이스가 아니라고 난리네,,ㅠㅠ 백엔드 보이..
+function DetailCard({
+  name: roomName,
+  image_url: imageURL,
+  description,
+  address,
+}: Pick<RoomResponse, 'name' | 'image_url' | 'description' | 'address'>) {
   return (
     <CardContainer>
       <ImageContainer>
-        <Image
-          src={selectedRoom.image_url || `/defaultImage.jpg`}
-          alt={selectedRoom.name}
-        />
+        <Image src={imageURL || `/defaultImage.jpg`} alt={roomName} />
       </ImageContainer>
       <TextContainer>
-        <RoomTitle>{selectedRoom.name}</RoomTitle>
-        <Info>{selectedRoom.description}</Info>
-        <Address>{selectedRoom.address}</Address>
+        <RoomTitle>{roomName}</RoomTitle>
+        <Info>{description}</Info>
+        <Address>{address}</Address>
       </TextContainer>
     </CardContainer>
   );
