@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { RoomResponse } from '../assets/interfaces.ts';
-import { fetchRoomDetails } from '../redux/slices/roomDetailSlice.ts';
 import formatNumber from '../util/formatNumber.ts';
-import { AppDispatch } from '../redux/store'; // Redux store의 타입을 가져옵니다.
 
 const CardContainer = styled.div`
   width: 100%;
@@ -65,26 +62,19 @@ type CardProps = RoomResponse & {
 };
 
 function Card(props: CardProps) {
-  const { room_id, image_url: imageUrl, name, city, price, order } = props;
+  const {
+    room_id: roomId,
+    image_url: imageUrl,
+    name,
+    city,
+    price,
+    order,
+  } = props;
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>(); // useDispatch에 AppDispatch 타입을 추가합니다.
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 
   const handleClick = async () => {
-    try {
-      console.log(room_id);
-      const resultAction = await dispatch(fetchRoomDetails(room_id));
-      if (fetchRoomDetails.fulfilled.match(resultAction)) {
-        navigate(`/detail/${room_id}`);
-      } else if (fetchRoomDetails.rejected.match(resultAction)) {
-        console.error(
-          'Fetch failed:',
-          resultAction.payload || resultAction.error.message,
-        );
-      }
-    } catch (error) {
-      console.error('Error fetching room details:', error);
-    }
+    navigate(`/detail/${roomId}`);
   };
 
   const handleMouseEnter = () => {

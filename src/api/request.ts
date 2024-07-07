@@ -177,13 +177,13 @@ export interface PaymentRequest {
 }
 
 export interface PaymentParams {
-  roomId: number;
+  room_id: number;
   payment: PaymentRequest;
 }
 
 export const postPayment = async (params: PaymentParams) =>
   await request<PaymentResponse>({
-    url: `/payments/rooms/${params.roomId}`,
+    url: `/payments/rooms/${params.room_id}`,
     method: 'POST',
     data: params.payment,
   });

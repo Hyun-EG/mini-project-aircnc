@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Reservation } from '../assets/interfaces.ts';
-import { getPayments } from '../api/request.ts';
 import formatNumber from '../util/formatNumber.ts';
+import { usePayments } from '../hooks/payment.tsx';
+import { PaymentResponse } from '../api/request.ts';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -55,15 +54,6 @@ const ReserTitleDate = styled.div`
   align-items: center;
 `;
 
-const ReserTitleGuest = styled.div`
-  width: 20%;
-  height: 4vh;
-  border-right: 1px solid lightgrey;
-  margin-right: 1vh;
-  display: flex;
-  align-items: center;
-`;
-
 const ReserTitlePrice = styled.div`
   width: 20%;
   height: 4vh;
@@ -96,14 +86,6 @@ const ReserContentDate = styled.div`
   align-items: center;
 `;
 
-const ReserContentGuest = styled.div`
-  width: 20%;
-  height: 4vh;
-  margin-right: 1vh;
-  display: flex;
-  align-items: center;
-`;
-
 const ReserContentPrice = styled.div`
   width: 20%;
   height: 4vh;
@@ -112,11 +94,10 @@ const ReserContentPrice = styled.div`
 `;
 
 interface ReservationRowProps {
-  reservation: Reservation;
+  reservation: PaymentResponse;
 }
 
-function ReservationRow(props: ReservationRowProps) {
-  const { reservation } = props;
+function ReservationRow({ reservation }: ReservationRowProps) {
   const formatDate = (date: Date) => {
     const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
     return formattedDate;
@@ -124,42 +105,28 @@ function ReservationRow(props: ReservationRowProps) {
 
   return (
     <ReserCotentContainer>
-      <ReserContentRoom>{reservation.room.name}</ReserContentRoom>
+      <ReserContentRoom>{reservation.room_response.name}</ReserContentRoom>
       <ReserContentDate>
-        {formatDate(new Date(reservation.checkInDate))} -{' '}
-        {formatDate(new Date(reservation.checkOutDate))}
+        {formatDate(new Date(reservation.check_in))} -{' '}
+        {formatDate(new Date(reservation.check_out))}
       </ReserContentDate>
-      <ReserContentGuest>{reservation.room.max_capacity}</ReserContentGuest>
-      <ReserContentPrice>
-        {formatNumber(reservation.room.price)}
-      </ReserContentPrice>
+      <ReserContentPrice>{formatNumber(reservation.price)}</ReserContentPrice>
     </ReserCotentContainer>
   );
 }
 
 function BookedListPage() {
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const { data: reservations, isLoading, isError } = usePayments();
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const payments = await getPayments();
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
-        const reservationsData = payments.map((payment: any) => ({
-          room: payment.room_response,
-          checkInDate: payment.check_in,
-          checkOutDate: payment.check_out,
-        }));
-        setReservations(reservationsData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  if (isError) {
+    return <h1>Error!</h1>;
+  }
 
-    fetchReservations();
-  }, []);
-
-  if (!reservations.length) {
+  if (!reservations || !reservations.length) {
     return (
       <div>
         <BookedListContainer>
@@ -183,15 +150,14 @@ function BookedListPage() {
         <ReserTitleContainer>
           <ReserTitleRoom>방 이름</ReserTitleRoom>
           <ReserTitleDate>날짜</ReserTitleDate>
-          <ReserTitleGuest>인원</ReserTitleGuest>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
         {reservations.map((reservation) => (
           <ReservationRow
             key={
-              reservation.room.room_id.toString() +
-              reservation.checkInDate.toString().replace(/-/g, '') +
-              reservation.checkOutDate.toString().replace(/-/g, '')
+              reservation.room_response.room_id.toString() +
+              reservation.check_in.toString().replace(/-/g, '') +
+              reservation.check_out.toString().replace(/-/g, '')
             }
             reservation={reservation}
           />

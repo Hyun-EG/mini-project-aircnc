@@ -5,7 +5,8 @@ import Button from './Button.tsx';
 // import addWishlist from '../util/addWishUtils.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
-import { postWish, postPayment } from '../api/request.ts';
+import { postWish } from '../api/request.ts';
+import { usePay } from '../hooks/payment.tsx';
 
 const FooterContainer = styled.footer`
   position: fixed;
@@ -41,6 +42,8 @@ function DetailFooter({
   checkInDate,
   checkOutDate,
 }: DetailFooterProps) {
+  const { mutateAsync: pay } = usePay();
+
   if (!room) {
     return <h1>Loading</h1>;
   }
@@ -62,13 +65,16 @@ function DetailFooter({
         !Number.isNaN(parsedCheckInDate.getTime()) &&
         !Number.isNaN(parsedCheckOutDate.getTime())
       ) {
-        const paymentData = {
+        const payment = {
           price: totalPrice,
           capacity: room.max_capacity,
           check_in: checkInDate,
           check_out: checkOutDate,
         };
-        await postPayment(room.room_id, paymentData);
+        await pay({
+          room_id: room.room_id,
+          payment,
+        });
       } else {
         alert('유효한 날짜를 입력해 주세요!');
       }
