@@ -394,7 +394,7 @@ export default function HeaderSearch({
         </Button>
         {openSelect === 'guest' && (
           <Guest
-            counts={{ total: guestCount }}
+            counts={{ total: searchState.guestCount }}
             onChange={(delta) => {
               const newGuestCount = searchState.guestCount + delta;
               if (newGuestCount < 1) {
