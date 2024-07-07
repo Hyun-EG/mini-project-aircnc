@@ -169,19 +169,23 @@ export const getPayments = async () =>
     method: 'GET',
   });
 
-export const postPayment = async (
-  roomId: number,
-  payment: {
-    price: number;
-    capacity: number;
-    check_in: string;
-    check_out: string;
-  },
-) =>
+export interface PaymentRequest {
+  price: number;
+  capacity: number;
+  check_in: string;
+  check_out: string;
+}
+
+export interface PaymentParams {
+  roomId: number;
+  payment: PaymentRequest;
+}
+
+export const postPayment = async (params: PaymentParams) =>
   await request<PaymentResponse>({
-    url: `/payments/rooms/${roomId}`,
+    url: `/payments/rooms/${params.roomId}`,
     method: 'POST',
-    data: payment,
+    data: params.payment,
   });
 
 export interface WishResponse {
