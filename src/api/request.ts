@@ -86,16 +86,16 @@ export interface RoomResponseData {
   reserved_date: DateType[];
 }
 
-export const getRoom = async (roomId: Pick<RoomResponse, 'room_id'>) =>
+export const getRoom = async (roomId: RoomResponse['room_id']) =>
   await request<RoomResponseData>({
     url: `/rooms/${roomId}`,
     method: 'GET',
   });
 
-export interface RandomRoomRequestParam {
+export interface RandomRoomRequestParam extends Record<string, number> {
   map_x: number;
   map_y: number;
-  raidus: number;
+  radius: number;
 }
 
 export interface RandomRoomResponseData {
@@ -104,9 +104,10 @@ export interface RandomRoomResponseData {
 
 export const getRandomRooms = async (params: RandomRoomRequestParam) =>
   await request<RandomRoomResponseData>({
-    url: '/rooms/randoms',
+    url: `/rooms/randoms?${Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&')}`,
     method: 'GET',
-    data: params,
   });
 
 export interface RoomSearchCity extends Record<string, unknown> {
@@ -196,15 +197,15 @@ export const getWishes = async () =>
     method: 'GET',
   });
 
-export const postWish = async (roomId: Pick<RoomResponse, 'room_id'>) =>
+export const postWish = async (roomId: RoomResponse['room_id']) =>
   await request({
     url: `/wishes/rooms/${roomId}`,
     method: 'POST',
   });
 
 export const deleteWish = async (
-  wishId: Pick<WishResponse, 'id'>,
-  roomId: Pick<RoomResponse, 'room_id'>,
+  wishId: WishResponse['id'],
+  roomId: RoomResponse['room_id'],
 ) =>
   await request({
     url: `/wishes/${wishId}/rooms/${roomId}`,
