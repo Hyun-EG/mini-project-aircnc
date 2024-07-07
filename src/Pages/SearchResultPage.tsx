@@ -6,6 +6,7 @@ import { setCursorId } from '../redux/slices/searchSlice.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map from '../Components/Map/Map.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
+import { useRoomSearch } from '../hooks/room.tsx';
 
 const SearchPageContainer = styled.div`
   display: flex;
@@ -41,10 +42,11 @@ function SearchResultPage() {
   const [stopFetching, setStopFetching] = useState<boolean>(false);
   const loader = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
+  const { mutateAsync: roomSearch, isPending, isError } = useRoomSearch();
 
   const formatDate = (isoDate: string | null) => {
     if (isoDate === null) {
-      return;
+      return '';
     }
     const date = new Date(isoDate);
     const year = date.getFullYear();
@@ -58,34 +60,25 @@ function SearchResultPage() {
       if (stopFetching) {
         return;
       }
-      let url;
-      if (mode === 'city') {
-        // http://ec2-52-79-187-32.ap-northeast-2.compute.amazonaws.com/
-        // http://52.79.187.32:8080/
-        url = `https://www.entj.site/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
-      } else {
-        url = `https://www.entj.site/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+
+      if (!checkInDate || !checkOutDate || !location || !cursorId) {
+        return;
       }
 
-      if (cursorId) {
-        url += `&cursor_id=${cursorId}`;
-      }
-
-      console.log(url);
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await roomSearch({
+        mode,
+        queries: {
+          capacity: guestCount,
+          check_in: formatDate(checkInDate),
+          check_out: formatDate(checkOutDate),
+          city: location,
+          cursor_id: cursorId,
+          ...coordinates,
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch room data');
-      }
-
-      const data = await response.json();
-      const roomData = data.body.room_response_list;
-      setStopFetching(data.body.last);
+      const roomData = response.body.room_response_list;
+      setStopFetching(response.body.last);
       setListings((prevListings) => [...prevListings, ...roomData]);
 
       dispatch(setCursorId(roomData[roomData.length - 1].room_id));
@@ -130,27 +123,24 @@ function SearchResultPage() {
     const fetchData = async () => {
       setListings([]);
       try {
-        let url;
-        if (mode === 'city') {
-          url = `https://www.entj.site/api/rooms/city?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&city=${location}`;
-        } else {
-          url = `https://www.entj.site/api/rooms/map?capacity=${guestCount}&check_in=${formatDate(checkInDate)}&check_out=${formatDate(checkOutDate)}&top=${coordinates.top}&bottom=${coordinates.bottom}&right=${coordinates.right}&left=${coordinates.left}`;
+        if (!checkInDate || !checkOutDate || !location) {
+          return;
         }
 
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await roomSearch({
+          mode,
+          queries: {
+            capacity: guestCount,
+            check_in: formatDate(checkInDate),
+            check_out: formatDate(checkOutDate),
+            city: location,
+            cursor_id: null,
+            ...coordinates,
           },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch room data');
-        }
-
-        const data = await response.json();
-        const roomData = data.body.room_response_list;
-        setStopFetching(data.body.last);
+        const roomData = response.body.room_response_list;
+        setStopFetching(response.body.last);
         setListings(roomData);
         if (roomData.length > 0) {
           dispatch(setCursorId(roomData[roomData.length - 1].room_id));
@@ -170,6 +160,14 @@ function SearchResultPage() {
     coordinates,
     dispatch,
   ]);
+
+  if (isPending) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return <h1>Error!</h1>;
+  }
 
   return (
     <SearchPageContainer>

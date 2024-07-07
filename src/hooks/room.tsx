@@ -2,9 +2,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   getRoom,
   getRandomRooms,
-  getRoomSearchCity,
-  getRoomSearchMap,
   RandomRoomRequestParam,
+  getRoomSearch,
 } from '../api/request.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 
@@ -30,18 +29,9 @@ export function useRandomRooms(params: RandomRoomRequestParam) {
   });
 }
 
-export function useRoomSearchCity() {
+export function useRoomSearch() {
   return useMutation({
-    mutationFn: getRoomSearchCity,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-}
-
-export function useRoomSearchMap() {
-  return useMutation({
-    mutationFn: getRoomSearchMap,
+    mutationFn: getRoomSearch,
     onError: (error) => {
       console.error(error);
     },

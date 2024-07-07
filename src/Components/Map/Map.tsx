@@ -24,7 +24,6 @@ interface MapProps {
 }
 
 function Map({ width, height, listings }: MapProps) {
-  const mapRef = useRef<naver.maps.Map | null>(null);
   const markersRef = useRef<naver.maps.Marker[]>([]);
   const dispatch = useDispatch();
   const { mode } = useSelector((state: RootState) => state.search);
@@ -150,7 +149,6 @@ function Map({ width, height, listings }: MapProps) {
 
     if (mode === 'city') {
       console.log(mode);
-      console.log(bounds);
       map.fitBounds(bounds);
     }
 

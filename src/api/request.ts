@@ -6,9 +6,10 @@ import {
   User,
 } from '../schema/userSchema.ts';
 import api from './api.ts';
-import { CITY_NAME } from '../schema/roomSchema.ts';
+import { City } from '../schema/roomSchema.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 
+// string과 호환 문제가 있어서 현재 사용하지 않음
 export type DateType = `${number}-${number}-${number}`;
 
 export type SimpleRoomResponse = Pick<
@@ -83,7 +84,7 @@ export const postFindPassword = async (
 
 export interface RoomResponseData {
   room_response: RoomResponse;
-  reserved_date: DateType[];
+  reserved_date: string[];
 }
 
 export const getRoom = async (roomId: RoomResponse['room_id']) =>
@@ -110,21 +111,21 @@ export const getRandomRooms = async (params: RandomRoomRequestParam) =>
     method: 'GET',
   });
 
-export interface RoomSearchCity extends Record<string, unknown> {
+export interface RoomSearchQueries extends Record<string, unknown> {
   capacity: number;
-  check_in: DateType;
-  check_out: DateType;
-  city: (typeof CITY_NAME)[number];
-  cursor_id?: number;
+  check_in: string;
+  check_out: string;
+  city?: City;
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+  cursor_id?: number | null;
 }
 
-export interface RoomSearchMap extends Record<string, unknown> {
-  capacity: number;
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-  cursor_id?: number;
+export interface RoomSearchParams {
+  mode: 'city' | 'map';
+  queries: RoomSearchQueries;
 }
 
 export interface RoomSearchResponseData {
@@ -132,20 +133,21 @@ export interface RoomSearchResponseData {
   last: boolean;
 }
 
-export const getRoomSearchCity = async (params: RoomSearchCity) =>
+export const getRoomSearch = async (params: RoomSearchParams) =>
   await request<RoomSearchResponseData>({
-    url: `/rooms/city${Object.keys(params).length ? '?' : ''}${Object.keys(
-      params,
-    )
-      .map((key) => `${key}=${params[key]}`)
-      .join('&')}`,
-    method: 'GET',
-  });
-
-export const getRoomSearchMap = async (params: RoomSearchMap) =>
-  await request<RoomSearchResponseData>({
-    url: `/rooms/map${Object.keys(params)
-      .map((key) => `${key}=${params[key]}`)
+    url: `/rooms/${params.mode}?${Object.keys(params.queries)
+      .filter(
+        (key) =>
+          (params.mode === 'city'
+            ? !(
+                key === 'top' ||
+                key === 'bottom' ||
+                key === 'left' ||
+                key === 'right'
+              )
+            : !(key === 'city')) && params.queries[key],
+      )
+      .map((key) => `${key}=${params.queries[key]}`)
       .join('&')}`,
     method: 'GET',
   });
@@ -153,8 +155,8 @@ export const getRoomSearchMap = async (params: RoomSearchMap) =>
 export interface PaymentResponse {
   room_response: SimpleRoomResponse;
   price: number;
-  check_in: DateType;
-  check_out: DateType;
+  check_in: string;
+  check_out: string;
 }
 
 export interface PaymentsResponseData {

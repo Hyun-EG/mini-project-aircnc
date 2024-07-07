@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 
 const CardContainer = styled.div`
