@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import styled, { keyframes } from 'styled-components';
 import CardGrid from '../Components/CardGrid.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
-import { getRandomRooms } from '../api/request.ts';
+import { useRandomRooms } from '../hooks/room.tsx';
 
 const SpinnerContainer = styled.div`
   display: flex;
@@ -31,43 +31,32 @@ const Spinner = styled.div`
 `;
 
 function MainPage() {
-  const [listings, setListings] = useState<RoomResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // 초기에는 true로 설정
-  const [locationError, setLocationError] = useState<string | null>(null);
-  const [fetchError, setFetchError] = useState<string | null>(null);
   const location = useGeolocation();
 
-  useEffect(() => {
-    const fetchCloseLists = async (map_x: number, map_y: number) => {
-      try {
-        const data = await getRandomRooms(map_x, map_y);
-        const roomData = (data.body as any).room_response_list;
+  const lat = useMemo(() => location.coordinates!.lat, [location.coordinates]);
+  const lng = useMemo(() => location.coordinates!.lng, [location.coordinates]);
 
-        if (roomData.length === 0) {
-          setFetchError('주위에 예약 가능한 숙소가 없습니다.');
-        } else {
-          setListings(roomData);
-          setFetchError(null);
-        }
-      } catch (error) {
-        setFetchError('숙소 정보를 불러오는 데 실패했습니다.');
-        console.error('Error fetching listings:', error);
-      } finally {
-        setLoading(false); // API 요청이 완료되면 loading 상태를 false로 변경
-      }
-    };
+  const { data, isLoading, isError } = useRandomRooms({
+    map_x: lng,
+    map_y: lat,
+    radius: 4.5,
+  });
 
-    if (location.loaded && !location.error) {
-      fetchCloseLists(location.coordinates!.lng, location.coordinates!.lat);
-      setLocationError(null);
-    } else if (location.error) {
-      setLocationError(location.error.message);
-      setLoading(false); // 위치 정보를 가져오지 못할 경우도 loading 상태를 false로 변경
-    }
-  }, [location]);
+  if (!location.loaded) {
+    return (
+      <div>
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+        <p>
+          현재 위치를 검색할 수 없습니다. 브라우저의 위치 권한을 허용해주세요.
+        </p>
+      </div>
+    );
+  }
 
   // 위치 정보를 확인하는 중일 때는 스피너를 표시
-  if (loading) {
+  if (isLoading) {
     return (
       <SpinnerContainer>
         <Spinner />
@@ -75,25 +64,20 @@ function MainPage() {
     );
   }
 
+  if (isError) {
+    return (
+      <div>
+        <p>숙소 정보를 불러오는 데 실패했습니다.</p>
+      </div>
+    );
+  }
+
   // 위치 정보가 확인되었을 때는 리스트를 렌더링
-  return (
+  return data ? (
+    <CardGrid listings={data as RoomResponse[]} />
+  ) : (
     <div>
-      {locationError && (
-        <div>
-          <SpinnerContainer>
-            <Spinner />
-          </SpinnerContainer>
-          <p>
-            현재 위치를 검색할 수 없습니다. 브라우저의 위치 권한을 허용해주세요.
-          </p>
-        </div>
-      )}
-      {fetchError && (
-        <div>
-          <p>{fetchError}</p>
-        </div>
-      )}
-      <CardGrid listings={listings} />
+      <p>주위에 예약 가능한 숙소가 없습니다.</p>
     </div>
   );
 }
