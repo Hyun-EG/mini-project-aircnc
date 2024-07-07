@@ -209,11 +209,13 @@ export const postWish = async (roomId: RoomResponse['room_id']) =>
     method: 'POST',
   });
 
-export const deleteWish = async (
-  wishId: WishResponse['id'],
-  roomId: RoomResponse['room_id'],
-) =>
+export interface DeleteWishRequestParams {
+  wishId: WishResponse['id'];
+  roomId: RoomResponse['room_id'];
+}
+
+export const deleteWish = async (params: DeleteWishRequestParams) =>
   await request({
-    url: `/wishes/${wishId}/rooms/${roomId}`,
+    url: `/wishes/${params.wishId}/rooms/${params.roomId}`,
     method: 'DELETE',
   });
