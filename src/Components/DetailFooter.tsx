@@ -5,8 +5,8 @@ import Button from './Button.tsx';
 // import addWishlist from '../util/addWishUtils.ts';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
-import { postWish } from '../api/request.ts';
 import { usePay } from '../hooks/payment.tsx';
+import { useAddWish } from '../hooks/wish.tsx';
 
 const FooterContainer = styled.footer`
   position: fixed;
@@ -43,13 +43,14 @@ function DetailFooter({
   checkOutDate,
 }: DetailFooterProps) {
   const { mutateAsync: pay } = usePay();
+  const { mutateAsync: addWish } = useAddWish();
 
   if (!room) {
     return <h1>Loading</h1>;
   }
 
   const handleLike = async () => {
-    await postWish(room.room_id);
+    await addWish(room.room_id);
   };
 
   const handleReserve = async () => {

@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { RoomResponse } from '../assets/interfaces.ts';
-import { getWishes } from '../api/request.ts';
+import { useWishes } from '../hooks/wish.tsx';
 
 const WishListContainer = styled.div`
   width: 100%;
@@ -65,30 +63,26 @@ const Image = styled.img`
 `;
 
 function WishListPage() {
-  const [wishList, setWishList] = useState<RoomResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data: wishlist, isLoading, isError } = useWishes();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchWishList = async () => {
-      try {
-        const response = await getWishes();
-        setWishList(response);
-      } catch (error) {
-        console.error('Failed to fetch wishlist:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWishList();
-  }, []);
-
-  // eslint-disable-next-line camelcase
-  const handleImageClick = (room_id: number) => {
-    // eslint-disable-next-line camelcase
-    navigate(`/detail/${room_id}`);
+  const handleImageClick = (roomId: number) => {
+    navigate(`/detail/${roomId}`);
   };
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return <h1>Error!</h1>;
+  }
+
+  if (!wishlist || !wishlist.length) {
+    return <h1>위시리스트에 저장된 숙소가 없습니다!</h1>;
+  }
+
+  console.log(wishlist);
 
   return (
     <WishListContainer>
@@ -96,32 +90,26 @@ function WishListPage() {
         <WishListTitle>위시리스트</WishListTitle>
       </WishListBody>
       <SeparationLine />
-      {loading ? (
-        <div>로딩 중...</div>
-      ) : (
-        <GridContainer>
-          {wishList.length > 0 ? (
-            wishList.map((room) => (
-              <CardContainer
-                key={room.room_id}
-                onClick={() => handleImageClick(room.room_id)}
-              >
-                <ImageContainer>
-                  <Image
-                    src={room.image_url || '/defaultImage.jpg'}
-                    alt={`Room ${room.room_id}`}
-                    onError={(e) => {
-                      e.currentTarget.src = '/defaultImage.jpg';
-                    }}
-                  />
-                </ImageContainer>
-              </CardContainer>
-            ))
-          ) : (
-            <div>위시리스트에 추가된 숙소가 없습니다.</div>
-          )}
-        </GridContainer>
-      )}
+      <GridContainer>
+        {wishlist
+          .sort((a, b) => a.id - b.id)
+          .map((wish) => (
+            <CardContainer
+              key={wish.room_response.room_id}
+              onClick={() => handleImageClick(wish.room_response.room_id)}
+            >
+              <ImageContainer>
+                <Image
+                  src={wish.room_response.image_url || '/defaultImage.jpg'}
+                  alt={`Room ${wish.room_response.room_id}`}
+                  onError={(e) => {
+                    e.currentTarget.src = '/defaultImage.jpg';
+                  }}
+                />
+              </ImageContainer>
+            </CardContainer>
+          ))}
+      </GridContainer>
     </WishListContainer>
   );
 }

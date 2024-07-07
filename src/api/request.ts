@@ -190,7 +190,7 @@ export const postPayment = async (params: PaymentParams) =>
 
 export interface WishResponse {
   id: number;
-  room_response: SimpleRoomResponse;
+  room_response: RoomResponse;
 }
 
 export interface WishesReponseData {
