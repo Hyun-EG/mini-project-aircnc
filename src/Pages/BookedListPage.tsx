@@ -139,11 +139,18 @@ function BookedListPage() {
   }, [reservations]);
 
   const handleCancel = (roomId: number) => {
-    setLocalReservations((prevReservations) =>
-      prevReservations.filter(
-        (reservation) => reservation.room_response.room_id !== roomId,
-      ),
-    );
+    if (
+      window.confirm(
+        '취소로 인한 불이익은 책임지지 않습니다. 정말 예약을 취소하시겠습니까?',
+      )
+    ) {
+      setLocalReservations((prevReservations) =>
+        prevReservations.filter(
+          (reservation) => reservation.room_response.room_id !== roomId,
+        ),
+      );
+      alert('예약이 취소되었습니다. 사실 불이익은 없습니다.');
+    }
   };
 
   if (isLoading) {
