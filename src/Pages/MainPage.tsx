@@ -6,6 +6,7 @@ import useGeolocation from '../util/currentLocationUtil.ts';
 import { useRandomRooms } from '../hooks/room.tsx';
 import banner1 from '../assets/images/banner1.jpg';
 import banner2 from '../assets/images/banner2.jpg';
+import tree from '../assets/images/tree.png';
 
 const SpinnerContainer = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const AddContainer = styled.div`
   width: 100%;
   height: 30vh;
   border-radius: 20px;
-  margin-bottom: 2vh;
+  margin: 2vh 0;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -42,9 +43,18 @@ const AddImage = styled.img.attrs<AddImageProps>(({ show }) => ({
   transition: opacity 1s ease-in-out;
 `;
 
+const MainTitleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.5vh;
+  margin-bottom: 3vh;
+  border-bottom: 1px solid #dcdcdc;
+`;
+
 const MainTitle = styled.div`
   height: 7vh;
-  margin-top: 4vh;
+  margin: 4vh 2vh 0 2vh;
   font-size: 4vh;
   font-weight: 500;
   color: #818080;
@@ -191,7 +201,15 @@ function MainPage() {
           />
         ))}
       </AddContainer>
-      <MainTitle>주변 숙소</MainTitle>
+      <MainTitleContainer>
+        <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+        <MainTitle>주변 숙소</MainTitle>
+        <img
+          src={tree}
+          alt="tree"
+          style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
+        />
+      </MainTitleContainer>
       <CardGrid listings={data as RoomResponse[]} />
       <MainFooter>
         <ContentContainer>
