@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -56,13 +56,27 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
   const dispatch = useDispatch<AppDispatch>();
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <MenuContainer onClick={toggleMenu}>
+    <MenuContainer onClick={toggleMenu} ref={menuRef}>
       {windowWidth < 601 ? (
         <Button $size="small" $shape="circle" $color="white" $border>
           <MenuIconLayout>
