@@ -53,7 +53,7 @@ const MainTitle = styled.div`
 
 const MainFooter = styled.div`
   height: 20vh;
-  margin-top: 2vh;
+  margin-top: 5vh;
   border-top: 1px solid #dcdcdc;
   padding: 2vh 5vh;
 `;
