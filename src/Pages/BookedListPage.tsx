@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import formatNumber from '../util/formatNumber.ts';
 import { usePayments } from '../hooks/payment.tsx';
@@ -93,11 +94,20 @@ const ReserContentPrice = styled.div`
   align-items: center;
 `;
 
+const ReserCancelBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: red;
+`;
+
 interface ReservationRowProps {
   reservation: PaymentResponse;
+  onCancel: () => void;
 }
 
-function ReservationRow({ reservation }: ReservationRowProps) {
+function ReservationRow({ reservation, onCancel }: ReservationRowProps) {
   const formatDate = (date: Date) => {
     const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
     return formattedDate;
@@ -111,12 +121,30 @@ function ReservationRow({ reservation }: ReservationRowProps) {
         {formatDate(new Date(reservation.check_out))}
       </ReserContentDate>
       <ReserContentPrice>{formatNumber(reservation.price)}</ReserContentPrice>
+      <ReserCancelBtn onClick={onCancel}>예약취소</ReserCancelBtn>
     </ReserCotentContainer>
   );
 }
 
 function BookedListPage() {
   const { data: reservations, isLoading, isError } = usePayments();
+  const [localReservations, setLocalReservations] = useState<PaymentResponse[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (reservations) {
+      setLocalReservations(reservations);
+    }
+  }, [reservations]);
+
+  const handleCancel = (roomId: number) => {
+    setLocalReservations((prevReservations) =>
+      prevReservations.filter(
+        (reservation) => reservation.room_response.room_id !== roomId,
+      ),
+    );
+  };
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -126,7 +154,7 @@ function BookedListPage() {
     return <h1>Error!</h1>;
   }
 
-  if (!reservations || !reservations.length) {
+  if (!localReservations.length) {
     return (
       <div>
         <BookedListContainer>
@@ -152,7 +180,7 @@ function BookedListPage() {
           <ReserTitleDate>날짜</ReserTitleDate>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
-        {reservations.map((reservation) => (
+        {localReservations.map((reservation) => (
           <ReservationRow
             key={
               reservation.room_response.room_id.toString() +
@@ -160,6 +188,7 @@ function BookedListPage() {
               reservation.check_out.toString().replace(/-/g, '')
             }
             reservation={reservation}
+            onCancel={() => handleCancel(reservation.room_response.room_id)}
           />
         ))}
       </BookedListContainer>
