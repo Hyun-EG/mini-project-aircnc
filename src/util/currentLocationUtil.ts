@@ -42,7 +42,9 @@ const useGeolocation = () => {
         message: 'Geolocation not supported',
       });
     }
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+      enableHighAccuracy: false,
+    });
   }, []);
 
   return location;
