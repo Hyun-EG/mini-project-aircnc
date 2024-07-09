@@ -1,19 +1,19 @@
 import styled from 'styled-components';
 import { RoomResponse } from '../assets/interfaces.ts';
 
-const CardContainer = styled.div`
+export const CardContainer = styled.div`
   width: 60%;
   padding: 10px;
   margin-right: 4vh;
   overflow: hidden;
 `;
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
   width: 100%;
   height: 50vh;
   overflow: hidden;
   position: relative;
 `;
-const Image = styled.img`
+export const Image = styled.img`
   position: absolute;
   top: 0;
   left: 0;
@@ -28,7 +28,7 @@ const RoomTitle = styled.div`
   font-size: 3vh;
 `;
 
-const TextContainer = styled.div`
+export const TextContainer = styled.div`
   margin: 3vh 1vh 1vh 1vh;
 `;
 

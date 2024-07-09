@@ -23,6 +23,8 @@ import {
 } from '../Components/Header/Guest.tsx';
 import Button from '../Components/Button.tsx';
 import { useRoom } from '../hooks/room.tsx';
+import { SkeletonObject } from '../Components/SkeletonGrid.tsx';
+import SkeletonDetailCard from '../Components/SkeletonDetailCard.tsx';
 
 const ContainerHeader = styled.header`
   display: flex;
@@ -120,6 +122,24 @@ const DetailFooterContent = styled.div`
   color: #ababab;
 `;
 
+const SkeletonTitle = styled(SkeletonObject)`
+  width: 25%;
+  height: 2rem;
+  margin: 0 auto;
+  border-radius: 8px;
+`;
+
+const SkeletonDetailsContainer = styled(RoomBookingDetails)`
+  border: none;
+  padding: 0;
+`;
+
+const SkeletonDetails = styled(SkeletonObject)`
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+`;
+
 export default function DetailInfoPage() {
   const { id } = useParams<{ id: string }>();
 
@@ -175,8 +195,19 @@ export default function DetailInfoPage() {
   }, [data, checkInDate, checkOutDate]);
 
   if (isLoading) {
-    console.log('loading');
-    return <h1>loading...</h1>;
+    return (
+      <>
+        <ContainerHeader>
+          <SkeletonTitle />
+        </ContainerHeader>
+        <InfoContainer>
+          <SkeletonDetailCard />
+          <SkeletonDetailsContainer>
+            <SkeletonDetails />
+          </SkeletonDetailsContainer>
+        </InfoContainer>
+      </>
+    );
   }
 
   if (isError) {

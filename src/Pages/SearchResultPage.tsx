@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store.ts';
 import { setCursorId } from '../redux/slices/searchSlice.ts';
 import CardGrid from '../Components/CardGrid.tsx';
-import Map from '../Components/Map/Map.tsx';
+import Map, { MapInstance } from '../Components/Map/Map.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 import { useRoomSearch } from '../hooks/room.tsx';
+import SkeletonGrid, { SkeletonObject } from '../Components/SkeletonGrid.tsx';
 
 const SearchPageContainer = styled.div`
   display: flex;
@@ -26,6 +27,12 @@ const CardGridWatcher = styled.div`
 
 const MapMargin = styled.div`
   flex-basis: 40%;
+`;
+
+const SkeletonMap = styled(SkeletonObject)`
+  ${MapInstance}
+  width: 39.5%;
+  height: 95vh;
 `;
 
 function SearchResultPage() {
@@ -162,7 +169,15 @@ function SearchResultPage() {
   ]);
 
   if (isPending) {
-    return <h1>Loading...</h1>;
+    return (
+      <SearchPageContainer>
+        <CardGridContainer>
+          <SkeletonGrid />
+        </CardGridContainer>
+        <MapMargin />
+        <SkeletonMap />
+      </SearchPageContainer>
+    );
   }
 
   if (isError) {

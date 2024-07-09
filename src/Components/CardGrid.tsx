@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Card from './Card.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 
-const GridContainer = styled.div`
+export const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
   gap: 25px;

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useWishes } from '../hooks/wish.tsx';
+import { SkeletonObject } from '../Components/SkeletonGrid.tsx';
 
 const WishListContainer = styled.div`
   width: 100%;
@@ -62,6 +63,12 @@ const Image = styled.img`
   border-radius: 10px;
 `;
 
+const SkeletonImage = styled(SkeletonObject)`
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 10px;
+`;
+
 function WishListPage() {
   const { data: wishlist, isLoading, isError } = useWishes();
   const navigate = useNavigate();
@@ -71,7 +78,19 @@ function WishListPage() {
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <WishListContainer>
+        <WishListBody>
+          <WishListTitle>위시리스트</WishListTitle>
+        </WishListBody>
+        <SeparationLine />
+        <GridContainer>
+          {Array.from({ length: 12 }, (_v, i) => i).map((index) => (
+            <SkeletonImage key={index} />
+          ))}
+        </GridContainer>
+      </WishListContainer>
+    );
   }
 
   if (isError) {

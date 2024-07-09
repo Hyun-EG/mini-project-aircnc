@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { RoomResponse } from '../assets/interfaces.ts';
 import formatNumber from '../util/formatNumber.ts';
 
-const CardContainer = styled.div`
+export const CardContainer = styled.div`
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -13,7 +13,7 @@ const CardContainer = styled.div`
   cursor: pointer;
 `;
 
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
   width: 100%;
   height: 0;
   padding-bottom: 100%;
@@ -22,7 +22,7 @@ const ImageContainer = styled.div`
   position: relative;
 `;
 
-const Image = styled.img`
+export const Image = styled.img`
   position: absolute;
   padding: 10px;
   top: 0;

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import formatNumber from '../util/formatNumber.ts';
 import { usePayments } from '../hooks/payment.tsx';
 import { PaymentResponse } from '../api/request.ts';
+import { SkeletonObject } from '../Components/SkeletonGrid.tsx';
 
 const BookedListContainer = styled.div`
   width: 100%;
@@ -93,6 +94,13 @@ const ReserContentPrice = styled.div`
   align-items: center;
 `;
 
+const SkeletonReservation = styled(SkeletonObject)`
+  width: 100%;
+  height: 5vh;
+  margin: 1vh;
+  border-radius: 8px;
+`;
+
 interface ReservationRowProps {
   reservation: PaymentResponse;
 }
@@ -119,29 +127,7 @@ function BookedListPage() {
   const { data: reservations, isLoading, isError } = usePayments();
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (isError) {
-    return <h1>Error!</h1>;
-  }
-
-  if (!reservations || !reservations.length) {
     return (
-      <div>
-        <BookedListContainer>
-          <BookedListBody>
-            <BookedListTitle>예약 목록</BookedListTitle>
-          </BookedListBody>
-          <SeparationLine />
-          <p>예약된 내역이 없습니다.</p>
-        </BookedListContainer>
-      </div>
-    );
-  }
-
-  return (
-    <div>
       <BookedListContainer>
         <BookedListBody>
           <BookedListTitle>예약 목록</BookedListTitle>
@@ -152,18 +138,51 @@ function BookedListPage() {
           <ReserTitleDate>날짜</ReserTitleDate>
           <ReserTitlePrice>가격</ReserTitlePrice>
         </ReserTitleContainer>
-        {reservations.map((reservation) => (
-          <ReservationRow
-            key={
-              reservation.room_response.room_id.toString() +
-              reservation.check_in.toString().replace(/-/g, '') +
-              reservation.check_out.toString().replace(/-/g, '')
-            }
-            reservation={reservation}
-          />
+        {Array.from({ length: 8 }, (_v, i) => i).map((index) => (
+          <SkeletonReservation key={index} />
         ))}
       </BookedListContainer>
-    </div>
+    );
+  }
+
+  if (isError) {
+    return <h1>Error!</h1>;
+  }
+
+  if (!reservations || !reservations.length) {
+    return (
+      <BookedListContainer>
+        <BookedListBody>
+          <BookedListTitle>예약 목록</BookedListTitle>
+        </BookedListBody>
+        <SeparationLine />
+        <p>예약된 내역이 없습니다.</p>
+      </BookedListContainer>
+    );
+  }
+
+  return (
+    <BookedListContainer>
+      <BookedListBody>
+        <BookedListTitle>예약 목록</BookedListTitle>
+      </BookedListBody>
+      <SeparationLine />
+      <ReserTitleContainer>
+        <ReserTitleRoom>방 이름</ReserTitleRoom>
+        <ReserTitleDate>날짜</ReserTitleDate>
+        <ReserTitlePrice>가격</ReserTitlePrice>
+      </ReserTitleContainer>
+      {reservations.map((reservation) => (
+        <ReservationRow
+          key={
+            reservation.room_response.room_id.toString() +
+            reservation.check_in.toString().replace(/-/g, '') +
+            reservation.check_out.toString().replace(/-/g, '')
+          }
+          reservation={reservation}
+        />
+      ))}
+    </BookedListContainer>
   );
 }
 

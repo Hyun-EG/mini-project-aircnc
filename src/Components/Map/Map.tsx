@@ -5,7 +5,7 @@ import { RoomResponse } from '../../assets/interfaces.ts';
 import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
 import { RootState } from '../../redux/store.ts';
 
-const MapInstance = styled.div<{ width: string; height: string }>`
+export const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   display: flex;

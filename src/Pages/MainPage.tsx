@@ -1,34 +1,35 @@
 import { useMemo } from 'react';
-import styled, { keyframes } from 'styled-components';
+// import styled, { keyframes } from 'styled-components';
 import CardGrid from '../Components/CardGrid.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
 import { useRandomRooms } from '../hooks/room.tsx';
+import SkeletonGrid from '../Components/SkeletonGrid.tsx';
 
-const SpinnerContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
+// const SpinnerContainer = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+// `;
 
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
+// const rotate = keyframes`
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// `;
 
-const Spinner = styled.div`
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #3f51b5;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: ${rotate} 1s linear infinite;
-`;
+// const Spinner = styled.div`
+//   border: 4px solid rgba(0, 0, 0, 0.1);
+//   border-top: 4px solid #3f51b5;
+//   border-radius: 50%;
+//   width: 50px;
+//   height: 50px;
+//   animation: ${rotate} 1s linear infinite;
+// `;
 
 function MainPage() {
   const location = useGeolocation();
@@ -43,25 +44,12 @@ function MainPage() {
   });
 
   if (!location.loaded) {
-    return (
-      <div>
-        <SpinnerContainer>
-          <Spinner />
-        </SpinnerContainer>
-        <p>
-          현재 위치를 검색할 수 없습니다. 브라우저의 위치 권한을 허용해주세요.
-        </p>
-      </div>
-    );
+    return <SkeletonGrid />;
   }
 
   // 위치 정보를 확인하는 중일 때는 스피너를 표시
   if (isLoading) {
-    return (
-      <SpinnerContainer>
-        <Spinner />
-      </SpinnerContainer>
-    );
+    return <SkeletonGrid />;
   }
 
   if (isError) {
