@@ -138,11 +138,55 @@ function MainPage() {
   });
 
   if (!location.loaded) {
-    return <SkeletonGrid />;
+    return (
+      <>
+        <AddContainer>
+          {images.map((image) => (
+            <AddImage
+              key={image.id}
+              src={banner1}
+              show={image.id === images[currentImage].id}
+            />
+          ))}
+        </AddContainer>
+        <MainTitleContainer>
+          <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+          <MainTitle>주변 숙소</MainTitle>
+          <img
+            src={tree}
+            alt="tree"
+            style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
+          />
+        </MainTitleContainer>
+        <SkeletonGrid />
+      </>
+    );
   }
 
   if (isLoading) {
-    return <SkeletonGrid />;
+    return (
+      <>
+        <AddContainer>
+          {images.map((image) => (
+            <AddImage
+              key={image.id}
+              src={image.src}
+              show={image.id === images[currentImage].id}
+            />
+          ))}
+        </AddContainer>
+        <MainTitleContainer>
+          <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+          <MainTitle>주변 숙소</MainTitle>
+          <img
+            src={tree}
+            alt="tree"
+            style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
+          />
+        </MainTitleContainer>
+        <SkeletonGrid />
+      </>
+    );
   }
 
   if (isError) {

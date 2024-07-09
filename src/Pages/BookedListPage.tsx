@@ -184,7 +184,7 @@ function BookedListPage() {
     return <h1>Error!</h1>;
   }
 
-  if (!reservations || !reservations.length) {
+  if (!localReservations.length) {
     return (
       <BookedListContainer>
         <BookedListBody>
@@ -207,7 +207,7 @@ function BookedListPage() {
         <ReserTitleDate>날짜</ReserTitleDate>
         <ReserTitlePrice>가격</ReserTitlePrice>
       </ReserTitleContainer>
-      {reservations.map((reservation) => (
+      {localReservations.map((reservation) => (
         <ReservationRow
           key={
             reservation.room_response.room_id.toString() +

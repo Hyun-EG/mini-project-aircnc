@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { IconX } from '@tabler/icons-react';
 import { useWishes, useDeleteWish } from '../hooks/wish.tsx';
 import { SkeletonObject } from '../Components/SkeletonGrid.tsx';
-import { IconX } from '@tabler/icons-react';
 
 const WishListContainer = styled.div`
   width: 100%;
