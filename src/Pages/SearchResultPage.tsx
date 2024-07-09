@@ -35,6 +35,13 @@ const SkeletonMap = styled(SkeletonObject)`
   height: 95vh;
 `;
 
+const NoListingsMessage = styled.div`
+  text-align: center;
+  font-size: 1.5rem;
+  color: red;
+  margin: 2rem 0;
+`;
+
 function SearchResultPage() {
   const {
     location,
@@ -187,8 +194,16 @@ function SearchResultPage() {
   return (
     <SearchPageContainer>
       <CardGridContainer>
-        <CardGrid listings={listings} />
-        <CardGridWatcher ref={loader} />
+        {listings.length === 0 ? (
+          <NoListingsMessage>
+            표시된 맵에 해당하는 숙소가 없습니다. 다시 검색 해주세요.
+          </NoListingsMessage>
+        ) : (
+          <>
+            <CardGrid listings={listings} />
+            <CardGridWatcher ref={loader} />
+          </>
+        )}
       </CardGridContainer>
       <MapMargin />
       <Map width="39.5%" height="95vh" listings={listings} />

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import formatNumber from '../util/formatNumber.ts';
 import { usePayments } from '../hooks/payment.tsx';
@@ -101,11 +102,20 @@ const SkeletonReservation = styled(SkeletonObject)`
   border-radius: 8px;
 `;
 
+const ReserCancelBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: red;
+`;
+
 interface ReservationRowProps {
   reservation: PaymentResponse;
+  onCancel: () => void;
 }
 
-function ReservationRow({ reservation }: ReservationRowProps) {
+function ReservationRow({ reservation, onCancel }: ReservationRowProps) {
   const formatDate = (date: Date) => {
     const formattedDate = date.toLocaleDateString().replace(/\.$/, '');
     return formattedDate;
@@ -119,12 +129,37 @@ function ReservationRow({ reservation }: ReservationRowProps) {
         {formatDate(new Date(reservation.check_out))}
       </ReserContentDate>
       <ReserContentPrice>{formatNumber(reservation.price)}</ReserContentPrice>
+      <ReserCancelBtn onClick={onCancel}>예약취소</ReserCancelBtn>
     </ReserCotentContainer>
   );
 }
 
 function BookedListPage() {
   const { data: reservations, isLoading, isError } = usePayments();
+  const [localReservations, setLocalReservations] = useState<PaymentResponse[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (reservations) {
+      setLocalReservations(reservations);
+    }
+  }, [reservations]);
+
+  const handleCancel = (roomId: number) => {
+    if (
+      window.confirm(
+        '취소로 인한 불이익은 책임지지 않습니다. 정말 예약을 취소하시겠습니까?',
+      )
+    ) {
+      setLocalReservations((prevReservations) =>
+        prevReservations.filter(
+          (reservation) => reservation.room_response.room_id !== roomId,
+        ),
+      );
+      alert('예약이 취소되었습니다. 사실 불이익은 없습니다.');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -180,6 +215,7 @@ function BookedListPage() {
             reservation.check_out.toString().replace(/-/g, '')
           }
           reservation={reservation}
+          onCancel={() => handleCancel(reservation.room_response.room_id)}
         />
       ))}
     </BookedListContainer>

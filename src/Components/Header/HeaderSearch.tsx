@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -156,6 +156,7 @@ export default function HeaderSearch({
   );
   const [openSelect, setOpenSelect] = useState<SelectMode>('');
   const locationPath = useLocation().pathname;
+  const searchBoxRef = useRef<HTMLMenuElement | null>(null);
 
   const initialSearchState: HeaderSearchState = useMemo(() => {
     return { location: '', checkInDate: '', checkOutDate: '', guestCount: 0 };
@@ -213,8 +214,24 @@ export default function HeaderSearch({
     navigate('/search');
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target as Node)
+      ) {
+        setOpenSelect('');
+      }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <SearchBox $openSelect={openSelect}>
+    <SearchBox $openSelect={openSelect} ref={searchBoxRef}>
       <SearchLocation $openSelect={openSelect} $isOpen="location">
         <Button
           $size="medium"
