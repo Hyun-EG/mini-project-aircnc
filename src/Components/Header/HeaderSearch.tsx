@@ -197,6 +197,7 @@ export default function HeaderSearch({
       return;
     }
 
+    setOpenSelect('');
     dispatch(setLocation(locationPrefix as City));
     dispatch(
       setCheckInDate(

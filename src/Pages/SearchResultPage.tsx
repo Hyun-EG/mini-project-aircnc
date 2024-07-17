@@ -194,7 +194,7 @@ function SearchResultPage() {
   return (
     <SearchPageContainer>
       <CardGridContainer>
-        {listings.length === 0 ? (
+        {!listings.length ? (
           <NoListingsMessage>
             표시된 맵에 해당하는 숙소가 없습니다. 다시 검색 해주세요.
           </NoListingsMessage>
