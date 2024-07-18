@@ -57,19 +57,13 @@ const Info = styled.p`
   color: #333;
 `;
 
-type CardProps = RoomResponse & {
+type CardProps = {
+  card: RoomResponse;
   order?: number;
 };
 
-function Card(props: CardProps) {
-  const {
-    room_id: roomId,
-    image_url: imageUrl,
-    name,
-    city,
-    price,
-    order,
-  } = props;
+function Card({ card, order }: CardProps) {
+  const { room_id: roomId, image_url: imageUrl, name, city, price } = card;
   const navigate = useNavigate();
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
 

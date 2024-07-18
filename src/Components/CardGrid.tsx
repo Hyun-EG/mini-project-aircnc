@@ -17,10 +17,9 @@ interface CardGridProps {
 
 export default function CardGrid({ listings }: CardGridProps) {
   return (
-    // props spreading is forbidden,, eslint설정 진짜 중요하다..;
     <GridContainer>
       {listings.map((listing, index) => (
-        <Card key={listing.room_id} {...listing} order={index} />
+        <Card key={listing.room_id} card={listing} order={index} />
       ))}
     </GridContainer>
   );
