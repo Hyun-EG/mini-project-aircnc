@@ -58,6 +58,43 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+  const menuItemsWithToken = [
+    {
+      typeName: '위시리스트',
+      callback: () => {
+        navigate('/wishlist');
+      },
+    },
+    {
+      typeName: '예약 목록',
+      callback: () => {
+        navigate('/booked');
+      },
+    },
+    {
+      typeName: '로그아웃',
+      callback: () => {
+        localStorage.removeItem('token');
+        navigate('/');
+      },
+    },
+  ];
+
+  const menuItemsWithoutToken = [
+    {
+      typeName: '로그인',
+      callback: () => {
+        dispatch(setModalStatus('email'));
+      },
+    },
+    {
+      typeName: '회원가입',
+      callback: () => {
+        dispatch(setModalStatus('email'));
+      },
+    },
+  ];
+
   const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
   };
@@ -93,49 +130,17 @@ export default function HeaderMenu({ windowWidth }: MenuProps) {
       )}
       {isOpen && (
         <DropdownMenu>
-          {token ? (
-            <>
-              <MenuItem
-                onClick={() => {
-                  navigate('/wishlist');
-                }}
-              >
-                위시리스트
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  navigate('/booked');
-                }}
-              >
-                예약 목록
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  localStorage.removeItem('token');
-                  navigate('/');
-                }}
-              >
-                로그아웃
-              </MenuItem>
-            </>
-          ) : (
-            <>
-              <MenuItem
-                onClick={() => {
-                  dispatch(setModalStatus('email'));
-                }}
-              >
-                로그인
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  dispatch(setModalStatus('email'));
-                }}
-              >
-                회원가입
-              </MenuItem>
-            </>
-          )}
+          {token
+            ? menuItemsWithToken.map((menu) => (
+                <MenuItem key={menu.typeName} onClick={menu.callback}>
+                  {menu.typeName}
+                </MenuItem>
+              ))
+            : menuItemsWithoutToken.map((menu) => (
+                <MenuItem key={menu.typeName} onClick={menu.callback}>
+                  {menu.typeName}
+                </MenuItem>
+              ))}
         </DropdownMenu>
       )}
     </MenuContainer>
