@@ -6,7 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-const BASE_URL = 'https://www.entj.site/api';
+const BASE_URL = 'https://scattered-faith-hejuby-565d8d93.koyeb.app/api';
 
 const logOnDev = (message: string) => {
   if (process.env.NODE_ENV === 'development') {
