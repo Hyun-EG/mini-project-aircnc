@@ -44,7 +44,7 @@ const HeaderLogo = styled.img`
 export default function Header() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -63,7 +63,7 @@ export default function Header() {
       return (
         <HeaderLogo
           onClick={() => {
-            Navigate('/');
+            navigate('/');
           }}
           src={logoSmall}
           alt="Logo"
@@ -74,7 +74,7 @@ export default function Header() {
     return (
       <HeaderLogo
         onClick={() => {
-          Navigate('/');
+          navigate('/');
         }}
         src={logo}
         alt="Logo"
