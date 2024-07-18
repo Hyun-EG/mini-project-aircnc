@@ -227,9 +227,11 @@ function SearchResultPage() {
           <>
             <CardGrid listings={listings} />
             <CardGridWatcher ref={loader} />
-            <SpinnerContainer>
-              <Spinner />
-            </SpinnerContainer>
+            {isPending && (
+              <SpinnerContainer>
+                <Spinner />
+              </SpinnerContainer>
+            )}
           </>
         )}
       </CardGridContainer>
