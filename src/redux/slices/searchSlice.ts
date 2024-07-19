@@ -45,7 +45,6 @@ const searchSlice = createSlice({
       state.guestCount = action.payload;
     },
     setCoordinates: (state, action: PayloadAction<Coordinates>) => {
-      console.log(action.payload);
       state.coordinates = action.payload;
     },
     setMode: (state, action: PayloadAction<'city' | 'map'>) => {

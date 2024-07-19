@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { RoomResponse } from '../../assets/interfaces.ts';
-import { setMode, setCoordinates } from '../../redux/slices/searchSlice.ts';
-import { RootState } from '../../redux/store.ts';
+import { setCoordinates } from '../../redux/slices/searchSlice.ts';
+import Button from '../Button.tsx';
 
 export const MapInstance = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width};
@@ -17,16 +17,26 @@ export const MapInstance = styled.div<{ width: string; height: string }>`
   }
 `;
 
+const MapSearchButton = styled.nav<{ $isShow: boolean }>`
+  display: ${(props) => (props.$isShow ? 'block' : 'none')};
+  position: absolute;
+  top: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+`;
+
 interface MapProps {
   width: string;
   height: string;
   listings: RoomResponse[];
+  handleSearchClick: () => void;
 }
 
-function Map({ width, height, listings }: MapProps) {
+function Map({ width, height, listings, handleSearchClick }: MapProps) {
   const markersRef = useRef<naver.maps.Marker[]>([]);
   const dispatch = useDispatch();
-  const { mode } = useSelector((state: RootState) => state.search);
+  const [showSearchButton, setShowSearchButton] = useState(false);
 
   const getBounds = useCallback((map: naver.maps.Map) => {
     const bounds = map.getBounds() as naver.maps.LatLngBounds;
@@ -44,7 +54,7 @@ function Map({ width, height, listings }: MapProps) {
   useEffect(() => {
     if (listings.length === 0) return;
 
-    const { naver } = window;
+    setShowSearchButton(false);
 
     const initialCenter = new naver.maps.LatLng(
       listings[0].map_y,
@@ -147,16 +157,13 @@ function Map({ width, height, listings }: MapProps) {
       if (openInfoWindow) openInfoWindow.close();
     });
 
-    if (mode === 'city') {
-      console.log(mode);
-      map.fitBounds(bounds);
-    }
+    map.fitBounds(bounds);
 
     naver.maps.Event.addListener(map, 'idle', () => {
       const coordinate = getBounds(map);
 
       dispatch(setCoordinates(coordinate));
-      dispatch(setMode('map'));
+      setShowSearchButton(true);
     });
 
     return () => {
@@ -167,7 +174,21 @@ function Map({ width, height, listings }: MapProps) {
     };
   }, [listings]);
 
-  return <MapInstance id="map" width={width} height={height} />;
+  return (
+    <MapInstance id="map" width={width} height={height}>
+      <MapSearchButton $isShow={showSearchButton}>
+        <Button
+          $size="medium"
+          $shape="rounded"
+          $color="white"
+          $border
+          onClick={handleSearchClick}
+        >
+          현재 지도에서 검색
+        </Button>
+      </MapSearchButton>
+    </MapInstance>
+  );
 }
 
 export default Map;

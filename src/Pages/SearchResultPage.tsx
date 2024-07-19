@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store.ts';
-import { setCursorId } from '../redux/slices/searchSlice.ts';
+import { setCursorId, setMode } from '../redux/slices/searchSlice.ts';
 import CardGrid from '../Components/CardGrid.tsx';
 import Map, { MapInstance } from '../Components/Map/Map.tsx';
 import { RoomResponse } from '../assets/interfaces.ts';
@@ -94,6 +94,45 @@ function SearchResultPage() {
     return `${year}-${month}-${day}`;
   };
 
+  const fetchData = useCallback(async () => {
+    setListings([]);
+    try {
+      if (!checkInDate || !checkOutDate || !location) {
+        return;
+      }
+
+      const response = await roomSearch({
+        mode,
+        queries: {
+          capacity: guestCount,
+          check_in: formatDate(checkInDate),
+          check_out: formatDate(checkOutDate),
+          city: location,
+          cursor_id: null,
+          ...coordinates,
+        },
+      });
+
+      const roomData = response.body.room_response_list;
+      setStopFetching(response.body.last);
+      setListings(roomData);
+      if (roomData.length > 0) {
+        dispatch(setCursorId(roomData[roomData.length - 1].room_id));
+      }
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+    }
+  }, [
+    checkInDate,
+    checkOutDate,
+    location,
+    coordinates,
+    guestCount,
+    coordinates,
+    mode,
+    dispatch,
+  ]);
+
   const fetchMoreListings = useCallback(async () => {
     try {
       if (stopFetching) {
@@ -145,6 +184,11 @@ function SearchResultPage() {
     [fetchMoreListings, listings.length],
   );
 
+  const handleSearchClick = useCallback(() => {
+    dispatch(setMode('map'));
+    fetchData();
+  }, [fetchData]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       threshold: 0.1,
@@ -159,46 +203,8 @@ function SearchResultPage() {
   }, [handleObserver]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setListings([]);
-      try {
-        if (!checkInDate || !checkOutDate || !location) {
-          return;
-        }
-
-        const response = await roomSearch({
-          mode,
-          queries: {
-            capacity: guestCount,
-            check_in: formatDate(checkInDate),
-            check_out: formatDate(checkOutDate),
-            city: location,
-            cursor_id: null,
-            ...coordinates,
-          },
-        });
-
-        const roomData = response.body.room_response_list;
-        setStopFetching(response.body.last);
-        setListings(roomData);
-        if (roomData.length > 0) {
-          dispatch(setCursorId(roomData[roomData.length - 1].room_id));
-        }
-      } catch (error) {
-        console.error('Error fetching listings:', error);
-      }
-    };
-
     fetchData();
-  }, [
-    checkInDate,
-    checkOutDate,
-    guestCount,
-    location,
-    mode,
-    coordinates,
-    dispatch,
-  ]);
+  }, [checkInDate, checkOutDate, guestCount, location, mode, dispatch]);
 
   if (isPending && !cursorId) {
     return (
@@ -236,7 +242,12 @@ function SearchResultPage() {
         )}
       </CardGridContainer>
       <MapMargin />
-      <Map width="39.5%" height="95vh" listings={listings} />
+      <Map
+        width="39.5%"
+        height="95vh"
+        listings={listings}
+        handleSearchClick={handleSearchClick}
+      />
     </SearchPageContainer>
   );
 }
