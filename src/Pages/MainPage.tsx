@@ -5,8 +5,6 @@ import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
 import { useRandomRooms } from '../hooks/room.tsx';
 import SkeletonGrid from '../Components/SkeletonGrid.tsx';
-import banner1 from '../assets/images/banner1.jpg';
-import banner2 from '../assets/images/banner2.jpg';
 import tree from '../assets/images/tree.png';
 
 const AddContainer = styled.div`
@@ -117,8 +115,8 @@ function MainPage() {
   const [currentImage, setCurrentImage] = useState(0);
 
   const images = [
-    { id: 'banner1', src: banner1 },
-    { id: 'banner2', src: banner2 },
+    { id: 'banner1', src: '/banner1_2038.webp', srcSmall: '/banner1_874.webp' },
+    { id: 'banner2', src: '/banner2_1996.webp', srcSmall: '/banner2_798.webp' },
   ];
 
   useEffect(() => {
@@ -144,7 +142,10 @@ function MainPage() {
           {images.map((image) => (
             <AddImage
               key={image.id}
-              src={banner1}
+              loading="lazy"
+              decoding="async"
+              srcSet={`${image.srcSmall} 960w`}
+              src={image.src}
               show={image.id === images[currentImage].id}
             />
           ))}

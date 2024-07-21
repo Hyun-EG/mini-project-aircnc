@@ -127,7 +127,13 @@ function Card({ card, order }: CardProps) {
       onMouseLeave={handleMouseLeave}
     >
       <ImageContainer>
-        <Image src={imageUrl || `/defaultImage.jpg`} alt={name} />
+        <Image
+          loading="lazy"
+          decoding="async"
+          srcSet={`${imageUrl || '/defaultImage_471.webp'} 960w`}
+          src={imageUrl || `/defaultImage_707.webp`}
+          alt={name}
+        />
       </ImageContainer>
       <TextContainer>
         <Title>{name}</Title>
