@@ -5,6 +5,8 @@ import logoSmall from '../../assets/images/logo-small.svg';
 
 const HeaderLogoImage = styled.img`
   cursor: pointer;
+  width: 128px;
+  height: 49px;
   @media (max-width: 768px) {
     width: 8vh;
     height: 8vh;
