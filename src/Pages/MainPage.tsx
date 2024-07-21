@@ -5,7 +5,6 @@ import { RoomResponse } from '../assets/interfaces.ts';
 import useGeolocation from '../util/currentLocationUtil.ts';
 import { useRandomRooms } from '../hooks/room.tsx';
 import SkeletonGrid from '../Components/SkeletonGrid.tsx';
-import tree from '../assets/images/tree.png';
 
 const AddContainer = styled.div`
   width: 100%;
@@ -151,10 +150,20 @@ function MainPage() {
           ))}
         </AddContainer>
         <MainTitleContainer>
-          <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+          <img
+            loading="lazy"
+            decoding="async"
+            srcSet="/tree_40.webp 960w"
+            src="/tree_100.webp"
+            alt="tree"
+            style={{ width: '5vh', height: '5vh' }}
+          />
           <MainTitle>주변 숙소</MainTitle>
           <img
-            src={tree}
+            loading="lazy"
+            decoding="async"
+            srcSet="/tree_40.webp 960w"
+            src="/tree_100.webp"
             alt="tree"
             style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
           />
@@ -177,10 +186,20 @@ function MainPage() {
           ))}
         </AddContainer>
         <MainTitleContainer>
-          <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+          <img
+            loading="lazy"
+            decoding="async"
+            srcSet="/tree_40.webp 960w"
+            src="/tree_100.webp"
+            alt="tree"
+            style={{ width: '5vh', height: '5vh' }}
+          />
           <MainTitle>주변 숙소</MainTitle>
           <img
-            src={tree}
+            loading="lazy"
+            decoding="async"
+            srcSet="/tree_40.webp 960w"
+            src="/tree_100.webp"
             alt="tree"
             style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
           />
@@ -210,10 +229,20 @@ function MainPage() {
         ))}
       </AddContainer>
       <MainTitleContainer>
-        <img src={tree} alt="tree" style={{ width: '5vh', height: '5vh' }} />
+        <img
+          loading="lazy"
+          decoding="async"
+          srcSet="/tree_40.webp 960w"
+          src="/tree_100.webp"
+          alt="tree"
+          style={{ width: '5vh', height: '5vh' }}
+        />
         <MainTitle>주변 숙소</MainTitle>
         <img
-          src={tree}
+          loading="lazy"
+          decoding="async"
+          srcSet="/tree_40.webp 960w"
+          src="/tree_100.webp"
           alt="tree"
           style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
         />

@@ -53,7 +53,13 @@ function DetailCard({
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={imageURL || `/defaultImage.jpg`} alt={roomName} />
+        <Image
+          loading="lazy"
+          decoding="async"
+          srcSet={`${imageURL || '/defaultImage_707.webp'} 960w`}
+          src={imageURL || `/defaultImage.webp`}
+          alt={roomName}
+        />
       </ImageContainer>
       <TextContainer>
         <RoomTitle>{roomName}</RoomTitle>
