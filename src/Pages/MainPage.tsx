@@ -109,112 +109,13 @@ const Members = styled.p`
   text-align: center;
 `;
 
-function MainPage() {
-  const location = useGeolocation();
-  const [currentImage, setCurrentImage] = useState(0);
+const images = [
+  { id: 'banner1', src: '/banner1_2038.webp', srcSmall: '/banner1_874.webp' },
+  { id: 'banner2', src: '/banner2_1996.webp', srcSmall: '/banner2_798.webp' },
+];
 
-  const images = [
-    { id: 'banner1', src: '/banner1_2038.webp', srcSmall: '/banner1_874.webp' },
-    { id: 'banner2', src: '/banner2_1996.webp', srcSmall: '/banner2_798.webp' },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  const lat = useMemo(() => location.coordinates!.lat, [location.coordinates]);
-  const lng = useMemo(() => location.coordinates!.lng, [location.coordinates]);
-
-  const { data, isLoading, isError } = useRandomRooms({
-    map_x: lng,
-    map_y: lat,
-    radius: 4.5,
-  });
-
-  if (!location.loaded) {
-    return (
-      <>
-        <AddContainer>
-          {images.map((image) => (
-            <AddImage
-              key={image.id}
-              decoding="async"
-              srcSet={`${image.srcSmall} 960w`}
-              src={image.src}
-              show={image.id === images[currentImage].id}
-            />
-          ))}
-        </AddContainer>
-        <MainTitleContainer>
-          <img
-            decoding="async"
-            srcSet="/tree_40.webp 960w"
-            src="/tree_100.webp"
-            alt="tree"
-            style={{ width: '5vh', height: '5vh' }}
-          />
-          <MainTitle>주변 숙소</MainTitle>
-          <img
-            decoding="async"
-            srcSet="/tree_40.webp 960w"
-            src="/tree_100.webp"
-            alt="tree"
-            style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
-          />
-        </MainTitleContainer>
-        <SkeletonGrid />
-      </>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <>
-        <AddContainer>
-          {images.map((image) => (
-            <AddImage
-              key={image.id}
-              decoding="async"
-              srcSet={`${image.srcSmall} 960w`}
-              src={image.src}
-              show={image.id === images[currentImage].id}
-            />
-          ))}
-        </AddContainer>
-        <MainTitleContainer>
-          <img
-            decoding="async"
-            srcSet="/tree_40.webp 960w"
-            src="/tree_100.webp"
-            alt="tree"
-            style={{ width: '5vh', height: '5vh' }}
-          />
-          <MainTitle>주변 숙소</MainTitle>
-          <img
-            decoding="async"
-            srcSet="/tree_40.webp 960w"
-            src="/tree_100.webp"
-            alt="tree"
-            style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
-          />
-        </MainTitleContainer>
-        <SkeletonGrid />
-      </>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div>
-        <p>숙소 정보를 불러오는 데 실패했습니다.</p>
-      </div>
-    );
-  }
-
-  return data ? (
+function MainPageHeader({ currentImage }: { currentImage: number }) {
+  return (
     <>
       <AddContainer>
         {images.map((image) => (
@@ -244,6 +145,58 @@ function MainPage() {
           style={{ width: '5vh', height: '5vh', transform: 'scaleX(-1)' }}
         />
       </MainTitleContainer>
+    </>
+  );
+}
+
+function SkeletonMainPage({ currentImage }: { currentImage: number }) {
+  return (
+    <>
+      <MainPageHeader currentImage={currentImage} />
+      <SkeletonGrid />
+    </>
+  );
+}
+
+function MainPage() {
+  const location = useGeolocation();
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const lat = useMemo(() => location.coordinates!.lat, [location.coordinates]);
+  const lng = useMemo(() => location.coordinates!.lng, [location.coordinates]);
+
+  const { data, isLoading, isError } = useRandomRooms({
+    map_x: lng,
+    map_y: lat,
+    radius: 4.5,
+  });
+
+  if (!location.loaded) {
+    return <SkeletonMainPage currentImage={currentImage} />;
+  }
+
+  if (isLoading) {
+    return <SkeletonMainPage currentImage={currentImage} />;
+  }
+
+  if (isError) {
+    return (
+      <div>
+        <p>숙소 정보를 불러오는 데 실패했습니다.</p>
+      </div>
+    );
+  }
+
+  return data ? (
+    <>
+      <MainPageHeader currentImage={currentImage} />
       <CardGrid listings={data as RoomResponse[]} />
       <MainFooter>
         <ContentContainer>
