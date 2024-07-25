@@ -1,4 +1,13 @@
-import { lazy } from 'react';
+import { Suspense, lazy } from 'react';
+import Spinner from '../Components/Spinner.tsx';
+
+export function SuspenseWithSpinner({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <Suspense fallback={<Spinner />}>{children}</Suspense>;
+}
 
 export const MainPage = lazy(async () => await import('../Pages/MainPage.tsx'));
 
