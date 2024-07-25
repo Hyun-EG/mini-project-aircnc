@@ -128,7 +128,7 @@ function Card({ card, order = 0 }: CardProps) {
     >
       <ImageContainer>
         <Image
-          loading={order < 4 ? 'lazy' : 'eager'}
+          loading={order < 4 ? 'eager' : 'lazy'}
           decoding="async"
           srcSet={`${imageUrl || '/defaultImage_471.webp'} 960w`}
           src={imageUrl || `/defaultImage_707.webp`}
