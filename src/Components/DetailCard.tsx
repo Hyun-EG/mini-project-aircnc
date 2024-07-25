@@ -58,6 +58,7 @@ function DetailCard({
           decoding="async"
           srcSet={`${imageURL || '/defaultImage_707.webp'} 960w`}
           src={imageURL || `/defaultImage.webp`}
+          sizes="300px"
           alt={roomName}
         />
       </ImageContainer>

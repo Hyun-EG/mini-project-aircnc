@@ -132,6 +132,7 @@ function Card({ card, order }: CardProps) {
           decoding="async"
           srcSet={`${imageUrl || '/defaultImage_471.webp'} 960w`}
           src={imageUrl || `/defaultImage_707.webp`}
+          sizes="300px"
           alt={name}
         />
       </ImageContainer>
