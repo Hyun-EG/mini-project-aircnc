@@ -62,7 +62,7 @@ type CardProps = {
   order?: number;
 };
 
-function Card({ card, order }: CardProps) {
+function Card({ card, order = 0 }: CardProps) {
   const { room_id: roomId, image_url: imageUrl, name, city, price } = card;
   const navigate = useNavigate();
   const [myMarker, setMyMarker] = useState<HTMLDivElement | null>(null);
@@ -128,7 +128,7 @@ function Card({ card, order }: CardProps) {
     >
       <ImageContainer>
         <Image
-          loading="lazy"
+          loading={order < 4 ? 'lazy' : 'eager'}
           decoding="async"
           srcSet={`${imageUrl || '/defaultImage_471.webp'} 960w`}
           src={imageUrl || `/defaultImage_707.webp`}

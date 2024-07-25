@@ -141,7 +141,6 @@ function MainPage() {
           {images.map((image) => (
             <AddImage
               key={image.id}
-              loading="lazy"
               decoding="async"
               srcSet={`${image.srcSmall} 960w`}
               src={image.src}
@@ -151,7 +150,6 @@ function MainPage() {
         </AddContainer>
         <MainTitleContainer>
           <img
-            loading="lazy"
             decoding="async"
             srcSet="/tree_40.webp 960w"
             src="/tree_100.webp"
@@ -160,7 +158,6 @@ function MainPage() {
           />
           <MainTitle>주변 숙소</MainTitle>
           <img
-            loading="lazy"
             decoding="async"
             srcSet="/tree_40.webp 960w"
             src="/tree_100.webp"
@@ -180,6 +177,8 @@ function MainPage() {
           {images.map((image) => (
             <AddImage
               key={image.id}
+              decoding="async"
+              srcSet={`${image.srcSmall} 960w`}
               src={image.src}
               show={image.id === images[currentImage].id}
             />
@@ -187,7 +186,6 @@ function MainPage() {
         </AddContainer>
         <MainTitleContainer>
           <img
-            loading="lazy"
             decoding="async"
             srcSet="/tree_40.webp 960w"
             src="/tree_100.webp"
@@ -196,7 +194,6 @@ function MainPage() {
           />
           <MainTitle>주변 숙소</MainTitle>
           <img
-            loading="lazy"
             decoding="async"
             srcSet="/tree_40.webp 960w"
             src="/tree_100.webp"
@@ -223,6 +220,8 @@ function MainPage() {
         {images.map((image) => (
           <AddImage
             key={image.id}
+            decoding="async"
+            srcSet={`${image.srcSmall} 960w`}
             src={image.src}
             show={image.id === images[currentImage].id}
           />
@@ -230,7 +229,6 @@ function MainPage() {
       </AddContainer>
       <MainTitleContainer>
         <img
-          loading="lazy"
           decoding="async"
           srcSet="/tree_40.webp 960w"
           src="/tree_100.webp"
@@ -239,7 +237,6 @@ function MainPage() {
         />
         <MainTitle>주변 숙소</MainTitle>
         <img
-          loading="lazy"
           decoding="async"
           srcSet="/tree_40.webp 960w"
           src="/tree_100.webp"
