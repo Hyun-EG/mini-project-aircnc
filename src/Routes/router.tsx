@@ -1,11 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from './Layout.tsx';
-import MainPage from '../Pages/MainPage.tsx';
-import WishListPage from '../Pages/WishListPage.tsx';
-import SearchResultPage from '../Pages/SearchResultPage.tsx';
-import DetailInfoPage from '../Pages/DetailInfoPage.tsx';
-import BookedListPage from '../Pages/BookedListPage.tsx';
-import NotFoundPage from '../Pages/NotFoundPage.tsx';
+import {
+  MainPage,
+  SearchResultPage,
+  DetailInfoPage,
+  WishListPage,
+  BookedListPage,
+  NotFoundPage,
+} from './Routes.tsx';
 
 const router = createBrowserRouter([
   {
