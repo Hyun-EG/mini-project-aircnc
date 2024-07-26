@@ -6,4 +6,19 @@ export default defineConfig({
   server: {
     open: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            const moduleName = id
+              .slice(id.indexOf('node_modules/') + 'node_modules/'.length)
+              .split('/')[0];
+
+            return moduleName;
+          }
+        },
+      },
+    },
+  },
 });
