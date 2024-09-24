@@ -1,60 +1,126 @@
-2024. 6.  18
+# 수강생들을 위한 숙박업소 에어씨엔씨
 
-# **💒 숙박 / 예약 서비스 만들기**
+<br>
 
-본 프로젝트는 숙박 예약 서비스를 완성하는 것을 목표로 합니다.
-필요한 설계는 팀별로 직접 구성합니다.
+<br>
+<br>
 
-### **[과제 수행 및 제출 방법]**
+📌회원가입 절차 없이 게스트아이디를 통해 에어씨엔씨를 이용해보세요!
 
-1. 현재 저장소를 로컬에 클론(Clone)합니다.
-2. 자신의 팀명으로 브랜치를 생성합니다.(구분 가능하도록 팀명을 꼭 파스칼케이스로 표시하세요, git branch KDT_FE8_Mini-Project_Team1)
-3. 자신의 팀명 브랜치에서 과제를 수행합니다.
-4. 과제 수행이 완료되면, 자신의 팀명 브랜치를 원격 저장소에 푸시(Push)합니다.(main 브랜치에 푸시하지 않도록 꼭 주의하세요, git push origin KDT_FE8_Mini-Project_Team1)
-5. 저장소에서 main 브랜치를 대상으로 Pull Request 생성하면, 과제 제출이 완료됩니다!(E.g, main <== KDT_FE8_Mini-Project_Team1)
-6. Pull Request 링크를 LMS로도 제출해 주셔야 합니다.
-7. main 혹은 다른 사람의 브랜치로 절대 병합하지 않도록 주의하세요!
-8. Pull Request에서 보이는 설명을 다른 사람들이 이해하기 쉽도록 꼼꼼하게 작성하세요!
-9. Pull Request에서 과제 제출 후 절대 병합(Merge)하지 않도록 주의하세요!
-10. 과제 수행 및 제출 과정에서 문제가 발생한 경우, 바로 담당 멘토나 강사님, 운영진에게 얘기하세요!
+## Userflow
 
-### **[필수 구현사항]**
+![userflow-real](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/7fbe3649-8073-4321-89af-d895f825f9ac)
 
-1. 회원 인증
-   - 회원가입
-     - 회원은 회원가입을 할 수 있습니다.
-     - 기본 정보는 ID 역할로 이메일 주소와, 비밀번호, 이름 입니다.
-   - 회원 로그인 기능
-     - 이메일과 비밀번호로 로그인할 수 있습니다.
-     - 회원 정보를 저장해둔 데이터베이스를 검색하여 해당 사용자가 유효한 사용자 인지 판단합니다.
-     - 상품 조회(전체, 개별), 회원 가입은 로그인 없이 사용 가능합니다.
-     - 이 외 기능은 로그인이 필요합니다.
-2. 전체 상품 목록 조회
-   - 데이터베이스에서 전체 상품 목록을 가져옵니다.
-   - 이미지, 상품명, 상품가격을 기본으로 출력합니다.
-   - 재고에 따라 품절일 경우, 출력 여부에 대해선 팀별로 결정합니다.
-   - 한 페이지에 출력되는 상품 개수는 팀별로 정하여, 페이징을 수행합니다.
-3. 개별 상품 조회
-   - 전체 상품 목록에서 특정 상품 이미지를 클릭하면, 해당 상품에 대한 상세 정보를 상품에 저장해 둔 데이터베이스에서 가져옵니다.
-   - 이미지, 상품명, 상품가격, 상품 상세 소개 (1줄 이상)을 기본으로 출려합니다.
-   - 재고에 따라 품절일 경우, 화면 구성은 팀별로 결정합니다.
-4. 상품 옵션 선택
-   - 상품 상세 소개 페이지에서 상품 옵션을 선택할 수 있습니다.
-   - 날짜, 숙박 인원은 기본으로 포함됩니다.
-   - 이 외 룸 형태 등 필요한 요소는 팀별로 기획합니다.
-5. 결제하기
-   - 주문 페이지에서 결제하기 버튼을 클릭하면, 실제 결제 로직 및 절차 없이 상품을 바로 주문한 것으로 처리합니다.
-   - 주문을 저장하는 데이터베이스에 주문 정보를 저장합니다.
-6. 주문 결과 확인
-   - 결제를 성공적으로 처리하면, 주문한 상품(들)에 대한 주문 결과를 출력해줍니다.
+<br>
+<br>
 
-### **[선택 구현사항]**
+## ✨FE 팀원 소개 및 분담✨
 
-1. 장바구니 보기
-   - 장바구니에 담긴 상품 데이터 (이미지, 상품명, 옵션 등)에 따른 상품별 구매 금액, 전체 주문 합계 금액 등을 화면에 출력합니다.
-   - 체크 박스를 통해 결제할 상품을 선택/제외할 수도 있습니다.
-   - 주문하기 버튼을 통해 주문/결제 화면으로 이동합니다.
-2. 장바구니 담기
-   - 상품 옵션을 선택한 후, 장바구니 담기 버튼을 클릭하면 선택한 상품이 장바구니에 담깁니다.
-3. 주문 내역 확인
-   - 별도 주문 내역 페이지에 여태 주문한 모든 이력을 출력해줍니다.
+| 김상화(대장)                                                                                                                                                         | 박성현(사원)                                                                                                                                                        | 변희준(팀장)                                                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                 | ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                | ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                               |
+| [`https://github.com/Iam-Sanghwa`](https://github.com/Iam-Sanghwa)                                                                                                   | [`https://github.com/Hyun-EG`](https://github.com/Hyun-EG)                                                                                                          | [`https://github.com/hejuby`](https://github.com/hejuby)                                                                                                                           |
+| <div><ul><li>페이지별 기능 및 컴포넌트 기획</li><li>개발, 배포 환경 구축</li><li>Card 컴포넌트 개발</li><li>검색, 조회, 장바구니, 예약 기능 api 연결</li></ul></div> | <div><li>유저플로우,리드미 작성</li><li>전체 레이아웃 UI 디자인 참여</li><li>헤더 구현 및 맵API 활용</li><li>검색, 조회, 장바구니, 예약 기능 페이지 구현</li></div> | <div><ul><li>아토믹 컴포넌트 구현</li><li>로그인/회원가입 유효성 검사</li><li> 비동기 훅 구현</li><li>전체 레이아웃 UI 디자인 참여</li><li>헤더 구현 및 맵API 활용</li></ul></div> |
+
+<br>
+<br>
+<br>
+
+## 🔨 사용한 기술 스택
+
+|            | 개발 환경                                                                                                                                                                                                                                                                                                                                           |
+| :--------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 개발 환경  | <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white"> <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white"> <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">                                        |
+|  유틸리티  | <img src="https://img.shields.io/badge/ESlint-4B32C3?style=for-the-badge&logo=ESlint&logoColor=white"> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=Prettier&logoColor=white">                                                                                                                                   |
+|   디자인   | <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">                                                                                                                                                                                                                                                |
+| 상태 관리  | <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white"> <img src="https://img.shields.io/badge/React--Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white">                                                                                                                              |
+| 라이브러리 | <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src ="https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"/> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> |
+|    배포    | <img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white">                                                                                                                                                                                                                                            |
+|   협업툴   | <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"> <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white">                                                                                                                                             |
+
+## ✨프로젝트 소개
+
+제작기간 : `2024.06.17 ~ 2024.07.07`
+제작인원 : `3명 [김상화 박성현 변희준]`
+
+<br>
+
+### 헤더
+
+- 헤더 내 로고 클릭시 메인페이지 이동
+- 도시/체크인 및 체크아웃 선택/인원수 검색 설정
+- 캘린더 선택 시 유효성 검사
+- 검색 내용 redux로 관리
+- 로그인/로그아웃 버튼
+
+<hr/>
+
+### 로그인/회원가입
+
+- 회원가입 시 e-mail, 비밀번호 규칙 유효성 검사
+- 회원가입 시 e-mail, 닉네임 중복 검사
+- 로그인시 엑세스 토큰 관리
+
+![로그인](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/532dfb7a-614e-494b-8095-af563e699008)
+
+![회원가입](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/0a2409b7-b9dd-46f5-a06c-9e9db21a0b1d)
+
+<hr/>
+
+### 메인 페이지
+
+- Geolocation API를 활용한 현재 위치 업데이트
+- 현 위치 주변 숙소 검색 후 숙소 표시
+
+![main](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/b298c59a-6984-41ce-8097-a62383de8e17)
+
+<hr/>
+
+### 서치 페이지
+
+- 헤더 검색 기능
+  - 리덕스로 관리하는 검색 쿼리를 활용하여 검색 진행
+  - 카드로 표시된 숙소의 위치(좌표)를 활용하여 네이버 맵 API에 마커 표시
+  - intersection observer를 활용한 무한스크롤 구현
+  - 카드로 표시된 숙소를 맵에서 모두 보여주기 위한 bounce설정
+  - 카드 호버시 마커 확대 기능
+- 맵 검색 기능
+  - 맵을 사용자가 임의로 이동/확대하였을 때 '지도 검색'모드 활성화
+  - 네이버 맵 상, 하, 좌, 우 좌표를 활용하여 검색 api 요청
+  - intersection observer를 활용한 무한스크롤 구현
+
+![search](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/4a916d0b-c20a-47bd-b6d7-22f270d6b6a9)
+
+<hr/>
+
+### 인포 페이지
+
+- 체크인, 체크아웃 날짜 선택
+- 숙박 인원 선택
+- 예약 결제 금액 표시
+- 예약하기, 장바구니 담기 기능
+
+![info](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/825f4f7f-114f-4fcc-9f20-908404d0858e)
+
+<hr/>
+
+### 예약목록 페이지
+
+- 예약된 숙소의 체크인/체크아웃 일정 등 정보 표시
+
+![reser](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/106f0625-0817-4162-a639-14838b0edd36)
+
+<hr/>
+  
+### 위시리스트 페이지
+
+- 위시리스트에 추가한 숙소의 사진 정보 표시
+
+![wish](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/2235052e-8169-489e-a520-a04e85e42e8a)
+
+<br>
+<br>
+
+감사합니다! 많이 배워갑니다!!!
+
+![adqqfd](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/ce0bc89c-b532-4b98-aadd-ee60e1f4cb6e)
