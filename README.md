@@ -14,13 +14,13 @@
 <br>
 <br>
 
-## ✨FE 팀원 소개 및 분담✨
+## ✨FE 팀원 소개✨
 
 | 김상화(대장)                                                                                                                                                         | 박성현(사원)                                                                                                                                                        | 변희준(팀장)                                                                                                                                                                       |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                 | ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                | ![adacca](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/c9a6f615-a0ea-490d-a61d-362fe2619e7a)                                                               |
 | [`https://github.com/Iam-Sanghwa`](https://github.com/Iam-Sanghwa)                                                                                                   | [`https://github.com/Hyun-EG`](https://github.com/Hyun-EG)                                                                                                          | [`https://github.com/hejuby`](https://github.com/hejuby)                                                                                                                           |
-| <div><ul><li>페이지별 기능 및 컴포넌트 기획</li><li>개발, 배포 환경 구축</li><li>Card 컴포넌트 개발</li><li>검색, 조회, 장바구니, 예약 기능 api 연결</li></ul></div> | <div><li>유저플로우,리드미 작성</li><li>전체 레이아웃 UI 디자인 참여</li><li>헤더 구현 및 맵API 활용</li><li>검색, 조회, 장바구니, 예약 기능 페이지 구현</li></div> | <div><ul><li>아토믹 컴포넌트 구현</li><li>로그인/회원가입 유효성 검사</li><li> 비동기 훅 구현</li><li>전체 레이아웃 UI 디자인 참여</li><li>헤더 구현 및 맵API 활용</li></ul></div> |
+
 
 <br>
 <br>
@@ -121,6 +121,3 @@
 <br>
 <br>
 
-감사합니다! 많이 배워갑니다!!!
-
-![adqqfd](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/ce0bc89c-b532-4b98-aadd-ee60e1f4cb6e)
