@@ -5,8 +5,6 @@
 <br>
 <br>
 
-📌회원가입 절차 없이 게스트아이디를 통해 에어씨엔씨를 이용해보세요!
-
 ## Userflow
 
 ![userflow-real](https://github.com/Iam-Sanghwa/KDT_FE8_Mini-Project/assets/106307387/7fbe3649-8073-4321-89af-d895f825f9ac)
